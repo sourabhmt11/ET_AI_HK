@@ -1,0 +1,73 @@
+COSMAC phase 0 final verification
+Captured: 2026-10-11T11:19:35Z
+Commit:   03380ae7a4bc941b6248fcd2429148891d3cadc2
+Command:  pytest --no-cov -p no:cacheprovider -q -rf
+
+Baseline (upstream-v0.8.1 + mcp pin): 1369 passed, 19 skipped, 0 failed
+Final    (phase 0 complete):          1403 passed, 21 skipped, 0 failed
+Delta:    +34 passed, +2 skipped, no regressions
+
+---
+........................................................................ [  5%]
+........................................................................ [ 10%]
+........................................................................ [ 15%]
+........................................................................ [ 20%]
+........................................................................ [ 25%]
+........................................................................ [ 30%]
+........................................................................ [ 35%]
+........................................................................ [ 40%]
+........................................................................ [ 45%]
+........................................................................ [ 50%]
+........................................................................ [ 55%]
+........................................................................ [ 60%]
+........................................ssssssssssss.................... [ 65%]
+....................sssss............................................... [ 70%]
+........................................................................ [ 75%]
+........................................................................ [ 80%]
+.......................................................s................ [ 86%]
+........................................................................ [ 91%]
+..........................................s...s......................... [ 96%]
+.......................................................                  [100%]
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/benchmarks/test_runner.py::TestRunBenchmark::test_run_sample_benchmark
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+tests/capabilities/test_jws_adapter.py::TestTamper::test_bad_signature_returns_untrusted
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\jwt\api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 16 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+    decoded = self.decode_complete(
+
+tests/integrations/test_pydantic_ai_guard.py: 3 warnings
+tests/test_middleware_parse_failure.py: 7 warnings
+tests/test_no_home_writes.py: 1 warning
+tests/tool_guard/test_guard.py: 1 warning
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\chromadb\api\types.py:944: DeprecationWarning: The EmbeddingFunction class does not implement name(). This will be required in a future version.
+    self.name() is NotImplemented
+
+tests/integrations/test_pydantic_ai_guard.py: 3 warnings
+tests/test_middleware_parse_failure.py: 7 warnings
+tests/test_no_home_writes.py: 1 warning
+tests/tool_guard/test_guard.py: 1 warning
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\chromadb\api\collection_configuration.py:791: DeprecationWarning: The EmbeddingFunction class does not implement name(). This will be required in a future version.
+    embedding_function.name() != "default"
+
+tests/integrations/test_pydantic_ai_guard.py::TestScanInput::test_clean_input_returns_report
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\huggingface_hub\file_download.py:149: UserWarning: `huggingface_hub` cache-system uses symlinks by default to efficiently store duplicated files but your machine does not support them in C:\Users\soura\AppData\Local\Temp\cosmac-tests-z7gfqxx6\data\models\models--sentence-transformers--all-MiniLM-L6-v2. Caching files will still work but in a degraded version that might require more space on your disk. This warning can be disabled by setting the `HF_HUB_DISABLE_SYMLINKS_WARNING` environment variable. For more details, see https://huggingface.co/docs/huggingface_hub/how-to-cache#limitations.
+  To support symlinks on Windows, you either need to activate Developer Mode or to run Python as an administrator. In order to activate developer mode, see this article: https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development
+    warnings.warn(message)
+
+tests/integrations/test_pydantic_ai_guard.py::TestScanInput::test_clean_input_returns_report
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\huggingface_hub\file_download.py:149: UserWarning: `huggingface_hub` cache-system uses symlinks by default to efficiently store duplicated files but your machine does not support them in C:\Users\soura\AppData\Local\Temp\cosmac-tests-z7gfqxx6\data\models. Caching files will still work but in a degraded version that might require more space on your disk. This warning can be disabled by setting the `HF_HUB_DISABLE_SYMLINKS_WARNING` environment variable. For more details, see https://huggingface.co/docs/huggingface_hub/how-to-cache#limitations.
+  To support symlinks on Windows, you either need to activate Developer Mode or to run Python as an administrator. In order to activate developer mode, see this article: https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development
+    warnings.warn(message)
+
+tests/signatures/test_apply_to_engine.py::test_engine_sync_threats_unverified_still_possible_explicitly
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\tests\signatures\test_apply_to_engine.py:237: DeprecationWarning: Unverified feed sync is deprecated; pass verify=True with public_key
+    engine.sync_threats("http://example.invalid/feed.json", verify=False)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1403 passed, 21 skipped, 30 warnings in 604.69s (0:10:04)

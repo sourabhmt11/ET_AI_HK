@@ -7,9 +7,30 @@ on:
     branches: [main]
 
 jobs:
+  # REP-07: a dedicated job so a reintroduced old name is visible as its own
+  # red check rather than buried in a test log. Runs once, not per Python.
+  rename-guards:
+    name: Rename and version guards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Old-name check (REP-07)
+        run: python tools/check_old_names.py
+
+      - name: Version sync (REP-09)
+        run: python tools/check_version_sync.py
+
   test:
+    name: Test (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13"]
 
@@ -18,16 +39,56 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install dependencies
         run: pip install -e ".[dev,all]"
+
       - name: Lint
         run: ruff check src/ tests/
+
       - name: Format check
         run: ruff format --check src/ tests/
+
       - name: Type check
         run: mypy src/
+
+      # REP-04: markers exist so a contributor can skip the slow,
+      # network-bound and model-downloading tests locally. CI runs everything.
       - name: Test
         run: pytest --cov=cosmac --cov-report=xml
+
+      # REP-04: a full run must not create COSMAC's directories under $HOME.
+      # Checked here because the runner is the clean machine the assertion
+      # in tests/test_no_home_writes.py is meaningful on.
+      - name: Assert no writes to the home directory
+        run: |
+          for d in "$HOME/.cosmac" "$HOME/.cache/cosmac"; do
+            if [ -e "$d" ]; then
+              echo "::error::the test suite created $d - it must stay inside"
+              echo "::error::the temporary data directory (REP-04)"
+              ls -la "$d"
+              exit 1
+            fi
+          done
+          echo "no COSMAC data directories under \$HOME"
+
       - name: Upload coverage
         uses: codecov/codecov-action@v4
         if: matrix.python-version == '3.12'
+
+  # REP-11: the documented set-up must work from a clean clone, using only
+  # what CONTRIBUTING.md tells a new contributor to run.
+  clean-clone-setup:
+    name: Developer set-up from a clean clone
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: make setup
+        run: make setup
+
+      - name: make ci
+        run: make ci

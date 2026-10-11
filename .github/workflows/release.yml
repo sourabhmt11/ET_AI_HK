@@ -1,23 +1,93 @@
-name: Release to PyPI
+name: Release
 
 on:
   push:
     tags: ["v*"]
 
+# DEF-05 / NFR-9. The inherited workflow built and published on a tag with
+# no test job at all: a tag was enough to ship. The build job now requires
+# the test job, so a red suite stops the release.
+#
+# Publishing is DISABLED. It stays disabled until decision 14 (ownership of
+# the repository, package name and container registry) is settled and the
+# product owner confirms in writing - see REP-12 and spec section 15.2.
+# Nothing may be published to any index or registry before then.
+
 jobs:
-  publish:
+  test:
+    name: Test, lint and type check
     runs-on: ubuntu-latest
-    environment: release
-    permissions:
-      id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Install from the lockfile
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,fastapi,mcp,observability,sentiment,language]"
+
+      - name: Lint
+        run: ruff check src/ tests/
+
+      - name: Format check
+        run: ruff format --check src/ tests/
+
+      - name: Type check
+        run: mypy src/
+
+      - name: Tests
+        run: pytest --no-cov -p no:cacheprovider -q
+
+      - name: Old-name check (REP-07)
+        run: python tools/check_old_names.py
+
+      - name: Version sync (REP-09)
+        run: python tools/check_version_sync.py
+
+  build:
+    name: Build distribution
+    needs: test          # DEF-05: the gate. No tests, no build.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - name: Install build tools
         run: pip install build
+
       - name: Build package
         run: python -m build
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+
+      - name: Upload artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  # ---------------------------------------------------------------------
+  # Publishing is intentionally not wired up.
+  #
+  # To enable it, decision 14 must be recorded and REP-12 done:
+  #   - the distribution name on the index is owned by COSMAC
+  #   - the container registry namespace is owned by COSMAC
+  #   - the product owner has confirmed ownership in writing
+  #
+  # Then add a `publish` job with `needs: build`, an OIDC `id-token: write`
+  # permission and the `release` environment. Do not re-enable it by
+  # uncommenting alone - the ownership checks above are the point.
+  # ---------------------------------------------------------------------
+  publish-disabled:
+    name: Publish (disabled pending decision 14)
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Explain why nothing was published
+        run: |
+          echo "Publishing is disabled."
+          echo "COSMAC does not yet own the package name or the container"
+          echo "registry namespace (decision 14, spec section 15.2)."
+          echo "The distribution was built and uploaded as an artefact only."

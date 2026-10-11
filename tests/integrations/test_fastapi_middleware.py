@@ -111,7 +111,15 @@ class TestFastAPIMiddleware:
             )
         assert response.status_code == 400
 
-    async def test_empty_body_passthrough(self, app):
+    async def test_unparseable_body_is_refused(self, app):
+        """Updated by DEF-03 (FR-7).
+
+        This test was called ``test_empty_body_passthrough`` but sent
+        ``b"not json"`` — a non-empty body the middleware could not parse —
+        and asserted it passed through to the application. That was the
+        bypass: a malformed body skipped the scanner entirely. It is now
+        refused with a 4xx.
+        """
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.post(
@@ -119,6 +127,19 @@ class TestFastAPIMiddleware:
                 content=b"not json",
                 headers={"content-type": "application/json"},
             )
-        # Non-JSON body should pass through (the endpoint itself may error)
-        # The middleware should not crash
-        assert response.status_code in (200, 422)
+        assert 400 <= response.status_code < 500, (
+            "an unparseable body must not reach the application unscanned"
+        )
+
+    async def test_genuinely_empty_body_passes_through(self, app):
+        """A bodyless POST is not a parse failure; there is nothing to scan."""
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.post(
+                "/chat",
+                content=b"",
+                headers={"content-type": "application/json"},
+            )
+        assert response.status_code not in (400, 415), (
+            "an empty body should pass through, not be refused as malformed"
+        )

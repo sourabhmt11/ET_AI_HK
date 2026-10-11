@@ -1218,5 +1218,13 @@ def attackme(
         sys.exit(1)
 
 
+# EVL-02 (Appendix C #15): `cosmac eval run` / `cosmac eval check`.
+# Registered here rather than defined inline so the evaluation harness stays
+# importable without the CLI.
+from cosmac.evaluation.cli import eval_group  # noqa: E402
+
+main.add_command(eval_group)
+
+
 if __name__ == "__main__":
     main()

@@ -115,15 +115,38 @@ def _classifier_loaded(engine: Any) -> bool:
     if not cfg.get("enabled", False):
         return True  # explicitly disabled is a choice, not a silent failure
 
-    for detector in getattr(engine, "detectors", []):
-        if getattr(detector, "detector_id", "") == "d022_semantic_classifier":
-            # The inherited detector sets _pipeline to None when transformers
-            # is missing or the model could not be fetched.
-            if hasattr(detector, "_pipeline"):
-                return detector._pipeline is not None
-            if hasattr(detector, "_available"):
-                return bool(detector._available)
-            return True
+    # The engine holds a DetectorRegistry on `_registry`; there is no public
+    # `detectors` attribute. Reading the wrong one silently yielded an empty
+    # list, which made this guard report every classifier as missing.
+    registry = getattr(engine, "_registry", None)
+    detectors: list[Any] = []
+    if registry is not None:
+        get = getattr(registry, "get", None)
+        if callable(get):
+            found = get("d022_semantic_classifier")
+            if found is not None:
+                detectors = [found]
+        if not detectors:
+            listed = getattr(registry, "_detectors", {}) or {}
+            detectors = list(listed.values() if isinstance(listed, dict) else listed)
+
+    for detector in detectors:
+        if getattr(detector, "detector_id", "") != "d022_semantic_classifier":
+            continue
+        # The detector loads its model lazily: `_available` is None and
+        # `_pipeline` is None until the first scan calls _ensure_pipeline().
+        # Reading that state directly reports a perfectly good classifier as
+        # missing, so ask the detector to resolve it.
+        ensure = getattr(detector, "_ensure_pipeline", None)
+        if callable(ensure):
+            try:
+                return bool(ensure())
+            except Exception:
+                return False
+        if getattr(detector, "_available", None) is not None:
+            return bool(detector._available)
+        return getattr(detector, "_pipeline", None) is not None
+    # d022 is enabled in configuration but absent from the registry.
     return False
 
 

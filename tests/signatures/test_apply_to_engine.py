@@ -213,21 +213,28 @@ def test_engine_sync_threats_explicit_verify_requires_public_key(engine) -> None
         )
 
 
-def test_engine_sync_threats_no_args_transitional_future_warning(engine) -> None:
-    """v0.7.2 transitional default: bare sync_threats(url) emits FutureWarning
-    but falls back to the legacy unverified path (which itself may fail for
-    other reasons — we only care about the warning being emitted first).
-    v0.8.0 will flip this to a hard ValueError.
+def test_engine_sync_threats_no_args_raises(engine) -> None:
+    """A bare sync_threats(url) call is refused — DEF-01 (FR-45).
+
+    This test previously asserted the v0.7.2 transitional behaviour: a
+    FutureWarning, then a fall back to the UNVERIFIED path. Its own
+    docstring said "v0.8.0 will flip this to a hard ValueError", which is
+    what COSMAC now does.
+
+    The fall-back mattered because verified feed content is merged into the
+    d030 custom-rules detector, so whoever served that URL could change
+    detection behaviour. A warning did not stop that; an exception does.
     """
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("always")
-        # Legacy path may fail for network / vault reasons — we only care
-        # that the FutureWarning fires first.
-        with contextlib.suppress(Exception):
-            engine.sync_threats("http://example.invalid/feed.json")
-        assert any(issubclass(wi.category, FutureWarning) for wi in w), (
-            "Bare sync_threats(url) call must emit FutureWarning naming v0.8.0"
-        )
+    with pytest.raises(ValueError, match="(?i)verif|key"):
+        engine.sync_threats("http://example.invalid/feed.json")
+
+
+def test_engine_sync_threats_unverified_still_possible_explicitly(engine) -> None:
+    """verify=False remains available, but the caller must say so in code."""
+    # It will still fail on the network, but it must get past the refusal
+    # above rather than raising the "refuses to run unverified" ValueError.
+    with contextlib.suppress(Exception):
+        engine.sync_threats("http://example.invalid/feed.json", verify=False)
 
 
 def test_engine_sync_threats_verify_false_deprecation_warning(engine) -> None:

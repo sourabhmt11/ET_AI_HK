@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import re
 import subprocess
+from collections import defaultdict
 import sys
 from pathlib import Path
 
@@ -87,17 +88,84 @@ def run_paths(manifest: dict, apply: bool) -> None:
             subprocess.run(["git", "rm", "-r", "-q", target], cwd=ROOT, check=True)
 
 
+def _replace_occurrences(text: str, old: str, new: str, which) -> tuple[str, int]:
+    """Replace selected 1-based occurrences of ``old``. ``which`` is 'all' or a list."""
+    if which == "all":
+        return text.replace(old, new), text.count(old)
+
+    wanted = set(which)
+    out: list[str] = []
+    index = 0
+    position = 0
+    replaced = 0
+    while True:
+        found = text.find(old, position)
+        if found == -1:
+            out.append(text[position:])
+            break
+        index += 1
+        out.append(text[position:found])
+        if index in wanted:
+            out.append(new)
+            replaced += 1
+        else:
+            out.append(old)
+        position = found + len(old)
+    return "".join(out), replaced
+
+
 def run_class_renames(manifest: dict, apply: bool) -> None:
+    missing: list[str] = []
+    # Apply every rule for a file in one pass, so occurrence numbering is
+    # computed against the original text rather than against a partly
+    # rewritten file.
+    by_file: dict[str, list[dict]] = defaultdict(list)
     for rule in manifest["class_renames"]:
-        path = ROOT / rule["file"]
+        by_file[rule["file"]].append(rule)
+
+    for rel, rules in by_file.items():
+        path = ROOT / rel
         if not path.exists():
-            print(f"  [skip] {rule['file']} (not present)")
+            print(f"  [skip] {rel} (not present)")
             continue
-        text = path.read_text(encoding="utf-8")
-        count = text.count(rule["from"])
-        print(f"  [class] {rule['file']}: {rule['from']} -> {rule['to']} ({count} occurrences)")
-        if apply and count:
-            path.write_text(text.replace(rule["from"], rule["to"]), encoding="utf-8")
+        original = path.read_text(encoding="utf-8")
+
+        # Build the replacement against the ORIGINAL occurrence order.
+        targets: dict[int, str] = {}
+        for rule in rules:
+            which = rule.get("occurrences", "all")
+            if which == "all":
+                total = original.count(rule["from"])
+                for i in range(1, total + 1):
+                    targets[i] = rule["to"]
+            else:
+                for i in which:
+                    targets[i] = rule["to"]
+
+        old = rules[0]["from"]
+        total = original.count(old)
+        unmapped = [i for i in range(1, total + 1) if i not in targets]
+        if unmapped:
+            missing.append(f"{rel}: occurrences {unmapped} have no target")
+
+        new_text = original
+        for occurrence, target in sorted(targets.items(), reverse=True):
+            new_text, _ = _replace_occurrences(new_text, old, target, [occurrence])
+
+        summary = ", ".join(
+            f"{i}->{targets[i].replace('Cosmac', '').replace('Middleware', '')}"
+            for i in sorted(targets)
+        )
+        print(f"  [class] {rel}: {total} occurrence(s) [{summary}]")
+        if apply and total:
+            path.write_text(new_text, encoding="utf-8")
+
+    if missing:
+        print("\n  !! UNMAPPED OCCURRENCES — these would fall through to the")
+        print("     generic PromptShield -> Cosmac rule and break the API:")
+        for line in missing:
+            print(f"       {line}")
+        raise SystemExit(1)
 
 
 def main() -> int:

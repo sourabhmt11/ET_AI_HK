@@ -1,8 +1,14 @@
 
 == class renames (three classes shared one name) ==
-  [skip] src/cosmac/integrations/fastapi_middleware.py (not present)
-  [skip] src/cosmac/integrations/flask_middleware.py (not present)
-  [skip] src/cosmac/integrations/django_middleware.py (not present)
+  [class] src/prompt_shield/integrations/fastapi_middleware.py: 1 occurrence(s) [1->ASGI]
+  [class] tests/integrations/test_fastapi_middleware.py: 2 occurrence(s) [1->ASGI, 2->ASGI]
+  [class] examples/fastapi_demo/app.py: 3 occurrence(s) [1->ASGI, 2->ASGI, 3->ASGI]
+  [class] examples/fastapi_demo/README.md: 1 occurrence(s) [1->ASGI]
+  [class] README.md: 2 occurrence(s) [1->ASGI, 2->ASGI]
+  [class] src/prompt_shield/integrations/flask_middleware.py: 1 occurrence(s) [1->Flask]
+  [class] src/prompt_shield/integrations/django_middleware.py: 1 occurrence(s) [1->Django]
+  [class] docs/integrations.md: 6 occurrence(s) [1->ASGI, 2->ASGI, 3->ASGI, 4->Flask, 5->Flask, 6->Django]
+  [class] docs/architecture.md: 3 occurrence(s) [1->ASGI, 2->Flask, 3->Django]
 
 == content rewrite ==
       3  .github/CODEOWNERS
@@ -95,7 +101,7 @@
       4  plugins/n8n/package.json
       3  plugins/pypi-alias/README.md
       4  plugins/pypi-alias/pyproject.toml
-     38  pyproject.toml
+     37  pyproject.toml
       8  smithery.yaml
       5  src/prompt_shield/__init__.py
       2  src/prompt_shield/__main__.py
@@ -154,6 +160,9 @@
       4  src/prompt_shield/detectors/d034_honeypot_tool.py
       6  src/prompt_shield/detectors/d035_perplexity_spectral.py
      29  src/prompt_shield/engine.py
+      7  src/prompt_shield/evaluation/__init__.py
+      2  src/prompt_shield/evaluation/cli.py
+      3  src/prompt_shield/evaluation/runner.py
      13  src/prompt_shield/exceptions.py
       1  src/prompt_shield/fatigue/__init__.py
       2  src/prompt_shield/feedback/auto_tuner.py
@@ -271,6 +280,8 @@
       1  tests/detectors/test_d033_topic_drift.py
       3  tests/detectors/test_d034_honeypot_tool.py
       3  tests/detectors/test_d035_perplexity_spectral.py
+      1  tests/evaluation/test_metrics.py
+      1  tests/evaluation/test_schema.py
       6  tests/fatigue/test_engine_integration.py
       1  tests/fatigue/test_tracker.py
       1  tests/fixtures/threat_feed/sample_threats.json
@@ -339,5 +350,5 @@
   [del ] prompt-shield-logo.png
   [del ] architecture.png
 
-DRY RUN: 2052 lines across 320 files
+DRY RUN: 2065 lines across 325 files
 Review this output with a second engineer before REP-06.

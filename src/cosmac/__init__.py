@@ -19,9 +19,9 @@ __version__ = "0.8.1"
 
 __all__ = [
     "Action",
+    "CosmacEngine",
     "DetectionResult",
     "MatchDetail",
-    "CosmacEngine",
     "ScanContext",
     "ScanReport",
     "Severity",

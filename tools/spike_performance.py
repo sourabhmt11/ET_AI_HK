@@ -79,7 +79,7 @@ def main() -> int:
 
     results: dict[str, object] = {
         "machine": f"{platform.system()} {platform.release()} / {platform.machine()} "
-                   f"/ Python {platform.python_version()}",
+        f"/ Python {platform.python_version()}",
         "note": "In-process scan latency. Not server latency; no network, no queueing.",
     }
 
@@ -114,8 +114,7 @@ def main() -> int:
     log("measuring d028 sequence alignment growth...")
     alignment = {}
     d028 = next(
-        (d for d in all_detectors
-         if getattr(d, "detector_id", "").startswith("d028")),
+        (d for d in all_detectors if getattr(d, "detector_id", "").startswith("d028")),
         None,
     )
     if d028 is None:

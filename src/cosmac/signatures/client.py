@@ -49,8 +49,7 @@ DEFAULT_FEED_URL: str = (
     "https://cdn.jsdelivr.net/gh/mthamil107/cosmac-signatures@main/v1/signatures.json"
 )
 DEFAULT_SIG_URL: str = (
-    "https://cdn.jsdelivr.net/gh/mthamil107/cosmac-signatures"
-    "@main/v1/signatures.json.minisig"
+    "https://cdn.jsdelivr.net/gh/mthamil107/cosmac-signatures@main/v1/signatures.json.minisig"
 )
 
 # Where we cache the last good feed so an offline client keeps working.

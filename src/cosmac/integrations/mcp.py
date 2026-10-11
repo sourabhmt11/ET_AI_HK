@@ -64,9 +64,7 @@ class CosmacMCPFilter:
             if report.detections:
                 if self.mode == "block":
                     self._stats["blocked"] += 1
-                    return (
-                        f"[Tool result blocked by cosmac: injection detected in {tool_name}]"
-                    )
+                    return f"[Tool result blocked by cosmac: injection detected in {tool_name}]"
                 elif self.mode == "sanitize":
                     self._stats["sanitized"] += 1
                     return sanitize_text(result_text, report, replacement=self.sanitize_replacement)

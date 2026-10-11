@@ -96,9 +96,7 @@ class CosmacAnthropic:
                     "('sanitize' is not supported by CosmacAnthropic); "
                     "pass tool_result_mode explicitly"
                 )
-            raise ValueError(
-                "tool_result_mode='sanitize' is not supported by CosmacAnthropic"
-            )
+            raise ValueError("tool_result_mode='sanitize' is not supported by CosmacAnthropic")
         valid_modes = ("block", "flag", "log", "monitor")
         if effective_tool_mode not in valid_modes:
             raise ValueError(

@@ -42,9 +42,7 @@ class CosmacFlaskMiddleware:
             # forward safely.
             if self.allow_unparsed:
                 return self.app(environ, start_response)
-            return self._refuse(
-                start_response, 400, "Could not read the request body."
-            )
+            return self._refuse(start_response, 400, "Could not read the request body.")
 
         if not body_bytes:
             return self.app(environ, start_response)
@@ -86,9 +84,7 @@ class CosmacFlaskMiddleware:
     @staticmethod
     def _refuse(start_response: Any, status: int, detail: str) -> list[bytes]:
         """Return a 4xx without calling the wrapped application."""
-        payload = json.dumps(
-            {"error": "Malformed request body", "detail": detail}
-        ).encode("utf-8")
+        payload = json.dumps({"error": "Malformed request body", "detail": detail}).encode("utf-8")
         start_response(
             f"{status} Bad Request",
             [

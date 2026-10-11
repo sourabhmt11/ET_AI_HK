@@ -90,8 +90,7 @@ def main() -> int:
     # Spec 9.1 "keep unchanged" — assert the rename did not take these too.
     missing = []
     joined = "\n".join(
-        p.read_text(encoding="utf-8", errors="ignore")
-        for p in tracked_text_files(manifest)
+        p.read_text(encoding="utf-8", errors="ignore") for p in tracked_text_files(manifest)
     )
     for token in manifest.get("must_not_change", []):
         if token not in joined:

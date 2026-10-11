@@ -299,7 +299,10 @@ class CosmacEngine:
         return str(ctx.get("trust", "")) not in self._UNTRUSTED_TIERS
 
     def _check_allowlist_blocklist(
-        self, input_text: str, scan_id: str, start: float,
+        self,
+        input_text: str,
+        scan_id: str,
+        start: float,
         ctx: dict[str, object] | None = None,
     ) -> ScanReport | None:
         """Short-circuit on allowlist or blocklist match; else return None.

@@ -28,9 +28,9 @@ from pathlib import Path
 from typing import Any
 
 from cosmac.evaluation.metrics import Proportion
-from cosmac.evaluation.schema import EvalSample, check_independence, load_samples
+from cosmac.evaluation.schema import check_independence, load_samples
 
-__all__ = ["EvalResult", "ClassifierUnavailableError", "run_evaluation", "write_report"]
+__all__ = ["ClassifierUnavailableError", "EvalResult", "run_evaluation", "write_report"]
 
 # Length buckets for latency reporting (NFR-3).
 LENGTH_BUCKETS: list[tuple[str, int, int]] = [
@@ -56,7 +56,9 @@ def _git_commit() -> str:
     try:
         return subprocess.run(
             ["git", "rev-parse", "HEAD"],
-            capture_output=True, text=True, check=True,
+            capture_output=True,
+            text=True,
+            check=True,
         ).stdout.strip()
     except (subprocess.CalledProcessError, FileNotFoundError, OSError):
         return "unknown"
@@ -110,8 +112,8 @@ class EvalResult:
 
 def _classifier_loaded(engine: Any) -> bool:
     """True when d022 is enabled in config and actually has a model."""
-    detectors = getattr(engine, "_ps_config", {}).get("detectors", {})
-    cfg = detectors.get("d022_semantic_classifier", {})
+    detector_config = getattr(engine, "_ps_config", {}).get("detectors", {})
+    cfg = detector_config.get("d022_semantic_classifier", {})
     if not cfg.get("enabled", False):
         return True  # explicitly disabled is a choice, not a silent failure
 
@@ -223,9 +225,7 @@ def run_evaluation(
         bucket: {
             "n": len(values),
             "p50": round(statistics.median(values), 2),
-            "p95": round(
-                sorted(values)[min(len(values) - 1, int(len(values) * 0.95))], 2
-            ),
+            "p95": round(sorted(values)[min(len(values) - 1, int(len(values) * 0.95))], 2),
         }
         for bucket, values in sorted(latencies.items())
         if values
@@ -255,12 +255,8 @@ def run_evaluation(
         header=header,
         attack_overall=Proportion(attack_hits, attack_total),
         benign_block_rate=Proportion(benign_blocked, benign_total),
-        by_attack_type={
-            k: Proportion(type_hits[k], type_total[k]) for k in sorted(type_total)
-        },
-        by_source={
-            k: Proportion(source_hits[k], source_total[k]) for k in sorted(source_total)
-        },
+        by_attack_type={k: Proportion(type_hits[k], type_total[k]) for k in sorted(type_total)},
+        by_source={k: Proportion(source_hits[k], source_total[k]) for k in sorted(source_total)},
         latency_ms=latency_summary,
         independence={
             "total": independence.total,
@@ -279,9 +275,7 @@ def write_report(result: EvalResult, out_dir: str | Path) -> tuple[Path, Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     json_path = out_dir / "results.json"
-    json_path.write_text(
-        json.dumps(result.to_dict(), indent=2, sort_keys=False), encoding="utf-8"
-    )
+    json_path.write_text(json.dumps(result.to_dict(), indent=2, sort_keys=False), encoding="utf-8")
 
     h = result.header
     lines = [

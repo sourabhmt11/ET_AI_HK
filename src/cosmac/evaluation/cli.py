@@ -25,17 +25,22 @@ def eval_group() -> None:
 
 @eval_group.command("run")
 @click.option(
-    "--set", "set_path", required=True,
+    "--set",
+    "set_path",
+    required=True,
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
     help="JSONL sample set in the EVL-01 schema.",
 )
 @click.option(
-    "--out", "out_dir", default="eval-out",
+    "--out",
+    "out_dir",
+    default="eval-out",
     type=click.Path(file_okay=False, path_type=Path),
     help="Directory for results.json and report.md.",
 )
 @click.option(
-    "--allow-missing-classifier", is_flag=True,
+    "--allow-missing-classifier",
+    is_flag=True,
     help=(
         "Run even if d022 did not load. The report records the classifier as "
         "unavailable; the figures are NOT comparable with a normal run."
@@ -44,9 +49,7 @@ def eval_group() -> None:
 def eval_run(set_path: Path, out_dir: Path, allow_missing_classifier: bool) -> None:
     """Run a sample set through the shipped default configuration."""
     try:
-        result = run_evaluation(
-            set_path, require_classifier=not allow_missing_classifier
-        )
+        result = run_evaluation(set_path, require_classifier=not allow_missing_classifier)
     except ClassifierUnavailableError as exc:
         click.echo(f"error: {exc}", err=True)
         sys.exit(2)
@@ -73,7 +76,9 @@ def eval_run(set_path: Path, out_dir: Path, allow_missing_classifier: bool) -> N
 
 @eval_group.command("check")
 @click.option(
-    "--set", "set_path", required=True,
+    "--set",
+    "set_path",
+    required=True,
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
     help="JSONL sample set to validate.",
 )

@@ -128,9 +128,7 @@ class TestCosmacAnthropic:
         response.content = [text_block]
         mock_anthropic_client.messages.create.return_value = response
 
-        shield = CosmacAnthropic(
-            client=mock_anthropic_client, engine=engine, scan_responses=True
-        )
+        shield = CosmacAnthropic(client=mock_anthropic_client, engine=engine, scan_responses=True)
         result = shield.create(
             model="claude-sonnet-4-20250514",
             max_tokens=1024,

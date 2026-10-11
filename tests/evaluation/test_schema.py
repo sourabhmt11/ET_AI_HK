@@ -27,9 +27,7 @@ VALID = {
 
 def write_jsonl(tmp_path, rows, name="set.jsonl"):
     path = tmp_path / name
-    path.write_text(
-        "\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8"
-    )
+    path.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
     return path
 
 
@@ -162,7 +160,8 @@ class TestShippedProbeSet:
             pytest.skip("probe_set_v1.jsonl not generated")
         samples = load_samples(path)
         content_borne = [
-            s for s in samples
+            s
+            for s in samples
             if s.attack_type in {"tool_abuse", "indirect_injection", "context_poisoning"}
         ]
         assert content_borne

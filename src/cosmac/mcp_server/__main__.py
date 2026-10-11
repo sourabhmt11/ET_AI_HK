@@ -110,8 +110,7 @@ def main() -> int:
         import mcp  # noqa: F401  # runtime existence check
     except ImportError:
         sys.stderr.write(
-            "cosmac-mcp requires the 'mcp' Python SDK. Install with:\n"
-            "  pip install 'cosmac[mcp]'\n"
+            "cosmac-mcp requires the 'mcp' Python SDK. Install with:\n  pip install 'cosmac[mcp]'\n"
         )
         return 2
 
@@ -138,9 +137,7 @@ def main() -> int:
         )
         return 1
     except Exception:
-        logging.getLogger("cosmac.mcp_server").exception(
-            "MCP server terminated with an error"
-        )
+        logging.getLogger("cosmac.mcp_server").exception("MCP server terminated with an error")
         return 1
     return 0
 

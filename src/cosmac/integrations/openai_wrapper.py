@@ -68,9 +68,7 @@ class CosmacOpenAI:
 
                 client = OpenAI()
             except ImportError as exc:
-                raise ImportError(
-                    "Install openai extras: pip install cosmac[openai]"
-                ) from exc
+                raise ImportError("Install openai extras: pip install cosmac[openai]") from exc
         self._client = client
         self._engine = engine or CosmacEngine()
         self.mode = mode

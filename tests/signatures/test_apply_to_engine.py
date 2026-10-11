@@ -225,7 +225,7 @@ def test_engine_sync_threats_no_args_raises(engine) -> None:
     d030 custom-rules detector, so whoever served that URL could change
     detection behaviour. A warning did not stop that; an exception does.
     """
-    with pytest.raises(ValueError, match="(?i)verif|key"):
+    with pytest.raises(ValueError, match=r"(?i)verif|key"):
         engine.sync_threats("http://example.invalid/feed.json")
 
 

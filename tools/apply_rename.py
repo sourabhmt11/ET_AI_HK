@@ -15,8 +15,8 @@ from __future__ import annotations
 import argparse
 import re
 import subprocess
-from collections import defaultdict
 import sys
+from collections import defaultdict
 from pathlib import Path
 
 import yaml

@@ -67,7 +67,7 @@ def main() -> int:
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     if re.search(r'(?m)^version\s*=\s*"', pyproject):
         problems.append(
-            "  pyproject.toml: has a literal `version = \"...\"`. It should use "
+            '  pyproject.toml: has a literal `version = "..."`. It should use '
             '`dynamic = ["version"]` with [tool.hatch.version] so the package '
             "stays the single source (REP-09)."
         )

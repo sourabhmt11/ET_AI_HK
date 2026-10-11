@@ -97,7 +97,7 @@ class TestFeedRefusesUnverified:
             },
             data_dir=str(tmp_path),
         )
-        with pytest.raises((ValueError, RuntimeError), match="(?i)verif|key"):
+        with pytest.raises((ValueError, RuntimeError), match=r"(?i)verif|key"):
             engine.sync_threats(feed_url="https://example.invalid/feed.json")
 
     def test_sync_with_no_url_raises(self, tmp_path):

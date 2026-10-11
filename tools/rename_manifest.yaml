@@ -219,6 +219,8 @@ exclude_paths:
   - docs/licences.md        # licence register names upstream artefacts
   - tools/rename_manifest.yaml   # the manifest is the record of the rename
   - tools/apply_rename.py
+  - tools/check_old_names.py     # contains the patterns it searches for
+  - docs/project-status.md       # records what the removed files claimed
   - paper/                  # upstream paper, unchanged
   - CHANGELOG.md            # history is a record; new entries are appended
   - docs/cosmac/            # the COSMAC spec deliberately names the upstream
@@ -247,6 +249,14 @@ exclude_line_patterns:
   - 'sentence-transformers/'          # model ID
   - 'distilgpt2'                      # model ID
   - 'upstream-v0\.8\.1'               # the baseline tag
+
+  # Explicit per-line opt-out. A line carrying the marker `rename-ok` keeps
+  # the old name on purpose. Use it only where the old name is REQUIRED:
+  #   - legally required attribution (Apache 2.0 / NOTICE)
+  #   - code that must match the old literal to reject it
+  #   - the rename tooling's own patterns
+  # Every use must say why on the same line.
+  - 'rename-ok'
 
 # ---------------------------------------------------------------------------
 # Identifiers that must NOT change (spec 9.1 "keep unchanged"). The verifier

@@ -120,9 +120,7 @@ def load_jailbreakbench(cache_dir: str | None = None) -> list[BenchmarkSample]:
     combined: dict[str, list[dict[str, Any]]] = {}
     for split in ("harmful", "benign"):
         try:
-            req = urllib.request.Request(
-                base.format(split=split), headers={"User-Agent": "cosmac"}
-            )
+            req = urllib.request.Request(base.format(split=split), headers={"User-Agent": "cosmac"})
             with urllib.request.urlopen(req, timeout=30) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
         except (urllib.error.URLError, OSError, json.JSONDecodeError) as exc:

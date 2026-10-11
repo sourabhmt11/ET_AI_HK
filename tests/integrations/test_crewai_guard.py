@@ -8,8 +8,8 @@ from unittest.mock import MagicMock
 import pytest
 
 from cosmac.integrations.crewai_guard import (
-    CrewAIGuard,
     CosmacCrewAITool,
+    CrewAIGuard,
 )
 
 # ---------------------------------------------------------------------------

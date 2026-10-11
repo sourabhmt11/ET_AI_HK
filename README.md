@@ -12,7 +12,7 @@
 ---
 
 > **Status: phase 0.** COSMAC is a product build in progress. This repository
-> is a renamed derivative of prompt-shield v0.8.1 (see [`NOTICE`](NOTICE)) with
+> is a renamed derivative of prompt-shield v0.8.1 (see [`NOTICE`](NOTICE)) with <!-- rename-ok: required attribution -->
 > the phase 0 foundation work applied. The ingestion, canonicalisation,
 > neutralisation and gateway components described in the specification are
 > **not built yet** — they are phase 1.
@@ -31,7 +31,7 @@ honestly with its sample count and interval.
 control for an agent with write-capable tools. No figure in this repository
 comes from a sealed or independent test set yet.
 
-**The benchmark figures published by prompt-shield are not COSMAC's** and are
+**The benchmark figures published by prompt-shield are not COSMAC's** and are <!-- rename-ok: required attribution -->
 not reproduced here. COSMAC publishes only what `cosmac eval run` measured on
 this code — see [Evaluation](#evaluation).
 
@@ -197,10 +197,10 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Licence and attribution
 
-Apache 2.0. COSMAC is a derivative of prompt-shield v0.8.1; see
+Apache 2.0. COSMAC is a derivative of prompt-shield v0.8.1; see <!-- rename-ok: required attribution -->
 [`NOTICE`](NOTICE) for the derivation and a summary of changes, and
 [`docs/licences.md`](docs/licences.md) for the licence register covering
 models, datasets and extraction libraries.
 
-Apache 2.0 grants no trademark rights. COSMAC does not use the prompt-shield
+Apache 2.0 grants no trademark rights. COSMAC does not use the prompt-shield <!-- rename-ok: required attribution -->
 name, logo or badge as its own branding.

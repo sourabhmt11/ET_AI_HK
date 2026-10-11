@@ -8,6 +8,7 @@ registry without a test failing.
 
 from __future__ import annotations
 
+import contextlib
 import re
 from pathlib import Path
 
@@ -25,10 +26,8 @@ def registry_count() -> int:
     from cosmac.registry import DetectorRegistry
 
     registry = DetectorRegistry()
-    try:
-        registry.discover()
-    except AttributeError:
-        pass
+    with contextlib.suppress(AttributeError):
+        registry.auto_discover()
     detectors = getattr(registry, "detectors", None) or getattr(registry, "_detectors", {})
     return len(detectors)
 
@@ -72,9 +71,7 @@ def test_readme_makes_no_metrics_claim():
     text = README.read_text(encoding="utf-8")
     # Mentioning it to say it does NOT exist is required; claiming it does is not.
     bad = re.search(r"Prometheus\s+`?/metrics`?\s+observability", text, re.IGNORECASE)
-    assert not bad, (
-        "README advertises a /metrics endpoint. api.py serves no such route."
-    )
+    assert not bad, "README advertises a /metrics endpoint. api.py serves no such route."
     assert "no `/metrics` route" in text.lower() or "there is no `/metrics`" in text.lower(), (
         "README should state plainly that /metrics is not served"
     )

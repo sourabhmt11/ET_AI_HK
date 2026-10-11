@@ -94,20 +94,23 @@ def main() -> int:
         "",
     ]
     if base is None:
-        lines.append(
-            "> No merge-base result to compare against; showing this branch only."
-        )
+        lines.append("> No merge-base result to compare against; showing this branch only.")
         lines.append("")
+
+    base_overall = (base or {}).get("attack_detection_overall")
+    base_benign = (base or {}).get("benign_block_rate")
+    head_overall = head["attack_detection_overall"]
+    head_benign = head["benign_block_rate"]
 
     lines += [
         "| Measure | This branch | Δ vs base |",
         "|---|---|---|",
-        f"| **Attack detection, overall** | {fmt(head['attack_detection_overall'])} | "
-        f"{delta(head['attack_detection_overall'], (base or {}).get('attack_detection_overall'))}"
-        f"{flag(head['attack_detection_overall'], (base or {}).get('attack_detection_overall'), DROP_OVERALL, False)} |",
-        f"| **Benign block rate** | {fmt(head['benign_block_rate'])} | "
-        f"{delta(head['benign_block_rate'], (base or {}).get('benign_block_rate'))}"
-        f"{flag(head['benign_block_rate'], (base or {}).get('benign_block_rate'), RISE_BENIGN, True)} |",
+        f"| **Attack detection, overall** | {fmt(head_overall)} | "
+        f"{delta(head_overall, base_overall)}"
+        f"{flag(head_overall, base_overall, DROP_OVERALL, False)} |",
+        f"| **Benign block rate** | {fmt(head_benign)} | "
+        f"{delta(head_benign, base_benign)}"
+        f"{flag(head_benign, base_benign, RISE_BENIGN, True)} |",
         "",
         "#### By attack type",
         "",

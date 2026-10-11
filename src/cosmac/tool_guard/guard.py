@@ -335,8 +335,7 @@ class ToolResultGuard:
         source_desc = f"tool_result[{tool_name or '?'}]"
         if self.mode == "block":
             raise ValueError(
-                f"cosmac BLOCKED {source_desc} "
-                f"(scan_id={report.scan_id}, families={families})"
+                f"cosmac BLOCKED {source_desc} (scan_id={report.scan_id}, families={families})"
             )
         if self.mode == "flag":
             logger.warning(

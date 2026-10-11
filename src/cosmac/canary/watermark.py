@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-
+import contextlib
 import hashlib
 import hmac
+from pathlib import Path
 
 # Unicode invisible characters used to encode watermark bits.
 WATERMARK_CHARS = [
@@ -37,25 +37,34 @@ class CanaryWatermark:
         Different secrets produce different watermarks.
     """
 
-    #: The inherited code shipped the literal default secret "prompt-shield".
+    #: The inherited code shipped a literal default secret. rename-ok: the
+    #: old value must appear verbatim below so it can be rejected.
     #: A watermark keyed by a secret every installation shares is forgeable by
     #: anyone who reads the source, so REP-08 refuses the known defaults and
     #: generates a per-install secret when none is supplied.
-    _REJECTED_SECRETS = frozenset({"prompt-shield", "cosmac", "", None})
+    _REJECTED_SECRETS = frozenset(
+        {
+            "prompt-shield",  # rename-ok: the old literal, kept so it can be refused
+            "cosmac",
+            "",
+        }
+    )
 
     def __init__(self, secret: str | None = None) -> None:
-        if secret in self._REJECTED_SECRETS:
-            if secret is not None:
-                raise ValueError(
-                    f"{secret!r} is a known default watermark secret and is "
-                    "refused: a secret shared by every installation can be "
-                    "forged by anyone who reads the source (REP-08). Pass a "
-                    "secret of your own, or omit the argument to generate a "
-                    "per-install secret."
-                )
-            secret = self._generate_install_secret()
-        self._secret = secret
-        self._sequence = self._derive_sequence(secret)
+        if secret is None:
+            resolved = self._generate_install_secret()
+        elif secret in self._REJECTED_SECRETS:
+            raise ValueError(
+                f"{secret!r} is a known default watermark secret and is "
+                "refused: a secret shared by every installation can be "
+                "forged by anyone who reads the source (REP-08). Pass a "
+                "secret of your own, or omit the argument to generate a "
+                "per-install secret."
+            )
+        else:
+            resolved = secret
+        self._secret = resolved
+        self._sequence = self._derive_sequence(resolved)
 
     @staticmethod
     def _generate_install_secret() -> str:
@@ -79,10 +88,8 @@ class CanaryWatermark:
             generated = secrets.token_urlsafe(32)
             secret_path.parent.mkdir(parents=True, exist_ok=True)
             secret_path.write_text(generated, encoding="utf-8")
-            try:  # best effort; POSIX only
+            with contextlib.suppress(OSError):  # best effort; POSIX only
                 secret_path.chmod(0o600)
-            except OSError:
-                pass
             return generated
         except OSError:
             # Read-only deployment: a process-lifetime secret still beats a

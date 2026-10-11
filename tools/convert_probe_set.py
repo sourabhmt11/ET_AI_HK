@@ -72,7 +72,8 @@ RETRIEVED_FAMILIES = {"tool_abuse", "indirect_injection", "context_poisoning"}
 
 
 def convert() -> int:
-    rows = [json.loads(line) for line in SRC.read_text(encoding="utf-8").splitlines() if line.strip()]
+    raw_lines = SRC.read_text(encoding="utf-8").splitlines()
+    rows = [json.loads(line) for line in raw_lines if line.strip()]
     out: list[dict] = []
 
     for row in rows:
@@ -93,9 +94,7 @@ def convert() -> int:
             attack_type = "unclassified"
 
         source_type = (
-            SOURCE_BY_STYLE.get(style)
-            or SOURCE_BY_CATEGORY.get(category)
-            or "user_message"
+            SOURCE_BY_STYLE.get(style) or SOURCE_BY_CATEGORY.get(category) or "user_message"
         )
 
         # Relabelling 2: content-borne families are retrieved, not user input.
@@ -133,7 +132,8 @@ def convert() -> int:
     # already labelled benign upstream, so relabelling 1 is a no-op
     # safeguard; relabelling 2 does move rows.
     relabelled_short = sum(
-        1 for src, dst in zip(rows, out)
+        1
+        for src, dst in zip(rows, out, strict=True)
         if src["category"] == "short_fragment" and src["label"] != dst["label"]
     )
     retrieved = sum(1 for r in out if r["trust"] == "retrieved")

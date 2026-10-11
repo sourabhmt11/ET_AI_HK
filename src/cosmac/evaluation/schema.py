@@ -129,8 +129,11 @@ class EvalSample:
 
     @classmethod
     def from_dict(cls, raw: dict[str, Any]) -> EvalSample:
-        missing = [f for f in ("id", "label", "text", "source_type", "trust", "split", "author")
-                   if f not in raw]
+        missing = [
+            f
+            for f in ("id", "label", "text", "source_type", "trust", "split", "author")
+            if f not in raw
+        ]
         if missing:
             raise SchemaError(f"sample {raw.get('id', '<no id>')}: missing field(s) {missing}")
         span = raw.get("injected_span")
@@ -139,9 +142,19 @@ class EvalSample:
                 raise SchemaError(f"{raw['id']}: injected_span must be [start, end]")
             span = (int(span[0]), int(span[1]))
         known = {
-            "id", "label", "text", "source_type", "trust", "split", "author",
-            "attack_type", "payload_id", "carrier_id", "injected_span",
-            "file_ref", "notes",
+            "id",
+            "label",
+            "text",
+            "source_type",
+            "trust",
+            "split",
+            "author",
+            "attack_type",
+            "payload_id",
+            "carrier_id",
+            "injected_span",
+            "file_ref",
+            "notes",
         }
         return cls(
             id=str(raw["id"]),
@@ -228,11 +241,13 @@ class IndependenceReport:
             f"independent carriers: {self.independent_carriers}",
         ]
         if self.shared_payload_groups:
-            lines.append(f"payload IDs reused by more than one sample: "
-                         f"{len(self.shared_payload_groups)}")
+            lines.append(
+                f"payload IDs reused by more than one sample: {len(self.shared_payload_groups)}"
+            )
         if self.shared_carrier_groups:
-            lines.append(f"carrier IDs reused by more than one sample: "
-                         f"{len(self.shared_carrier_groups)}")
+            lines.append(
+                f"carrier IDs reused by more than one sample: {len(self.shared_carrier_groups)}"
+            )
         return "\n".join(lines)
 
 

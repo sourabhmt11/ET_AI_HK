@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d024_multilingual_injection import (
+from cosmac.detectors.d024_multilingual_injection import (
     MultilingualInjectionDetector,
 )
 

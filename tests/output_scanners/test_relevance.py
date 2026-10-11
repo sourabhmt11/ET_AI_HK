@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from prompt_shield.output_scanners.relevance import RelevanceScanner
+from cosmac.output_scanners.relevance import RelevanceScanner
 
 
 class TestRelevanceScanner:

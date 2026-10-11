@@ -4,7 +4,7 @@ Each sample is a ``(text, expected_families, is_attack)`` triple. Tests
 that assert taxonomy precision use ``expected_families`` as the ground
 truth; end-to-end tests use ``is_attack`` for the binary attack-vs-clean
 signal. Samples are hand-authored to cover the 8 attack families defined
-in :class:`~prompt_shield.models.ToolResultAttackFamily`.
+in :class:`~cosmac.models.ToolResultAttackFamily`.
 
 Never add real production data or personal identifiers here — samples
 are synthetic attack strings intentionally crafted for detection.
@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from prompt_shield.models import ToolResultAttackFamily as F
+from cosmac.models import ToolResultAttackFamily as F
 
 
 @dataclass(frozen=True)

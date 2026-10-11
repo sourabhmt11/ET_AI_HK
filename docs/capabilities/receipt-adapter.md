@@ -29,7 +29,7 @@ Callers who need freshness guarantees should use `JWSAdapter` with `exp` claim r
 
 ## Adjacent projects (interop, not competitors)
 
-prompt-shield is the content-scanning layer. Capability enforcement itself lives in projects like these; a real deployment usually runs both.
+cosmac is the content-scanning layer. Capability enforcement itself lives in projects like these; a real deployment usually runs both.
 
 - [`invariantlabs-ai/invariant`](https://github.com/invariantlabs-ai/invariant) — Apache-2.0, guardrails on tool calls and data flows, MCP gateway
 - [`ananthaprakashb/mcp-gate`](https://github.com/ananthaprakashb/mcp-gate) — ephemeral HMAC-signed capability tokens for MCP
@@ -43,13 +43,13 @@ prompt-shield is the content-scanning layer. Capability enforcement itself lives
 
 Installation:
 ```
-pip install prompt-shield-ai[capabilities-pipelock]
+pip install cosmac[capabilities-pipelock]
 ```
 
 Usage:
 ```python
-from prompt_shield.tool_guard import ToolResultGuard
-from prompt_shield.capabilities.pipelock import PipelockAdapter
+from cosmac.tool_guard import ToolResultGuard
+from cosmac.capabilities.pipelock import PipelockAdapter
 
 guard = ToolResultGuard(mode="flag")
 # public_key_hex is REQUIRED — passing None trusts the receipt's embedded
@@ -81,12 +81,12 @@ Verdict mapping (from the Pipelock spec):
 
 Installation:
 ```
-pip install prompt-shield-ai[capabilities-jws]
+pip install cosmac[capabilities-jws]
 ```
 
 Usage:
 ```python
-from prompt_shield.capabilities.jws import JWSAdapter
+from cosmac.capabilities.jws import JWSAdapter
 
 adapter = JWSAdapter(
     verification_key=public_key_pem,           # or shared secret for HS256
@@ -120,7 +120,7 @@ report = guard.scan(
 Any object implementing the `ReceiptAdapter` protocol works:
 
 ```python
-from prompt_shield.capabilities import ReceiptAdapter, ReceiptVerification
+from cosmac.capabilities import ReceiptAdapter, ReceiptVerification
 
 class MyAdapter:
     name = "custom"

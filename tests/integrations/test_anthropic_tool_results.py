@@ -8,11 +8,11 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.integrations.anthropic_wrapper import (
-    PromptShieldAnthropic,
+from cosmac.integrations.anthropic_wrapper import (
+    CosmacAnthropic,
     _extract_tool_result_text,
 )
-from prompt_shield.models import ToolResultAttackFamily
+from cosmac.models import ToolResultAttackFamily
 
 
 class _StubMessages:
@@ -61,7 +61,7 @@ class TestExtractToolResultText:
 
 class TestToolResultBlockScanning:
     def _wrap(self, engine, **kwargs):
-        return PromptShieldAnthropic(
+        return CosmacAnthropic(
             client=_StubClient(),
             engine=engine,
             **kwargs,
@@ -230,7 +230,7 @@ class TestToolResultBlockScanning:
 
 class TestFamiliesInException:
     def test_block_message_names_families(self, engine):
-        shield = PromptShieldAnthropic(
+        shield = CosmacAnthropic(
             client=_StubClient(),
             engine=engine,
             mode="block",

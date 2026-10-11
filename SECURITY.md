@@ -9,7 +9,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in prompt-shield, please report it responsibly.
+If you discover a security vulnerability in cosmac, please report it responsibly.
 
 **Do NOT open a public GitHub issue for security vulnerabilities.**
 
@@ -31,11 +31,11 @@ private vulnerability reporting feature on this repository.
 
 ## Security Considerations
 
-prompt-shield is a **detection** tool, not a guarantee of security. It should be used as one layer in a defense-in-depth strategy.
+cosmac is a **detection** tool, not a guarantee of security. It should be used as one layer in a defense-in-depth strategy.
 
 ### Data Privacy
 
-- By default, prompt-shield **never stores raw input text** in its database
+- By default, cosmac **never stores raw input text** in its database
 - Only SHA-256 hashes and vector embeddings are persisted
 - The `history.store_input_text` config option exists but defaults to `false`
 - Threat feed exports contain only hashes and embeddings, never raw attack text

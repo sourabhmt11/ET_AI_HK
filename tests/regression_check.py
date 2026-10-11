@@ -1,4 +1,4 @@
-"""Regression gate for prompt-shield.
+"""Regression gate for cosmac.
 
 Re-runs the fast benchmark harness and compares results against
 ``tests/baseline_v0.3.3.txt``. Fails (non-zero exit) if any of the
@@ -189,7 +189,7 @@ def _compare(baseline: dict[str, float], current: dict[str, Any], *, verbose: bo
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="prompt-shield regression gate")
+    parser = argparse.ArgumentParser(description="cosmac regression gate")
     parser.add_argument(
         "--skip-pytest",
         action="store_true",

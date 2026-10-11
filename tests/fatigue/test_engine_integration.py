@@ -9,9 +9,9 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from prompt_shield.detectors.base import BaseDetector
-from prompt_shield.engine import PromptShieldEngine
-from prompt_shield.models import DetectionResult, Severity
+from cosmac.detectors.base import BaseDetector
+from cosmac.engine import CosmacEngine
+from cosmac.models import DetectionResult, Severity
 
 
 class _FixedConfidenceDetector(BaseDetector):
@@ -43,10 +43,10 @@ def _build_engine(
     min_samples: int = 5,
     trigger_ratio: float = 0.3,
     threshold: float = 0.7,
-) -> PromptShieldEngine:
-    engine = PromptShieldEngine(
+) -> CosmacEngine:
+    engine = CosmacEngine(
         config_dict={
-            "prompt_shield": {
+            "cosmac": {
                 "mode": "block",
                 "threshold": threshold,
                 "parallel": False,

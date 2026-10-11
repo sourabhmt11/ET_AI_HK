@@ -6,7 +6,7 @@ import re
 
 import pytest
 
-from prompt_shield.canary.token_generator import CanaryTokenGenerator
+from cosmac.canary.token_generator import CanaryTokenGenerator
 
 
 @pytest.fixture

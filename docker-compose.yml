@@ -1,12 +1,12 @@
 services:
-  prompt-shield:
+  cosmac:
     build: .
     ports:
       - "8000:8000"
     environment:
-      - PROMPT_SHIELD_MODE=block
-      - PROMPT_SHIELD_THRESHOLD=0.7
-      - PROMPT_SHIELD_DATA_DIR=/home/shield/data
+      - COSMAC_MODE=block
+      - COSMAC_THRESHOLD=0.7
+      - COSMAC_DATA_DIR=/home/shield/data
     volumes:
       - shield-data:/home/shield/data
     healthcheck:

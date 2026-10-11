@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install prompt-shield with [all] extras
+      - name: Install cosmac with [all] extras
         # [all] pulls in every optional dep referenced by the README
         # examples (ml, langchain, llamaindex, haystack, pydantic-ai,
         # crewai, mcp, openai, anthropic, fastapi, flask, django,

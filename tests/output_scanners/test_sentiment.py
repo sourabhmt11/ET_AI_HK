@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.output_scanners.sentiment import SentimentOutputScanner
+from cosmac.output_scanners.sentiment import SentimentOutputScanner
 
 
 @pytest.fixture

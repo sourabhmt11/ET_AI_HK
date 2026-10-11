@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d019_dual_persona import DualPersonaDetector
+from cosmac.detectors.d019_dual_persona import DualPersonaDetector
 
 
 @pytest.fixture

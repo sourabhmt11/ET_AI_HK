@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d006_multi_turn_escalation import (
+from cosmac.detectors.d006_multi_turn_escalation import (
     MultiTurnEscalationDetector,
 )
 

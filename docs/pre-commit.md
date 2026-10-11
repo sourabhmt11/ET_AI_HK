@@ -1,6 +1,6 @@
 # Pre-commit Hook Integration
 
-Prompt Shield provides pre-commit hooks that scan staged files for prompt
+COSMAC provides pre-commit hooks that scan staged files for prompt
 injection patterns and PII before every commit. This catches security issues
 early, before they enter your repository.
 
@@ -8,8 +8,8 @@ early, before they enter your repository.
 
 | Hook ID | Description |
 |---------|-------------|
-| `prompt-shield-scan` | Scans for prompt injection patterns (role hijacking, instruction override, etc.) |
-| `prompt-shield-pii` | Scans for PII (emails, phone numbers, SSNs, credit card numbers, etc.) |
+| `cosmac-scan` | Scans for prompt injection patterns (role hijacking, instruction override, etc.) |
+| `cosmac-pii` | Scans for PII (emails, phone numbers, SSNs, credit card numbers, etc.) |
 
 ## Setup
 
@@ -26,8 +26,8 @@ repos:
   - repo: https://github.com/mthamil107/prompt-shield
     rev: v0.3.0
     hooks:
-      - id: prompt-shield-scan
-      - id: prompt-shield-pii
+      - id: cosmac-scan
+      - id: cosmac-pii
 ```
 
 ### 3. Install the hooks
@@ -36,7 +36,7 @@ repos:
 pre-commit install
 ```
 
-Now Prompt Shield will automatically scan every staged text file when you run
+Now COSMAC will automatically scan every staged text file when you run
 `git commit`.
 
 ## Configuration
@@ -51,7 +51,7 @@ repos:
   - repo: https://github.com/mthamil107/prompt-shield
     rev: v0.3.0
     hooks:
-      - id: prompt-shield-scan
+      - id: cosmac-scan
         args: ["--threshold", "0.8"]
 ```
 
@@ -64,9 +64,9 @@ repos:
   - repo: https://github.com/mthamil107/prompt-shield
     rev: v0.3.0
     hooks:
-      - id: prompt-shield-scan
+      - id: cosmac-scan
         args: ["--exclude", "*.min.js", "--exclude", "vendor/*"]
-      - id: prompt-shield-pii
+      - id: cosmac-pii
         args: ["--exclude", "tests/fixtures/*"]
 ```
 
@@ -74,7 +74,7 @@ You can also use the built-in `exclude` key from pre-commit:
 
 ```yaml
 hooks:
-  - id: prompt-shield-scan
+  - id: cosmac-scan
     exclude: "^(vendor/|node_modules/)"
 ```
 
@@ -85,21 +85,21 @@ You do not need to enable both hooks. Pick the ones relevant to your project:
 ```yaml
 # Only scan for prompt injection
 hooks:
-  - id: prompt-shield-scan
+  - id: cosmac-scan
 ```
 
 ```yaml
 # Only scan for PII
 hooks:
-  - id: prompt-shield-pii
+  - id: cosmac-pii
 ```
 
 ## How It Works
 
 ### Prompt Injection Hook
 
-The `prompt-shield-scan` hook runs each staged text file through the
-PromptShieldEngine with a lightweight configuration optimized for speed:
+The `cosmac-scan` hook runs each staged text file through the
+CosmacEngine with a lightweight configuration optimized for speed:
 
 - Vault, feedback, canary, and history subsystems are disabled
 - The semantic classifier (which requires ML model downloads) is disabled
@@ -110,7 +110,7 @@ to be blocked.
 
 ### PII Hook
 
-The `prompt-shield-pii` hook uses the PIIRedactor to scan for common PII
+The `cosmac-pii` hook uses the PIIRedactor to scan for common PII
 patterns including:
 
 - Email addresses
@@ -145,14 +145,14 @@ FAIL prompts/system.txt — 2 detection(s), risk score 0.85
 Run the hooks against all files without committing:
 
 ```bash
-pre-commit run prompt-shield-scan --all-files
-pre-commit run prompt-shield-pii --all-files
+pre-commit run cosmac-scan --all-files
+pre-commit run cosmac-pii --all-files
 ```
 
 Run against specific files:
 
 ```bash
-pre-commit run prompt-shield-scan --files src/prompts/*.txt
+pre-commit run cosmac-scan --files src/prompts/*.txt
 ```
 
 ## CI Integration
@@ -161,9 +161,9 @@ Add to your CI pipeline to scan all files on every push:
 
 ```yaml
 # GitHub Actions example
-- name: Run Prompt Shield hooks
+- name: Run COSMAC hooks
   run: |
     pip install pre-commit
-    pre-commit run prompt-shield-scan --all-files
-    pre-commit run prompt-shield-pii --all-files
+    pre-commit run cosmac-scan --all-files
+    pre-commit run cosmac-pii --all-files
 ```

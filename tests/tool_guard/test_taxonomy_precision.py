@@ -10,8 +10,8 @@ detector recall — that's covered by ``tests/benchmark_*`` scripts.
 
 from __future__ import annotations
 
-from prompt_shield.models import Action
-from prompt_shield.tool_guard import ToolResultGuard
+from cosmac.models import Action
+from cosmac.tool_guard import ToolResultGuard
 from tests.fixtures.tool_result_attacks import (
     ATTACK_SAMPLES,
     CLEAN_SAMPLES,

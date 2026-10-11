@@ -19,7 +19,7 @@ from typing import Any
 import pytest
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
-from prompt_shield.signatures import (
+from cosmac.signatures import (
     SignaturesClient,
     SignatureVerificationError,
     apply_to_engine,
@@ -114,9 +114,9 @@ def signed_feed(keypair: tuple[Ed25519PrivateKey, bytes, str]):
 
 @pytest.fixture
 def engine(sample_config: dict[str, Any], tmp_data_dir):
-    from prompt_shield.engine import PromptShieldEngine
+    from cosmac.engine import CosmacEngine
 
-    return PromptShieldEngine(config_dict=sample_config, data_dir=str(tmp_data_dir))
+    return CosmacEngine(config_dict=sample_config, data_dir=str(tmp_data_dir))
 
 
 # ---------------------------------------------------------------------------

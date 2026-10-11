@@ -10,14 +10,14 @@ import pytest
 if TYPE_CHECKING:
     from pathlib import Path
 
-from prompt_shield.benchmarks.datasets import (
+from cosmac.benchmarks.datasets import (
     BenchmarkSample,
     list_datasets,
     load_csv_dataset,
     load_dataset,
     load_json_dataset,
 )
-from prompt_shield.exceptions import BenchmarkError
+from cosmac.exceptions import BenchmarkError
 
 
 class TestLoadSampleDataset:

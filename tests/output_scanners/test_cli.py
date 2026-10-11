@@ -1,4 +1,4 @@
-"""Tests for the `prompt-shield output` CLI commands."""
+"""Tests for the `cosmac output` CLI commands."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import json
 import pytest
 from click.testing import CliRunner
 
-from prompt_shield.cli import main
+from cosmac.cli import main
 
 
 @pytest.fixture()
@@ -54,7 +54,7 @@ def test_output_scan_cli_command_json(runner: CliRunner) -> None:
 
 
 def test_output_scanners_list_command(runner: CliRunner) -> None:
-    """`prompt-shield output scanners` lists all nine scanners."""
+    """`cosmac output scanners` lists all nine scanners."""
     result = runner.invoke(main, ["output", "scanners"])
     assert result.exit_code == 0
     for name in (

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from prompt_shield.normalization import NormalizationPipeline
+from cosmac.normalization import NormalizationPipeline
 
 
 class TestNFKC:

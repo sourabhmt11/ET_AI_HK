@@ -1,9 +1,9 @@
 # Configuration
 
-prompt-shield uses a layered configuration system. Settings are resolved in this priority order (highest first):
+cosmac uses a layered configuration system. Settings are resolved in this priority order (highest first):
 
 1. Environment variables
-2. `config_dict` parameter passed to `PromptShieldEngine()`
+2. `config_dict` parameter passed to `CosmacEngine()`
 3. YAML config file
 4. Built-in defaults
 
@@ -12,13 +12,13 @@ prompt-shield uses a layered configuration system. Settings are resolved in this
 Generate a default config file:
 
 ```bash
-prompt-shield config init -o prompt_shield.yaml
+cosmac config init -o cosmac.yaml
 ```
 
 Full reference:
 
 ```yaml
-prompt_shield:
+cosmac:
   # Operating mode: "block" (reject), "monitor" (log only), or "flag"
   mode: block
 
@@ -40,7 +40,7 @@ prompt_shield:
     output: stdout       # "stdout" or a file path
 
   # Data directory for vault, database, and models.
-  # null = auto-resolve (~/.prompt_shield or ./.prompt_shield)
+  # null = auto-resolve (~/.cosmac or ./.cosmac)
   data_dir: null
 
   # Attack vault (vector similarity store)
@@ -69,7 +69,7 @@ prompt_shield:
   threat_feed:
     enabled: true
     auto_sync: false
-    feed_url: "https://raw.githubusercontent.com/prompt-shield/threat-feed/main/feeds/latest.json"
+    feed_url: "https://raw.githubusercontent.com/cosmac/threat-feed/main/feeds/latest.json"
     sync_interval_hours: 24
 
   # Scan history persistence
@@ -100,18 +100,18 @@ prompt_shield:
 
 ## Environment Variables
 
-Override any setting with environment variables using the `PROMPT_SHIELD_` prefix:
+Override any setting with environment variables using the `COSMAC_` prefix:
 
 | Variable | Maps to | Example |
 |---|---|---|
-| `PROMPT_SHIELD_MODE` | `mode` | `monitor` |
-| `PROMPT_SHIELD_THRESHOLD` | `threshold` | `0.8` |
-| `PROMPT_SHIELD_DATA_DIR` | `data_dir` | `/tmp/ps` |
-| `PROMPT_SHIELD_VAULT_ENABLED` | `vault.enabled` | `false` |
-| `PROMPT_SHIELD_VAULT_SIMILARITY_THRESHOLD` | `vault.similarity_threshold` | `0.9` |
-| `PROMPT_SHIELD_FEEDBACK_ENABLED` | `feedback.enabled` | `false` |
-| `PROMPT_SHIELD_CANARY_ENABLED` | `canary.enabled` | `false` |
-| `PROMPT_SHIELD_LOGGING_LEVEL` | `logging.level` | `DEBUG` |
+| `COSMAC_MODE` | `mode` | `monitor` |
+| `COSMAC_THRESHOLD` | `threshold` | `0.8` |
+| `COSMAC_DATA_DIR` | `data_dir` | `/tmp/ps` |
+| `COSMAC_VAULT_ENABLED` | `vault.enabled` | `false` |
+| `COSMAC_VAULT_SIMILARITY_THRESHOLD` | `vault.similarity_threshold` | `0.9` |
+| `COSMAC_FEEDBACK_ENABLED` | `feedback.enabled` | `false` |
+| `COSMAC_CANARY_ENABLED` | `canary.enabled` | `false` |
+| `COSMAC_LOGGING_LEVEL` | `logging.level` | `DEBUG` |
 
 Boolean values are case-insensitive (`true`/`false`). Numeric values are auto-coerced.
 
@@ -120,7 +120,7 @@ Boolean values are case-insensitive (`true`/`false`). Numeric values are auto-co
 Each detector can be individually configured under `detectors.<detector_id>`:
 
 ```yaml
-prompt_shield:
+cosmac:
   detectors:
     d001_system_prompt_extraction:
       enabled: true       # Enable/disable this detector
@@ -139,7 +139,7 @@ Blocks inputs whose detected language is not in `allowed_languages`. Uses [langd
 Enable only when your deployment is genuinely language-restricted:
 
 ```yaml
-prompt_shield:
+cosmac:
   detectors:
     d031_language_enforcement:
       enabled: true                          # opt-in
@@ -156,7 +156,7 @@ Blocks inputs that match operator-defined denied topics via keyword/phrase match
 Enable when your deployment must refuse specific topic classes (medical advice, legal advice, financial recommendations, etc.):
 
 ```yaml
-prompt_shield:
+cosmac:
   detectors:
     d032_topic_enforcement:
       enabled: true
@@ -176,7 +176,7 @@ prompt_shield:
 Pass a dict directly:
 
 ```python
-engine = PromptShieldEngine(config_dict={
+engine = CosmacEngine(config_dict={
     "mode": "monitor",
     "threshold": 0.8,
     "vault": {"enabled": False},
@@ -187,14 +187,14 @@ engine = PromptShieldEngine(config_dict={
 
 The data directory stores the vault database, scan history, and model weights. Resolution order:
 
-1. Explicit `data_dir` in config or `PROMPT_SHIELD_DATA_DIR` env var
-2. If `.prompt-shield.yaml` exists in CWD: `./.prompt_shield/` (project-scoped)
-3. Default: `~/.prompt_shield/` (global)
+1. Explicit `data_dir` in config or `COSMAC_DATA_DIR` env var
+2. If `.cosmac.yaml` exists in CWD: `./.cosmac/` (project-scoped)
+3. Default: `~/.cosmac/` (global)
 
 ## Validation
 
 Validate a config file:
 
 ```bash
-prompt-shield config validate prompt_shield.yaml
+cosmac config validate cosmac.yaml
 ```

@@ -1,4 +1,4 @@
-"""Tests for the strict_mode fail-closed switch on PromptShieldEngine.
+"""Tests for the strict_mode fail-closed switch on CosmacEngine.
 
 Background: an earlier external review flagged that ``engine.scan()``
 absorbs detector exceptions and returns as if the failed detector had
@@ -17,9 +17,9 @@ from typing import TYPE_CHECKING, Any, ClassVar
 
 import pytest
 
-from prompt_shield.detectors.base import BaseDetector
-from prompt_shield.engine import PromptShieldEngine
-from prompt_shield.models import DetectionResult, Severity
+from cosmac.detectors.base import BaseDetector
+from cosmac.engine import CosmacEngine
+from cosmac.models import DetectionResult, Severity
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -45,7 +45,7 @@ def _build_config(
 ) -> dict[str, Any]:
     """Minimal config; strict_mode + parallel toggleable per test."""
     return {
-        "prompt_shield": {
+        "cosmac": {
             "mode": "block",
             "threshold": 0.7,
             "strict_mode": strict_mode,
@@ -76,9 +76,9 @@ def test_strict_mode_off_by_default(tmp_data_dir: Path) -> None:
     Backwards-compat contract: existing v0.7.x callers who upgrade see
     no behavioural change unless they explicitly opt in.
     """
-    engine = PromptShieldEngine(
+    engine = CosmacEngine(
         config_dict={
-            "prompt_shield": {
+            "cosmac": {
                 "data_dir": str(tmp_data_dir),
                 "vault": {"enabled": False},
                 "feedback": {"enabled": False},
@@ -103,7 +103,7 @@ def test_default_mode_silent_on_detector_failure(tmp_data_dir: Path, parallel: b
     v0.7.x contract we are preserving under strict_mode=False.
     """
     cfg = _build_config(tmp_data_dir, strict_mode=False, parallel=parallel)
-    engine = PromptShieldEngine(config_dict=cfg, data_dir=str(tmp_data_dir))
+    engine = CosmacEngine(config_dict=cfg, data_dir=str(tmp_data_dir))
 
     baseline_report = engine.scan("hello world, nothing suspicious here")
     baseline_run = baseline_report.total_detectors_run
@@ -128,7 +128,7 @@ def test_strict_mode_raises_on_detector_failure(tmp_data_dir: Path, parallel: bo
     the switch — parametrized to keep parity guaranteed.
     """
     cfg = _build_config(tmp_data_dir, strict_mode=True, parallel=parallel)
-    engine = PromptShieldEngine(config_dict=cfg, data_dir=str(tmp_data_dir))
+    engine = CosmacEngine(config_dict=cfg, data_dir=str(tmp_data_dir))
     engine.register_detector(_ExplodingDetector())
 
     with pytest.raises(RuntimeError, match="simulated detector failure"):

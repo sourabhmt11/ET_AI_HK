@@ -1,11 +1,11 @@
 # LangChain Demo
 
-Demonstrates `PromptShieldCallback` for automatic prompt injection scanning in LangChain chains.
+Demonstrates `CosmacCallback` for automatic prompt injection scanning in LangChain chains.
 
 ## Setup
 
 ```bash
-pip install prompt-shield[langchain] langchain-openai
+pip install cosmac[langchain] langchain-openai
 ```
 
 ## Run

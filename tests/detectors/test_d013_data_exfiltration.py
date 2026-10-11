@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d013_data_exfiltration import DataExfiltrationDetector
+from cosmac.detectors.d013_data_exfiltration import DataExfiltrationDetector
 
 
 @pytest.fixture

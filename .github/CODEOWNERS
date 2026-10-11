@@ -1,8 +1,8 @@
 # Default owners for everything
-* @prompt-shield/maintainers
+* @cosmac/maintainers
 
 # Detectors require review from security team
-src/prompt_shield/detectors/ @prompt-shield/security
+src/cosmac/detectors/ @cosmac/security
 
 # Integration adapters
-src/prompt_shield/integrations/ @prompt-shield/maintainers
+src/cosmac/integrations/ @cosmac/maintainers

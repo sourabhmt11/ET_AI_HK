@@ -13,7 +13,7 @@
 
 ## Status summary
 
-- **Shipped and empirically evaluated (3 of 7):** d028 Smith-Waterman alignment (§4), adversarial fatigue tracker (§2), d027 stylometric discontinuity (§1). v3 update: a fourth detector, d029 many-shot structural analysis, ships in prompt-shield v0.4.1 — see `tests/detectors/test_d029_many_shot_structural.py`. A full §-level write-up will land in v4.
+- **Shipped and empirically evaluated (3 of 7):** d028 Smith-Waterman alignment (§4), adversarial fatigue tracker (§2), d027 stylometric discontinuity (§1). v3 update: a fourth detector, d029 many-shot structural analysis, ships in cosmac v0.4.1 — see `tests/detectors/test_d029_many_shot_structural.py`. A full §-level write-up will land in v4.
 - **Proposed, implementation pending (3 of 7):** honeypot tool definitions (§3), prediction market ensemble (§5), perplexity spectral analysis (§6), runtime taint tracking (§7).
 - **Headline result:** on `deepset/prompt-injections` (116 samples) the Smith-Waterman detector alone lifts F1 from 0.033 (26-detector regex baseline) to **0.378 (+34.5 pp)** with zero added false positives. Full 4-configuration ablation across six benchmarks in §5.
 - **v3 contribution:** independent evaluation against **three peer-reviewed academic benchmarks** (Liu et al. USENIX Security 2024, Garak / Derczynski et al. 2024, InjecAgent / Zhan et al. ACL Findings 2024) — **8,276 total attack prompts** scanned. Detection rates: Liu 64.0%, Garak 55.2%, InjecAgent 85.2%. Cross-benchmark convergence on a 35-45% pattern-matching ceiling for subtle indirect injection. See §5.6.
@@ -27,9 +27,9 @@ Every open-source prompt-injection detector today relies on the same two approac
 
 We propose a different path: seven detection techniques ported from disciplines outside LLM security — forensic linguistics, materials-science fatigue analysis, deception technology, bioinformatics, economic mechanism design, signal processing, and compiler theory. Each produces a fundamentally different detection signal that complements, rather than duplicates, existing methods.
 
-**This v2.0 revision moved the work from proposal to partial empirical validation.** Three of the seven techniques are implemented in prompt-shield v0.4.1 (Apache 2.0, open source), and benchmarked in a 4-configuration ablation across six datasets — five public (deepset, NotInject, LLMail-Inject, AgentHarm, AgentDojo) and one synthetic indirect-injection benchmark released alongside this paper. The Smith-Waterman local-alignment detector lifts F1 from 0.033 to **0.378 on deepset** (+34.5 pp, zero added false positives); the stylometric discontinuity detector adds **+11.1 pp F1** on the indirect-injection benchmark; the adversarial fatigue tracker is validated against a probing-campaign test showing that a sustained burst of near-threshold scans blocks a subsequent lower-confidence scan from the same source.
+**This v2.0 revision moved the work from proposal to partial empirical validation.** Three of the seven techniques are implemented in cosmac v0.4.1 (Apache 2.0, open source), and benchmarked in a 4-configuration ablation across six datasets — five public (deepset, NotInject, LLMail-Inject, AgentHarm, AgentDojo) and one synthetic indirect-injection benchmark released alongside this paper. The Smith-Waterman local-alignment detector lifts F1 from 0.033 to **0.378 on deepset** (+34.5 pp, zero added false positives); the stylometric discontinuity detector adds **+11.1 pp F1** on the indirect-injection benchmark; the adversarial fatigue tracker is validated against a probing-campaign test showing that a sustained burst of near-threshold scans blocks a subsequent lower-confidence scan from the same source.
 
-**v3.0 (2026-05-18) adds independent evaluation against three peer-reviewed academic benchmarks** — Liu et al. (USENIX Security 2024), Garak (Derczynski et al., 2024), and InjecAgent (Zhan et al., ACL Findings 2024) — totalling **8,276 attack prompts** that were not used to design or tune any prompt-shield detector. Detection rates: 64.0% on Liu, 55.2% on Garak, 85.2% on InjecAgent. Across all three benchmarks the same pattern emerges: ~92% detection on explicit-override attacks, ~99% on data-exfiltration attacks, and a **structural plateau at 35-45% on subtle indirect injection** where the embedded instruction lacks override keywords. This corroborates the gap that Liu et al. identified and that DataSentinel (IEEE S&P 2025) was designed to close. See §5.6 for the full breakdown. The same revision also notes a fourth shipped detector (d029 many-shot structural analysis) whose paper-level write-up will appear in v4.
+**v3.0 (2026-05-18) adds independent evaluation against three peer-reviewed academic benchmarks** — Liu et al. (USENIX Security 2024), Garak (Derczynski et al., 2024), and InjecAgent (Zhan et al., ACL Findings 2024) — totalling **8,276 attack prompts** that were not used to design or tune any cosmac detector. Detection rates: 64.0% on Liu, 55.2% on Garak, 85.2% on InjecAgent. Across all three benchmarks the same pattern emerges: ~92% detection on explicit-override attacks, ~99% on data-exfiltration attacks, and a **structural plateau at 35-45% on subtle indirect injection** where the embedded instruction lacks override keywords. This corroborates the gap that Liu et al. identified and that DataSentinel (IEEE S&P 2025) was designed to close. See §5.6 for the full breakdown. The same revision also notes a fourth shipped detector (d029 many-shot structural analysis) whose paper-level write-up will appear in v4.
 
 Three techniques remain proposals pending implementation. Their mechanisms are described in full alongside the evaluated three; a future revision will fold their empirical results into this section. Prior-art analysis is per-technique in §§1–7, and limitations are owned explicitly in §5.4.
 
@@ -41,7 +41,7 @@ The prompt injection defense landscape has a convergence problem. Nearly every t
 
 | Approach | Tools Using It | Known Weakness |
 |----------|---------------|----------------|
-| Regex / keyword patterns | prompt-shield, Vigil, NeMo Guardrails | Paraphrasing, synonym substitution |
+| Regex / keyword patterns | cosmac, Vigil, NeMo Guardrails | Paraphrasing, synonym substitution |
 | Fine-tuned DeBERTa classifier | LLM Guard, PIGuard, Meta Prompt Guard 2, Deepset | Adversarial perturbation (77-95% evasion, [ACL 2025 Workshop](https://arxiv.org/abs/2504.11168)) |
 | LLM-as-judge | PromptArmor, NeMo, LangKit | Vulnerable to the same manipulation it detects |
 | Vector similarity | Rebuff (archived), Vigil | Only catches variants of known attacks |
@@ -147,7 +147,7 @@ EWMA-based anomaly detection is standard in [network intrusion detection](https:
 
 ## Technique 3: Honeypot Tool Definitions
 
-> **Status: PROPOSED, not yet implemented.** The mechanism below is the design spec for the forthcoming `prompt_shield.honeypot` module. Agentic-only attack class — validation requires an AgentDojo / MCP-style simulated attacker harness that has not yet been constructed.
+> **Status: PROPOSED, not yet implemented.** The mechanism below is the design spec for the forthcoming `cosmac.honeypot` module. Agentic-only attack class — validation requires an AgentDojo / MCP-style simulated attacker harness that has not yet been constructed.
 
 **Borrowed from:** Network security / deception technology
 
@@ -527,7 +527,7 @@ Every number in §5.2 is reproduced by the following single-command invocation o
 
 ```bash
 git clone https://github.com/mthamil107/prompt-shield
-cd prompt-shield
+cd cosmac
 pip install -e ".[dev,all]"
 pip install agentdojo                                     # one-off, for task extraction
 python docs/papers/evaluation/run_public_datasets.py      # ~4 min wall-clock
@@ -545,11 +545,11 @@ The fatigue probing-campaign claim is reproduced by the test suite:
 python -m pytest tests/fatigue/ -v
 ```
 
-All 868 tests in the full suite pass on Python 3.10, 3.11, 3.12, and 3.13; ruff, mypy, and the prompt-shield self-scan are green in CI.
+All 868 tests in the full suite pass on Python 3.10, 3.11, 3.12, and 3.13; ruff, mypy, and the cosmac self-scan are green in CI.
 
 ### 5.6 Independent evaluations against peer-reviewed academic benchmarks (v3 addition)
 
-To validate that the §5.2 numbers are not specific to our chosen datasets, we further evaluate prompt-shield's input pipeline against three independent attack corpora published at peer-reviewed venues. None of these benchmarks were used to design or tune any prompt-shield detector. All numbers below are regex-only (`d022` ML classifier disabled) for reproducibility on commodity hardware.
+To validate that the §5.2 numbers are not specific to our chosen datasets, we further evaluate cosmac's input pipeline against three independent attack corpora published at peer-reviewed venues. None of these benchmarks were used to design or tune any cosmac detector. All numbers below are regex-only (`d022` ML classifier disabled) for reproducibility on commodity hardware.
 
 | Source | Venue | Corpus size | Detection rate | Full results |
 |---|---|---:|---:|---|
@@ -574,9 +574,9 @@ By contrast, **data-exfiltration and explicit-override attacks are caught at nea
 
 #### Implications
 
-1. **Input-side detection has a structural ceiling on subtle indirect injection.** This is not a bug in prompt-shield's specific implementation — it is a property of the attack class. Liu et al. quantified this gap and built DataSentinel (IEEE S&P 2025) as a fine-tuned model specifically targeting it; our results corroborate the gap on two independent benchmarks (Garak, InjecAgent) using a different defender (prompt-shield, regex-only).
-2. **Hybrid input+output defense is the natural follow-up.** The Garak `LatentJailbreak` 0% result is explicitly out of scope for an input firewall and would be handled by prompt-shield's existing output-side toxicity scanner; future work should report the combined input+output detection rate to honest characterize end-to-end coverage.
-3. **Adaptive-attack robustness is the most important open question.** None of the three benchmarks above test adaptive attacks crafted against prompt-shield specifically; the canonical reference for that methodology is Nasr et al. *"The Attacker Moves Second"* (arXiv:2510.09023, 2025), and the next revision of this paper plans to apply that methodology per-detector-family.
+1. **Input-side detection has a structural ceiling on subtle indirect injection.** This is not a bug in cosmac's specific implementation — it is a property of the attack class. Liu et al. quantified this gap and built DataSentinel (IEEE S&P 2025) as a fine-tuned model specifically targeting it; our results corroborate the gap on two independent benchmarks (Garak, InjecAgent) using a different defender (cosmac, regex-only).
+2. **Hybrid input+output defense is the natural follow-up.** The Garak `LatentJailbreak` 0% result is explicitly out of scope for an input firewall and would be handled by cosmac's existing output-side toxicity scanner; future work should report the combined input+output detection rate to honest characterize end-to-end coverage.
+3. **Adaptive-attack robustness is the most important open question.** None of the three benchmarks above test adaptive attacks crafted against cosmac specifically; the canonical reference for that methodology is Nasr et al. *"The Attacker Moves Second"* (arXiv:2510.09023, 2025), and the next revision of this paper plans to apply that methodology per-detector-family.
 
 #### Methodology in brief
 
@@ -598,7 +598,7 @@ Four techniques remain proposals: honeypot tools, prediction-market ensemble sco
 
 **The v4.0 revision plans to fold in:**
 
-1. A full §-level write-up of d029 many-shot structural analysis (currently shipped in prompt-shield v0.4.1, with 36 unit tests, but not yet given a paper-section treatment).
+1. A full §-level write-up of d029 many-shot structural analysis (currently shipped in cosmac v0.4.1, with 36 unit tests, but not yet given a paper-section treatment).
 2. Adaptive-attack evaluation against each shipped technique, following the Nasr et al. *"The Attacker Moves Second"* methodology (arXiv:2510.09023, 2025) and the NAACL Findings 2025 / ICLR 2025 prior work. Per-detector-family adaptive attacks (sequence-alignment-aware, stylometry-aware, fatigue-aware, many-shot-aware) are the natural next contribution given the §5.6 cross-benchmark plateau.
 3. A held-out indirect-injection benchmark composed of human-written documents with paraphrased payloads (not template-based), targeting the 35-45% ceiling identified in §5.6.
 4. A head-to-head competitor comparison (Rebuff, Lakera, Meta Prompt Guard 2, PIGuard, Deepset DeBERTa v3, DataSentinel) on the same three academic benchmarks used in §5.6 — apples-to-apples detector-coverage numbers rather than mixed end-to-end ASR claims.
@@ -612,7 +612,7 @@ Until then the claims here are scoped to: (a) the 4-configuration × 6-dataset a
 
 These techniques are being implemented in [prompt-shield v0.4.0](https://github.com/mthamil107/prompt-shield) (Apache 2.0).
 
-- **Try it:** `pip install prompt-shield-ai`
+- **Try it:** `pip install cosmac`
 - **Contribute:** PRs, benchmarks, and adversarial evaluations welcome
 - **Discuss:** Open an issue to propose improvements or report results
 - **Cite:** If you use these techniques in research, please cite this repository
@@ -650,4 +650,4 @@ We believe the future of prompt injection defense is cross-disciplinary. The bes
 
 ---
 
-*prompt-shield is open source under the Apache 2.0 license. Star the repo if this work is useful to you.*
+*cosmac is open source under the Apache 2.0 license. Star the repo if this work is useful to you.*

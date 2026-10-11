@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d023_pii_detection import PIIDetectionDetector
+from cosmac.detectors.d023_pii_detection import PIIDetectionDetector
 
 
 @pytest.fixture

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d003_instruction_override import (
+from cosmac.detectors.d003_instruction_override import (
     InstructionOverrideDetector,
 )
 

@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from prompt_shield.evaluation.schema import (
+from cosmac.evaluation.schema import (
     EvalSample,
     SchemaError,
     check_independence,

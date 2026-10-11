@@ -5,7 +5,7 @@ Demonstrates the self-hardening feedback loop: vault storage, similarity matchin
 ## Setup
 
 ```bash
-pip install prompt-shield
+pip install cosmac
 ```
 
 ## Run

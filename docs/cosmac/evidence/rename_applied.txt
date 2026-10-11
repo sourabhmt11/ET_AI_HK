@@ -1,0 +1,374 @@
+
+== class renames (three classes shared one name) ==
+  [class] src/prompt_shield/integrations/fastapi_middleware.py: 1 occurrence(s) [1->ASGI]
+  [class] tests/integrations/test_fastapi_middleware.py: 2 occurrence(s) [1->ASGI, 2->ASGI]
+  [class] examples/fastapi_demo/app.py: 3 occurrence(s) [1->ASGI, 2->ASGI, 3->ASGI]
+  [class] examples/fastapi_demo/README.md: 1 occurrence(s) [1->ASGI]
+  [class] README.md: 2 occurrence(s) [1->ASGI, 2->ASGI]
+  [class] src/prompt_shield/integrations/flask_middleware.py: 1 occurrence(s) [1->Flask]
+  [class] src/prompt_shield/integrations/django_middleware.py: 1 occurrence(s) [1->Django]
+  [class] docs/integrations.md: 6 occurrence(s) [1->ASGI, 2->ASGI, 3->ASGI, 4->Flask, 5->Flask, 6->Django]
+  [class] docs/architecture.md: 3 occurrence(s) [1->ASGI, 2->Flask, 3->Django]
+
+== content rewrite ==
+      3  .github/CODEOWNERS
+      3  .github/ISSUE_TEMPLATE/bug_report.yml
+      1  .github/ISSUE_TEMPLATE/feature_request.yml
+      8  .github/actions/prompt-shield-scan/action.yml
+     14  .github/actions/prompt-shield-scan/scan.py
+      1  .github/workflows/ci.yml
+      1  .github/workflows/doctest.yml
+      3  .github/workflows/prompt-shield.yml
+      3  .gitignore
+      6  .pre-commit-hooks.yaml
+      4  .prompt-shield-ignore
+      6  CONTRIBUTING.md
+      8  Dockerfile
+     11  Dockerfile.mcp
+     20  PROJECT_CONTEXT.md
+    119  README.md
+     22  ROADMAP.md
+      3  SECURITY.md
+      2  deploy/helm/prompt-shield/Chart.yaml
+     11  deploy/helm/prompt-shield/README.md
+      4  deploy/helm/prompt-shield/templates/NOTES.txt
+     11  deploy/helm/prompt-shield/templates/_helpers.tpl
+      5  deploy/helm/prompt-shield/templates/configmap.yaml
+      8  deploy/helm/prompt-shield/templates/deployment.yaml
+      3  deploy/helm/prompt-shield/templates/hpa.yaml
+      3  deploy/helm/prompt-shield/templates/ingress.yaml
+      2  deploy/helm/prompt-shield/templates/pvc.yaml
+      3  deploy/helm/prompt-shield/templates/service.yaml
+      2  deploy/helm/prompt-shield/templates/serviceaccount.yaml
+      3  deploy/helm/prompt-shield/values.yaml
+      4  docker-compose.yml
+      2  docs/_config.yml
+      9  docs/agentic-security.md
+     18  docs/architecture.md
+      7  docs/capabilities/receipt-adapter.md
+     10  docs/changelog.md
+     23  docs/configuration.md
+     18  docs/design-notes-v0.5.0.md
+      8  docs/detectors.md
+      1  docs/detectors/d022-classifier-swap.md
+     24  docs/docker.md
+     16  docs/github-action.md
+     19  docs/grafana/README.md
+     19  docs/grafana/prompt-shield-dashboard.json
+      6  docs/index.md
+     27  docs/integrations.md
+     11  docs/mcp-registry-submissions.md
+     42  docs/mcp-server.md
+     21  docs/pre-commit.md
+     18  docs/quickstart.md
+     14  docs/research-post-cross-domain-techniques.md
+     24  docs/self-learning.md
+     26  docs/writing-detectors.md
+      3  examples/agentic_demo/README.md
+      3  examples/agentic_demo/app.py
+      7  examples/agentic_demo/mcp_server.py
+      2  examples/custom_detector/README.md
+      4  examples/custom_detector/my_detector.py
+      6  examples/demo.py
+      7  examples/demo_gif.py
+      6  examples/demo_record.py
+      1  examples/fastapi_demo/README.md
+      2  examples/fastapi_demo/app.py
+      2  examples/langchain_demo/README.md
+      9  examples/langchain_demo/app.py
+      3  examples/quickstart.py
+      1  examples/self_learning_demo/README.md
+      3  examples/self_learning_demo/app.py
+      2  mkdocs.yml
+      3  plugins/dify/PRIVACY.md
+      4  plugins/dify/README.md
+      5  plugins/dify/manifest.yaml
+     10  plugins/dify/provider/prompt_shield.py
+      3  plugins/dify/provider/prompt_shield.yaml
+      1  plugins/dify/requirements.txt
+      3  plugins/dify/tools/output_scan.py
+      1  plugins/dify/tools/output_scan.yaml
+      3  plugins/dify/tools/pii_redact.py
+      1  plugins/dify/tools/pii_redact.yaml
+      3  plugins/dify/tools/pii_scan.py
+      1  plugins/dify/tools/pii_scan.yaml
+      4  plugins/dify/tools/scan.py
+      1  plugins/dify/tools/scan.yaml
+     10  plugins/n8n/README.md
+      6  plugins/n8n/credentials/PromptShieldApi.credentials.ts
+      1  plugins/n8n/nodes/PromptShield/PromptShield.node.json
+      7  plugins/n8n/nodes/PromptShield/PromptShield.node.ts
+      4  plugins/n8n/package.json
+      3  plugins/pypi-alias/README.md
+      4  plugins/pypi-alias/pyproject.toml
+     37  pyproject.toml
+      8  smithery.yaml
+      5  src/prompt_shield/__init__.py
+      2  src/prompt_shield/__main__.py
+      2  src/prompt_shield/alerting/__init__.py
+      2  src/prompt_shield/alerting/webhook.py
+     24  src/prompt_shield/api.py
+      1  src/prompt_shield/benchmarks/__init__.py
+      6  src/prompt_shield/benchmarks/datasets.py
+      1  src/prompt_shield/benchmarks/metrics.py
+      8  src/prompt_shield/benchmarks/runner.py
+      1  src/prompt_shield/canary/watermark.py
+      6  src/prompt_shield/capabilities/__init__.py
+      1  src/prompt_shield/capabilities/_base.py
+      4  src/prompt_shield/capabilities/jws.py
+      5  src/prompt_shield/capabilities/pipelock.py
+     21  src/prompt_shield/cli.py
+      1  src/prompt_shield/compliance/__init__.py
+      3  src/prompt_shield/compliance/mitre_atlas_mapping.py
+      5  src/prompt_shield/compliance/owasp_mapping.py
+     16  src/prompt_shield/config/__init__.py
+      3  src/prompt_shield/config/default.yaml
+      1  src/prompt_shield/detectors/base.py
+      3  src/prompt_shield/detectors/d001_system_prompt_extraction.py
+      3  src/prompt_shield/detectors/d002_role_hijack.py
+      3  src/prompt_shield/detectors/d003_instruction_override.py
+      3  src/prompt_shield/detectors/d004_prompt_leaking.py
+      3  src/prompt_shield/detectors/d005_context_manipulation.py
+      3  src/prompt_shield/detectors/d006_multi_turn_escalation.py
+      3  src/prompt_shield/detectors/d007_task_deflection.py
+      4  src/prompt_shield/detectors/d008_base64_payload.py
+      4  src/prompt_shield/detectors/d009_rot13_substitution.py
+      4  src/prompt_shield/detectors/d010_unicode_homoglyph.py
+      4  src/prompt_shield/detectors/d011_whitespace_injection.py
+      3  src/prompt_shield/detectors/d012_markdown_html_injection.py
+      3  src/prompt_shield/detectors/d013_data_exfiltration.py
+      3  src/prompt_shield/detectors/d014_tool_function_abuse.py
+      3  src/prompt_shield/detectors/d015_rag_poisoning.py
+      3  src/prompt_shield/detectors/d016_url_injection.py
+      3  src/prompt_shield/detectors/d017_hypothetical_framing.py
+      3  src/prompt_shield/detectors/d018_academic_pretext.py
+      3  src/prompt_shield/detectors/d019_dual_persona.py
+      3  src/prompt_shield/detectors/d020_token_smuggling.py
+      3  src/prompt_shield/detectors/d021_vault_similarity.py
+      6  src/prompt_shield/detectors/d022_semantic_classifier.py
+      4  src/prompt_shield/detectors/d023_pii_detection.py
+      3  src/prompt_shield/detectors/d024_multilingual_injection.py
+      3  src/prompt_shield/detectors/d025_multi_encoding.py
+      3  src/prompt_shield/detectors/d026_denial_of_wallet.py
+      4  src/prompt_shield/detectors/d027_stylometric_discontinuity.py
+      5  src/prompt_shield/detectors/d028_sequence_alignment.py
+      3  src/prompt_shield/detectors/d029_many_shot_structural.py
+      5  src/prompt_shield/detectors/d030_custom_rules.py
+      3  src/prompt_shield/detectors/d031_language_enforcement.py
+      3  src/prompt_shield/detectors/d032_topic_enforcement.py
+      3  src/prompt_shield/detectors/d033_topic_drift.py
+      4  src/prompt_shield/detectors/d034_honeypot_tool.py
+      6  src/prompt_shield/detectors/d035_perplexity_spectral.py
+     29  src/prompt_shield/engine.py
+      7  src/prompt_shield/evaluation/__init__.py
+      2  src/prompt_shield/evaluation/cli.py
+      3  src/prompt_shield/evaluation/runner.py
+     13  src/prompt_shield/exceptions.py
+      1  src/prompt_shield/fatigue/__init__.py
+      2  src/prompt_shield/feedback/auto_tuner.py
+      2  src/prompt_shield/feedback/feedback_store.py
+      9  src/prompt_shield/hooks.py
+error: the following files have local modifications:
+    plugins/dify/PRIVACY.md
+    plugins/dify/README.md
+    plugins/dify/manifest.yaml
+    plugins/dify/provider/prompt_shield.py
+    plugins/dify/provider/prompt_shield.yaml
+    plugins/dify/requirements.txt
+    plugins/dify/tools/output_scan.py
+    plugins/dify/tools/output_scan.yaml
+    plugins/dify/tools/pii_redact.py
+    plugins/dify/tools/pii_redact.yaml
+    plugins/dify/tools/pii_scan.py
+    plugins/dify/tools/pii_scan.yaml
+    plugins/dify/tools/scan.py
+    plugins/dify/tools/scan.yaml
+(use --cached to keep the file, or -f to force removal)
+      7  src/prompt_shield/integrations/agent_guard.py
+     16  src/prompt_shield/integrations/anthropic_wrapper.py
+     24  src/prompt_shield/integrations/crewai_guard.py
+      4  src/prompt_shield/integrations/django_middleware.py
+      5  src/prompt_shield/integrations/fastapi_middleware.py
+      4  src/prompt_shield/integrations/flask_middleware.py
+     28  src/prompt_shield/integrations/haystack_component.py
+     13  src/prompt_shield/integrations/langchain_callback.py
+      9  src/prompt_shield/integrations/llamaindex_handler.py
+      9  src/prompt_shield/integrations/mcp.py
+     16  src/prompt_shield/integrations/openai_wrapper.py
+     28  src/prompt_shield/integrations/pydantic_ai_guard.py
+      7  src/prompt_shield/mcp_server/__init__.py
+     24  src/prompt_shield/mcp_server/__main__.py
+      6  src/prompt_shield/mcp_server/mcp_profile.yaml
+     37  src/prompt_shield/mcp_server/server.py
+      2  src/prompt_shield/models.py
+      5  src/prompt_shield/observability/__init__.py
+     12  src/prompt_shield/observability/metrics.py
+     12  src/prompt_shield/output_scanners/__init__.py
+      1  src/prompt_shield/output_scanners/base.py
+      3  src/prompt_shield/output_scanners/bias_fairness.py
+      3  src/prompt_shield/output_scanners/code_injection.py
+     12  src/prompt_shield/output_scanners/engine.py
+      2  src/prompt_shield/output_scanners/hallucination.py
+      2  src/prompt_shield/output_scanners/models.py
+      4  src/prompt_shield/output_scanners/output_pii.py
+      3  src/prompt_shield/output_scanners/prompt_leakage.py
+      3  src/prompt_shield/output_scanners/relevance.py
+      3  src/prompt_shield/output_scanners/schema_validation.py
+      3  src/prompt_shield/output_scanners/sentiment.py
+      3  src/prompt_shield/output_scanners/toxicity.py
+      3  src/prompt_shield/persistence/database.py
+      2  src/prompt_shield/pii/__init__.py
+      2  src/prompt_shield/pii/redactor.py
+      1  src/prompt_shield/ratelimit/__init__.py
+      3  src/prompt_shield/redteam/__init__.py
+      1  src/prompt_shield/redteam/report.py
+      8  src/prompt_shield/redteam/runner.py
+     13  src/prompt_shield/registry.py
+      9  src/prompt_shield/signatures/__init__.py
+     11  src/prompt_shield/signatures/apply_to_engine.py
+      7  src/prompt_shield/signatures/client.py
+      8  src/prompt_shield/tool_guard/__init__.py
+      3  src/prompt_shield/tool_guard/_honeypot.py
+      3  src/prompt_shield/tool_guard/_sanitize.py
+      1  src/prompt_shield/tool_guard/_taxonomy.py
+     18  src/prompt_shield/tool_guard/guard.py
+      3  src/prompt_shield/tool_guard/models.py
+      1  src/prompt_shield/utils.py
+      4  src/prompt_shield/vault/attack_vault.py
+      1  src/prompt_shield/vault/embedder.py
+      4  src/prompt_shield/vault/threat_feed.py
+      7  tests/alerting/test_webhook.py
+      2  tests/baseline_v0.3.3.txt
+     14  tests/benchmark_comparison.py
+     12  tests/benchmark_garak.py
+      8  tests/benchmark_harmbench.py
+     11  tests/benchmark_injecagent.py
+      6  tests/benchmark_jailbreakbench.py
+     12  tests/benchmark_liu_attackers.py
+      9  tests/benchmark_public_datasets.py
+      5  tests/benchmark_realistic.py
+      2  tests/benchmarks/test_datasets.py
+      1  tests/benchmarks/test_metrics.py
+      7  tests/benchmarks/test_runner.py
+      2  tests/canary/test_leak_detector.py
+      1  tests/canary/test_token_generator.py
+      1  tests/canary/test_watermark.py
+      2  tests/capabilities/test_jws_adapter.py
+      2  tests/capabilities/test_pipelock_adapter.py
+      4  tests/capabilities/test_toolresultguard_receipt_integration.py
+      1  tests/compliance/test_mitre_atlas_mapping.py
+      5  tests/compliance/test_owasp_mapping.py
+      6  tests/conftest.py
+      1  tests/decoders/test_preprocessor.py
+      1  tests/detectors/test_d001_system_prompt_extraction.py
+      1  tests/detectors/test_d002_role_hijack.py
+      1  tests/detectors/test_d003_instruction_override.py
+      1  tests/detectors/test_d004_prompt_leaking.py
+      1  tests/detectors/test_d005_context_manipulation.py
+      1  tests/detectors/test_d006_multi_turn_escalation.py
+      1  tests/detectors/test_d007_task_deflection.py
+      1  tests/detectors/test_d008_base64_payload.py
+      1  tests/detectors/test_d009_rot13_substitution.py
+      1  tests/detectors/test_d010_unicode_homoglyph.py
+      1  tests/detectors/test_d011_whitespace_injection.py
+      1  tests/detectors/test_d012_markdown_html_injection.py
+      1  tests/detectors/test_d013_data_exfiltration.py
+      1  tests/detectors/test_d014_tool_function_abuse.py
+      1  tests/detectors/test_d015_rag_poisoning.py
+      1  tests/detectors/test_d016_url_injection.py
+      1  tests/detectors/test_d017_hypothetical_framing.py
+      1  tests/detectors/test_d018_academic_pretext.py
+      1  tests/detectors/test_d019_dual_persona.py
+      1  tests/detectors/test_d020_token_smuggling.py
+      1  tests/detectors/test_d021_vault_similarity.py
+      1  tests/detectors/test_d022_semantic_classifier.py
+      1  tests/detectors/test_d023_pii_detection.py
+      1  tests/detectors/test_d024_multilingual_injection.py
+      1  tests/detectors/test_d025_multi_encoding.py
+      1  tests/detectors/test_d026_denial_of_wallet.py
+      2  tests/detectors/test_d027_stylometric_discontinuity.py
+      2  tests/detectors/test_d028_notinject_regressions.py
+      2  tests/detectors/test_d028_sequence_alignment.py
+      1  tests/detectors/test_d029_many_shot_structural.py
+      2  tests/detectors/test_d030_custom_rules.py
+      1  tests/detectors/test_d031_language_enforcement.py
+      2  tests/detectors/test_d032_topic_enforcement.py
+      1  tests/detectors/test_d033_topic_drift.py
+      3  tests/detectors/test_d034_honeypot_tool.py
+      3  tests/detectors/test_d035_perplexity_spectral.py
+      1  tests/evaluation/test_metrics.py
+      1  tests/evaluation/test_schema.py
+      6  tests/fatigue/test_engine_integration.py
+      1  tests/fatigue/test_tracker.py
+      1  tests/fixtures/threat_feed/sample_threats.json
+      2  tests/fixtures/tool_result_attacks.py
+      2  tests/integrations/test_agent_guard.py
+      5  tests/integrations/test_anthropic_tool_results.py
+     23  tests/integrations/test_anthropic_wrapper.py
+     11  tests/integrations/test_crewai_guard.py
+      2  tests/integrations/test_fastapi_middleware.py
+     30  tests/integrations/test_haystack_component.py
+      7  tests/integrations/test_langchain_on_tool_end.py
+      6  tests/integrations/test_llamaindex_retrieved_nodes.py
+      9  tests/integrations/test_mcp.py
+     30  tests/integrations/test_openai_wrapper.py
+     14  tests/integrations/test_pydantic_ai_guard.py
+      6  tests/mcp_server/test_server.py
+      6  tests/mcp_server/test_stdio_transport.py
+      5  tests/normalization/test_engine_integration.py
+      1  tests/normalization/test_pipeline.py
+      4  tests/observability/test_metrics.py
+      1  tests/output_scanners/test_api.py
+      1  tests/output_scanners/test_bias_fairness.py
+      3  tests/output_scanners/test_cli.py
+      1  tests/output_scanners/test_code_injection.py
+      1  tests/output_scanners/test_engine.py
+      1  tests/output_scanners/test_hallucination.py
+      1  tests/output_scanners/test_output_pii.py
+      1  tests/output_scanners/test_prompt_leakage.py
+      1  tests/output_scanners/test_relevance.py
+      1  tests/output_scanners/test_schema_validation.py
+      1  tests/output_scanners/test_sentiment.py
+      2  tests/output_scanners/test_toxicity.py
+      1  tests/persistence/test_database.py
+      2  tests/pii/test_redactor.py
+      1  tests/ratelimit/test_limiter.py
+     11  tests/redteam/test_runner.py
+      2  tests/regression_check.py
+      3  tests/signatures/test_apply_to_engine.py
+      6  tests/signatures/test_client.py
+      6  tests/test_api.py
+      4  tests/test_cli.py
+     19  tests/test_config.py
+      9  tests/test_engine.py
+      9  tests/test_engine_strict_mode.py
+     20  tests/test_hooks.py
+     12  tests/test_parallel.py
+      4  tests/test_registry.py
+      4  tests/threshold_sweep.py
+      3  tests/tool_guard/test_guard.py
+      2  tests/tool_guard/test_models.py
+      2  tests/tool_guard/test_scan_tool_result.py
+      2  tests/tool_guard/test_taxonomy.py
+      2  tests/tool_guard/test_taxonomy_precision.py
+      5  tests/vault/test_threat_feed.py
+
+== path moves and deletes ==
+  [move] src/prompt_shield -> src/cosmac
+  [move] .prompt-shield-ignore -> .cosmac-ignore
+  [move] .github/actions/prompt-shield-scan -> .github/actions/cosmac-scan
+  [move] .github/workflows/prompt-shield.yml -> .github/workflows/cosmac.yml
+  [move] deploy/helm/prompt-shield -> deploy/helm/cosmac
+  [move] docs/grafana/prompt-shield-dashboard.json -> docs/grafana/cosmac-dashboard.json
+  [del ] plugins/dify
+Traceback (most recent call last):
+  File "C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\tools\apply_rename.py", line 215, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\tools\apply_rename.py", line 205, in main
+    run_paths(manifest, apply)
+  File "C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\tools\apply_rename.py", line 88, in run_paths
+    subprocess.run(["git", "rm", "-r", "-q", target], cwd=ROOT, check=True)
+  File "C:\Users\soura\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', 'rm', '-r', '-q', 'plugins/dify']' returned non-zero exit status 1.

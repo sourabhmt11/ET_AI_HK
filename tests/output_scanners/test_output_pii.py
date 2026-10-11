@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from prompt_shield.output_scanners.output_pii import OutputPIIScanner
+from cosmac.output_scanners.output_pii import OutputPIIScanner
 
 
 class TestOutputPIIScanner:

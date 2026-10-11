@@ -9,7 +9,7 @@ import pytest
 import yaml
 from click.testing import CliRunner
 
-from prompt_shield.cli import main
+from cosmac.cli import main
 
 
 @pytest.fixture
@@ -30,7 +30,7 @@ def data_dir(tmp_path: Path) -> str:
 def cli_config_file(tmp_path: Path, data_dir: str) -> str:
     """Write a minimal config YAML that disables vault/feedback for fast tests."""
     config = {
-        "prompt_shield": {
+        "cosmac": {
             "mode": "block",
             "threshold": 0.7,
             "data_dir": data_dir,
@@ -54,7 +54,7 @@ class TestCLIVersion:
         """--version should output the version string."""
         result = runner.invoke(main, ["--version"])
         assert result.exit_code == 0
-        assert "prompt-shield" in result.output
+        assert "cosmac" in result.output
 
 
 class TestCLIScan:
@@ -140,7 +140,7 @@ class TestCLIConfig:
         assert Path(output_path).exists()
         # Verify the generated file is valid YAML with expected keys
         content = yaml.safe_load(Path(output_path).read_text(encoding="utf-8"))
-        assert "prompt_shield" in content
+        assert "cosmac" in content
 
     def test_cli_config_validate(self, runner: CliRunner, cli_config_file: str) -> None:
         """config validate should report that a valid config is valid."""

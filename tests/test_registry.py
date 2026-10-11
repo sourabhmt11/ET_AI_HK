@@ -6,10 +6,10 @@ from typing import ClassVar
 
 import pytest
 
-from prompt_shield.detectors.base import BaseDetector
-from prompt_shield.exceptions import RegistryError
-from prompt_shield.models import DetectionResult, Severity
-from prompt_shield.registry import DetectorRegistry
+from cosmac.detectors.base import BaseDetector
+from cosmac.exceptions import RegistryError
+from cosmac.models import DetectionResult, Severity
+from cosmac.registry import DetectorRegistry
 
 
 def _make_mock_detector(detector_id: str = "mock_detector") -> BaseDetector:

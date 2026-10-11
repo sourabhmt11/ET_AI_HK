@@ -6,7 +6,7 @@ import urllib.parse
 
 import pytest
 
-from prompt_shield.detectors.d025_multi_encoding import MultiEncodingDetector
+from cosmac.detectors.d025_multi_encoding import MultiEncodingDetector
 
 
 @pytest.fixture

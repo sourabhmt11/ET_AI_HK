@@ -1,11 +1,11 @@
-title: "prompt-shield — open-source prompt-injection firewall for LLM applications"
+title: "cosmac — open-source prompt-injection firewall for LLM applications"
 description: >-
   Apache 2.0 prompt-injection firewall with 33 input detectors and 9 output
   scanners. Novel cross-domain techniques (Smith-Waterman alignment,
   stylometric discontinuity, multi-turn Jaccard drift, adversarial fatigue).
   First OSS federated ed25519-signed threat-intel feed.
 
-baseurl: "/prompt-shield"
+baseurl: "/cosmac"
 url: "https://mthamil107.github.io"
 
 # Jekyll built-in theme (no dependencies to add)

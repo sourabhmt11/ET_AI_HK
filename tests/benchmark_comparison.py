@@ -1,4 +1,4 @@
-"""Comparison benchmark: prompt-shield vs competitors on the same attack dataset.
+"""Comparison benchmark: cosmac vs competitors on the same attack dataset.
 
 Compares against:
 - llm-guard (ProtectAI DeBERTa v2 wrapper)
@@ -110,13 +110,13 @@ def _all_prompts() -> list[tuple[str, str, bool]]:
 # ============================================================
 
 
-def scan_prompt_shield(prompts: list[tuple[str, str, bool]]) -> list[dict[str, Any]]:
-    """Scan with prompt-shield."""
-    from prompt_shield.engine import PromptShieldEngine
+def scan_cosmac(prompts: list[tuple[str, str, bool]]) -> list[dict[str, Any]]:
+    """Scan with cosmac."""
+    from cosmac.engine import CosmacEngine
 
-    engine = PromptShieldEngine(
+    engine = CosmacEngine(
         config_dict={
-            "prompt_shield": {
+            "cosmac": {
                 "mode": "block",
                 "threshold": 0.7,
                 "parallel": False,
@@ -147,15 +147,15 @@ def scan_prompt_shield(prompts: list[tuple[str, str, bool]]) -> list[dict[str, A
     return results, elapsed
 
 
-def scan_prompt_shield_with_ml(
+def scan_cosmac_with_ml(
     prompts: list[tuple[str, str, bool]],
 ) -> list[dict[str, Any]]:
-    """Scan with prompt-shield (ML classifier enabled)."""
-    from prompt_shield.engine import PromptShieldEngine
+    """Scan with cosmac (ML classifier enabled)."""
+    from cosmac.engine import CosmacEngine
 
-    engine = PromptShieldEngine(
+    engine = CosmacEngine(
         config_dict={
-            "prompt_shield": {
+            "cosmac": {
                 "mode": "block",
                 "threshold": 0.7,
                 "parallel": False,
@@ -403,7 +403,7 @@ def main():
     total_benign = sum(1 for _, _, a in prompts if not a)
 
     print("=" * 80)
-    print("PROMPT-SHIELD vs COMPETITORS — COMPARISON BENCHMARK")
+    print("COSMAC vs COMPETITORS — COMPARISON BENCHMARK")
     print("=" * 80)
     print(
         f"Dataset: {total_attacks} attacks across {len(ATTACKS)} categories + {total_benign} benign"
@@ -411,8 +411,8 @@ def main():
     print()
 
     scanners = [
-        ("prompt-shield (regex only)", scan_prompt_shield),
-        ("prompt-shield (regex + ML)", scan_prompt_shield_with_ml),
+        ("cosmac (regex only)", scan_cosmac),
+        ("cosmac (regex + ML)", scan_cosmac_with_ml),
         ("ProtectAI DeBERTa v2", scan_protectai_deberta),
         ("PIGuard (ACL 2025)", scan_piguard),
         ("Meta Prompt Guard 2", scan_meta_prompt_guard),

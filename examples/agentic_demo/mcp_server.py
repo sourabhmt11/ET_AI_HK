@@ -1,4 +1,4 @@
-"""Mock MCP server wrapped with PromptShieldMCPFilter.
+"""Mock MCP server wrapped with CosmacMCPFilter.
 
 Shows how to protect an MCP tool server so that tool arguments and results
 are automatically scanned for prompt injection before reaching the agent.
@@ -7,8 +7,8 @@ are automatically scanned for prompt injection before reaching the agent.
 import asyncio
 from typing import Any
 
-from prompt_shield import PromptShieldEngine
-from prompt_shield.integrations.mcp import PromptShieldMCPFilter
+from cosmac import CosmacEngine
+from cosmac.integrations.mcp import CosmacMCPFilter
 
 
 # --- Mock MCP server ---
@@ -46,16 +46,16 @@ class MockMCPServer:
         return f"Unknown tool: {tool_name}"
 
 
-# --- Wrap with PromptShieldMCPFilter ---
+# --- Wrap with CosmacMCPFilter ---
 
 async def main() -> None:
-    engine = PromptShieldEngine()
+    engine = CosmacEngine()
     mock_server = MockMCPServer()
 
-    # Wrap the MCP server with prompt-shield filtering.
+    # Wrap the MCP server with cosmac filtering.
     # Tool arguments are scanned before execution.
     # Tool results are scanned after execution and sanitized (injections redacted).
-    protected_server = PromptShieldMCPFilter(
+    protected_server = CosmacMCPFilter(
         server=mock_server,
         engine=engine,
         scan_results=True,

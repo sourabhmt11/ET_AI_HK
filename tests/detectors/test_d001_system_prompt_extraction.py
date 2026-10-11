@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d001_system_prompt_extraction import (
+from cosmac.detectors.d001_system_prompt_extraction import (
     SystemPromptExtractionDetector,
 )
 

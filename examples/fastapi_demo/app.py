@@ -1,17 +1,17 @@
-"""FastAPI demo with PromptShieldMiddleware scanning incoming requests."""
+"""FastAPI demo with CosmacASGIMiddleware scanning incoming requests."""
 
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from prompt_shield.integrations.fastapi_middleware import PromptShieldMiddleware
+from cosmac.integrations.fastapi_middleware import CosmacASGIMiddleware
 
-app = FastAPI(title="prompt-shield FastAPI Demo")
+app = FastAPI(title="cosmac FastAPI Demo")
 
 # Add middleware — every POST/PUT/PATCH body is scanned automatically.
 # The middleware extracts text from "body.prompt" and "body.messages.*.content"
 # by default. Requests containing prompt injection are rejected with HTTP 400.
 app.add_middleware(
-    PromptShieldMiddleware,
+    CosmacASGIMiddleware,
     mode="block",  # "block" (reject), "monitor" (log only), or "flag"
 )
 

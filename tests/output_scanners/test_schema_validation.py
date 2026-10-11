@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from prompt_shield.output_scanners.schema_validation import SchemaValidationScanner
+from cosmac.output_scanners.schema_validation import SchemaValidationScanner
 
 
 @pytest.fixture()

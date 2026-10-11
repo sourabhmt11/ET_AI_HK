@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from prompt_shield.api import app
+from cosmac.api import app
 
 
 @pytest.fixture()

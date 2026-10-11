@@ -1,19 +1,19 @@
 # Docker Support
 
-prompt-shield ships with a production-ready Docker image that exposes both the CLI and a REST API server.
+cosmac ships with a production-ready Docker image that exposes both the CLI and a REST API server.
 
 ## Quick Start
 
 ### Build the Image
 
 ```bash
-docker build -t prompt-shield .
+docker build -t cosmac .
 ```
 
 ### Run the API Server
 
 ```bash
-docker run -p 8000:8000 prompt-shield
+docker run -p 8000:8000 cosmac
 ```
 
 The API is now available at `http://localhost:8000`. Interactive docs are at `http://localhost:8000/docs`.
@@ -22,13 +22,13 @@ The API is now available at `http://localhost:8000`. Interactive docs are at `ht
 
 ```bash
 # Scan text
-docker run prompt-shield prompt-shield scan "Ignore all previous instructions"
+docker run cosmac cosmac scan "Ignore all previous instructions"
 
 # PII redact
-docker run prompt-shield prompt-shield pii redact "user@example.com"
+docker run cosmac cosmac pii redact "user@example.com"
 
 # Version info
-docker run prompt-shield prompt-shield --version
+docker run cosmac cosmac --version
 ```
 
 ### Docker Compose
@@ -45,23 +45,23 @@ All configuration is via environment variables:
 
 | Variable | Default | Description |
 |---|---|---|
-| `PROMPT_SHIELD_MODE` | `block` | Scanning mode: `block`, `flag`, `log`, `monitor` |
-| `PROMPT_SHIELD_THRESHOLD` | `0.7` | Detection confidence threshold (0.0 - 1.0) |
-| `PROMPT_SHIELD_HOST` | `0.0.0.0` | API bind address |
-| `PROMPT_SHIELD_PORT` | `8000` | API port |
-| `PROMPT_SHIELD_RATE_LIMIT` | `100` | Max requests per minute per client IP |
-| `PROMPT_SHIELD_CORS_ORIGINS` | `*` | Comma-separated allowed CORS origins |
-| `PROMPT_SHIELD_LOG_LEVEL` | `info` | Log level: `debug`, `info`, `warning`, `error` |
-| `PROMPT_SHIELD_DATA_DIR` | `/home/shield/data` | Persistent data directory |
+| `COSMAC_MODE` | `block` | Scanning mode: `block`, `flag`, `log`, `monitor` |
+| `COSMAC_THRESHOLD` | `0.7` | Detection confidence threshold (0.0 - 1.0) |
+| `COSMAC_HOST` | `0.0.0.0` | API bind address |
+| `COSMAC_PORT` | `8000` | API port |
+| `COSMAC_RATE_LIMIT` | `100` | Max requests per minute per client IP |
+| `COSMAC_CORS_ORIGINS` | `*` | Comma-separated allowed CORS origins |
+| `COSMAC_LOG_LEVEL` | `info` | Log level: `debug`, `info`, `warning`, `error` |
+| `COSMAC_DATA_DIR` | `/home/shield/data` | Persistent data directory |
 
 ### Example: Custom Configuration
 
 ```bash
 docker run -p 8000:8000 \
-  -e PROMPT_SHIELD_MODE=flag \
-  -e PROMPT_SHIELD_THRESHOLD=0.5 \
-  -e PROMPT_SHIELD_RATE_LIMIT=200 \
-  prompt-shield
+  -e COSMAC_MODE=flag \
+  -e COSMAC_THRESHOLD=0.5 \
+  -e COSMAC_RATE_LIMIT=200 \
+  cosmac
 ```
 
 ## API Endpoints
@@ -97,7 +97,7 @@ curl -X POST http://localhost:8000/pii/redact \
 The container stores scan history and detector data in `/home/shield/data`. Mount a volume to persist across restarts:
 
 ```bash
-docker run -p 8000:8000 -v shield-data:/home/shield/data prompt-shield
+docker run -p 8000:8000 -v shield-data:/home/shield/data cosmac
 ```
 
 The Docker Compose configuration handles this automatically.
@@ -105,18 +105,18 @@ The Docker Compose configuration handles this automatically.
 ## Security Notes
 
 - The container runs as a non-root user (`shield`, UID 1000).
-- No ML classifier is included by default to keep the image small. For the ML-based classifier, build a custom image with `pip install prompt-shield-ai[ml]`.
-- Set `PROMPT_SHIELD_CORS_ORIGINS` to specific origins in production instead of the default `*`.
-- Rate limiting is applied per client IP. Adjust `PROMPT_SHIELD_RATE_LIMIT` based on your expected traffic.
+- No ML classifier is included by default to keep the image small. For the ML-based classifier, build a custom image with `pip install cosmac[ml]`.
+- Set `COSMAC_CORS_ORIGINS` to specific origins in production instead of the default `*`.
+- Rate limiting is applied per client IP. Adjust `COSMAC_RATE_LIMIT` based on your expected traffic.
 
 ## Building a Custom Image
 
 To include ML support or additional plugins:
 
 ```dockerfile
-FROM prompt-shield:latest
+FROM cosmac:latest
 
 USER root
-RUN pip install --no-cache-dir "prompt-shield-ai[ml]"
+RUN pip install --no-cache-dir "cosmac[ml]"
 USER shield
 ```

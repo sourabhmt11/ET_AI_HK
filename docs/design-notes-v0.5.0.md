@@ -1,17 +1,17 @@
-# Design Notes — prompt-shield v0.5.0
+# Design Notes — cosmac v0.5.0
 
 **Author:** Thamilvendhan Munirathinam
 **Date:** 2026-06-18
 **Project:** prompt-shield — https://github.com/mthamil107/prompt-shield
 **Companion paper:** *Beyond Pattern Matching: Seven Cross-Domain Techniques for Prompt Injection Detection*, arXiv:2604.18248 (CC BY 4.0)
 **License:** CC BY 4.0
-**Code release:** v0.5.1 on PyPI (`prompt-shield-ai`, Apache 2.0); commit `298c01f` on `main`.
+**Code release:** v0.5.1 on PyPI (`cosmac`, Apache 2.0); commit `298c01f` on `main`.
 **DOI:** [10.5281/zenodo.20809165](https://doi.org/10.5281/zenodo.20809165)
 **Zenodo record:** https://zenodo.org/records/20809165
 
 ## Purpose and scope
 
-This document is a technical design note for the **novel detection and pre-processing techniques introduced in `prompt-shield` v0.5.0** that are *not* covered in the companion arXiv paper. It is published as a dated public disclosure so that the techniques described here are unambiguously **prior art** as of the timestamp on this document and its DOI on Zenodo.
+This document is a technical design note for the **novel detection and pre-processing techniques introduced in `cosmac` v0.5.0** that are *not* covered in the companion arXiv paper. It is published as a dated public disclosure so that the techniques described here are unambiguously **prior art** as of the timestamp on this document and its DOI on Zenodo.
 
 The companion arXiv paper covers d027 (stylometric discontinuity), d028 (Smith-Waterman sequence alignment with semantic substitution matrix), and the adversarial fatigue tracker. This document covers the seven additional cross-domain techniques shipped in v0.5.0, in enough algorithmic detail to be independently reimplemented from this text alone.
 
@@ -31,7 +31,7 @@ All techniques are released under Apache 2.0 (code) and CC BY 4.0 (this descript
 
 **Why this is novel.** Existing literature on many-shot jailbreaking focuses on the *attack* construction. This technique reframes detection as **periodicity analysis on structural markers**, borrowing from time-series anomaly detection — short conversations have irregular intervals, mechanically padded ones do not.
 
-**Implementation reference.** `src/prompt_shield/detectors/d029_many_shot_structural.py`.
+**Implementation reference.** `src/cosmac/detectors/d029_many_shot_structural.py`.
 
 ## 2. d030 — Custom YAML Rules Engine
 
@@ -55,7 +55,7 @@ On detection, when multiple rules match the same input, **highest-severity wins*
 
 **Novelty claim.** The fail-soft rule loader + highest-severity-wins precedence + per-rule action verb (`block`/`flag`/`log`) is a distinctive combination — most regex-rule engines are either fail-hard (one bad rule kills the loader) or first-match-wins.
 
-**Implementation reference.** `src/prompt_shield/detectors/d030_custom_rules.py`.
+**Implementation reference.** `src/cosmac/detectors/d030_custom_rules.py`.
 
 ## 3. d031 — Two-Stage Language Enforcement
 
@@ -77,7 +77,7 @@ d031_language_enforcement:
 
 **Novelty claim.** The fast-path script-ratio gate is a well-known technique in isolation. The novelty here is the **two-stage gated combination**: script-fraction analysis as a no-dependency fast path, with `langdetect` invoked only when the fast path is inconclusive AND optional dependencies are present. This makes the detector deployable in environments that cannot pull in `langdetect` while still benefiting from it when available.
 
-**Implementation reference.** `src/prompt_shield/detectors/d031_language_enforcement.py`.
+**Implementation reference.** `src/cosmac/detectors/d031_language_enforcement.py`.
 
 ## 4. d032 — Operator-Defined Denied Topics
 
@@ -103,7 +103,7 @@ Keywords are matched as word-bounded literal phrases (regex `\bKW\b`, escaped). 
 
 **Novelty claim.** The combination of (a) **multiple competing keyword groups with per-group severity**, (b) **min-hits-per-group threshold** (so isolated word usage doesn't fire — "I'm not asking for medical advice" doesn't trigger on "advice"), and (c) **most-hits-wins** precedence is the distinctive contribution. This sits between naive single-keyword block-lists and full ML topic classifiers.
 
-**Implementation reference.** `src/prompt_shield/detectors/d032_topic_enforcement.py`.
+**Implementation reference.** `src/cosmac/detectors/d032_topic_enforcement.py`.
 
 ## 5. d033 — Multi-Turn Topic Drift via Jaccard Anchor Similarity
 
@@ -138,7 +138,7 @@ d033_topic_drift:
 2. **The anchor is the conversation's own first turns**, not an externally supplied "safe" prompt. The detector adapts to each conversation's established topic without operator configuration of what the topic is.
 3. **Two-gate decision** (`similarity < T` AND `turn_count ≥ M`) prevents false-positives on legitimate topic switches in short conversations.
 
-**Implementation reference.** `src/prompt_shield/detectors/d033_topic_drift.py`. Test coverage: `tests/detectors/test_d033_topic_drift.py` (10 tests).
+**Implementation reference.** `src/cosmac/detectors/d033_topic_drift.py`. Test coverage: `tests/detectors/test_d033_topic_drift.py` (10 tests).
 
 ## 6. Normalization Pipeline (pre-detector)
 
@@ -157,7 +157,7 @@ Each stage is **idempotent**: running it twice produces the same output as runni
 
 **Novelty claim.** The idempotent-stage pipeline with **change-tracking output** is the distinctive contribution. Existing libraries typically apply normalizations destructively without surfacing what changed. The change-tracking output enables a meta-detector ("input contained zero-width characters") on top of the standard detectors.
 
-**Implementation reference.** `src/prompt_shield/normalization/pipeline.py`.
+**Implementation reference.** `src/cosmac/normalization/pipeline.py`.
 
 ## 7. Multi-Encoding Preprocessor (pre-detector)
 
@@ -177,7 +177,7 @@ Decoders implemented:
 
 **Novelty claim.** The **fan-out candidate-set model** is the distinctive contribution. Most detectors are written as `decode_if_possible(text) → detect(text)`, which can only handle one encoding per substring. The fan-out model treats decoded variants as additional inputs to the full detector stack, so a base64-encoded ROT13-encoded attack is caught when (a) base64 decode produces ROT13 text, (b) ROT13 decode produces the original attack, (c) any detector matches the final decoded form.
 
-**Implementation reference.** `src/prompt_shield/decoders/preprocessor.py`.
+**Implementation reference.** `src/cosmac/decoders/preprocessor.py`.
 
 ## 8. Removal of d022 Input-Length Cap (semantic ML classifier)
 
@@ -189,7 +189,7 @@ Decoders implemented:
 
 **Novelty claim.** The chunking pattern is standard. The combination of (a) **overlap to avoid splitting tokens across chunks**, (b) **max-pool aggregation**, and (c) **a hard chunk cap** (`max_chunks=8`) to bound worst-case compute is the contribution. The cap prevents adversarial input-padding attacks that would force the detector to run for unbounded time.
 
-**Implementation reference.** `src/prompt_shield/detectors/d022_semantic_classifier.py`.
+**Implementation reference.** `src/cosmac/detectors/d022_semantic_classifier.py`.
 
 ## 9. Sliding-Window Rate Limiter
 
@@ -199,17 +199,17 @@ Decoders implemented:
 
 **Not novel as a primitive.** Sliding-window rate limiting is well-known and is documented here for completeness only.
 
-**Implementation reference.** `src/prompt_shield/ratelimit/limiter.py`.
+**Implementation reference.** `src/cosmac/ratelimit/limiter.py`.
 
 ## 10. Prometheus Metrics Exposition
 
-**Technique.** A `PromptShieldMetrics` class exposes:
+**Technique.** A `CosmacMetrics` class exposes:
 
-- `prompt_shield_scans_total` (counter, label: `action ∈ {block, flag, log, pass}`)
-- `prompt_shield_detections_total` (counter, labels: `detector_id`, `severity`)
-- `prompt_shield_scan_duration_seconds` (histogram)
-- `prompt_shield_scan_input_size_chars` (histogram)
-- `prompt_shield_scan_input_size_tokens` (histogram)
+- `cosmac_scans_total` (counter, label: `action ∈ {block, flag, log, pass}`)
+- `cosmac_detections_total` (counter, labels: `detector_id`, `severity`)
+- `cosmac_scan_duration_seconds` (histogram)
+- `cosmac_scan_input_size_chars` (histogram)
+- `cosmac_scan_input_size_tokens` (histogram)
 
 `expose()` returns `(body, content_type)` for drop-in HTTP handler integration. `prometheus_client` is a lazy optional dependency.
 

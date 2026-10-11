@@ -5,14 +5,14 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from prompt_shield.config import (
+from cosmac.config import (
     get_action_for_severity,
     get_detector_config,
     load_config,
     resolve_data_dir,
     validate_config,
 )
-from prompt_shield.models import Severity
+from cosmac.models import Severity
 
 if TYPE_CHECKING:
     import pytest
@@ -22,23 +22,23 @@ class TestLoadConfig:
     """Tests for load_config."""
 
     def test_load_default_config(self) -> None:
-        """Loading with no args should return a config with prompt_shield key."""
+        """Loading with no args should return a config with cosmac key."""
         config = load_config()
-        assert "prompt_shield" in config
-        ps = config["prompt_shield"]
+        assert "cosmac" in config
+        ps = config["cosmac"]
         assert "mode" in ps
         assert "threshold" in ps
 
     def test_load_config_with_dict(self) -> None:
         """Loading with a config_dict override should merge values."""
         override = {
-            "prompt_shield": {
+            "cosmac": {
                 "mode": "monitor",
                 "threshold": 0.9,
             }
         }
         config = load_config(config_dict=override)
-        ps = config["prompt_shield"]
+        ps = config["cosmac"]
         assert ps["mode"] == "monitor"
         assert ps["threshold"] == 0.9
 
@@ -47,10 +47,10 @@ class TestEnvOverride:
     """Tests for environment variable overrides."""
 
     def test_config_env_override(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        """Setting PROMPT_SHIELD_MODE env var should override config mode."""
-        monkeypatch.setenv("PROMPT_SHIELD_MODE", "monitor")
+        """Setting COSMAC_MODE env var should override config mode."""
+        monkeypatch.setenv("COSMAC_MODE", "monitor")
         config = load_config()
-        ps = config["prompt_shield"]
+        ps = config["cosmac"]
         assert ps["mode"] == "monitor"
 
 
@@ -58,15 +58,15 @@ class TestResolveDataDir:
     """Tests for data directory resolution."""
 
     def test_resolve_data_dir_default(self) -> None:
-        """Without explicit data_dir, should return ~/.prompt_shield."""
-        config = {"prompt_shield": {"data_dir": None}}
+        """Without explicit data_dir, should return ~/.cosmac."""
+        config = {"cosmac": {"data_dir": None}}
         result = resolve_data_dir(config)
-        assert result == Path.home() / ".prompt_shield"
+        assert result == Path.home() / ".cosmac"
 
     def test_resolve_data_dir_explicit(self, tmp_path: Path) -> None:
         """Explicit data_dir in config should be used directly."""
         explicit = str(tmp_path / "custom_data")
-        config = {"prompt_shield": {"data_dir": explicit}}
+        config = {"cosmac": {"data_dir": explicit}}
         result = resolve_data_dir(config)
         assert result == Path(explicit)
 
@@ -77,7 +77,7 @@ class TestDetectorConfig:
     def test_get_detector_config(self) -> None:
         """Should return enabled, threshold, and severity for a detector."""
         config = {
-            "prompt_shield": {
+            "cosmac": {
                 "threshold": 0.7,
                 "detectors": {
                     "d001_system_prompt_extraction": {
@@ -96,7 +96,7 @@ class TestDetectorConfig:
     def test_get_detector_config_defaults(self) -> None:
         """Missing per-detector config should fall back to global defaults."""
         config = {
-            "prompt_shield": {
+            "cosmac": {
                 "threshold": 0.7,
                 "detectors": {},
             }
@@ -113,7 +113,7 @@ class TestGetActionForSeverity:
     def test_get_action_for_severity(self) -> None:
         """Should correctly map severity levels to configured actions."""
         config = {
-            "prompt_shield": {
+            "cosmac": {
                 "mode": "block",
                 "actions": {
                     "critical": "block",
@@ -135,7 +135,7 @@ class TestValidateConfig:
     def test_validate_config_valid(self) -> None:
         """A valid config should return an empty errors list."""
         config = {
-            "prompt_shield": {
+            "cosmac": {
                 "mode": "block",
                 "threshold": 0.7,
                 "vault": {"similarity_threshold": 0.85},
@@ -147,7 +147,7 @@ class TestValidateConfig:
     def test_validate_config_invalid_mode(self) -> None:
         """An invalid mode value should produce a validation error."""
         config = {
-            "prompt_shield": {
+            "cosmac": {
                 "mode": "invalid_mode",
                 "threshold": 0.7,
             }

@@ -1,10 +1,10 @@
 # =============================================================================
-# prompt-shield MCP-server Docker image — stdio transport, no HTTP surface
+# cosmac MCP-server Docker image — stdio transport, no HTTP surface
 # =============================================================================
 #
 # This is a separate image from the default Dockerfile (which runs the
 # REST/uvicorn server). Use this one when you want the bundled MCP server
-# (`prompt-shield-mcp`), for example:
+# (`cosmac-mcp`), for example:
 #
 #   * Registry submissions to Glama / Smithery / MCP.so
 #   * Docker-based MCP clients (Claude Desktop / Cursor / VS Code) that
@@ -16,7 +16,7 @@
 # =============================================================================
 
 # ---------------------------------------------------------------------------
-# Stage 1: Build — install prompt-shield with the [mcp] extra
+# Stage 1: Build — install cosmac with the [mcp] extra
 # ---------------------------------------------------------------------------
 FROM python:3.12-slim AS builder
 
@@ -41,11 +41,11 @@ RUN pip install --no-cache-dir --prefix=/install ".[mcp]"
 FROM python:3.12-slim
 
 # --- OCI / opencontainers labels -------------------------------------------
-LABEL maintainer="prompt-shield contributors" \
+LABEL maintainer="cosmac contributors" \
       version="0.7.6" \
-      description="prompt-shield MCP server (stdio) for LLM applications" \
-      org.opencontainers.image.title="prompt-shield-mcp" \
-      org.opencontainers.image.description="Standalone MCP server exposing prompt-shield's scan API to Claude Desktop / Cursor / VS Code / n8n over stdio" \
+      description="cosmac MCP server (stdio) for LLM applications" \
+      org.opencontainers.image.title="cosmac-mcp" \
+      org.opencontainers.image.description="Standalone MCP server exposing cosmac's scan API to Claude Desktop / Cursor / VS Code / n8n over stdio" \
       org.opencontainers.image.version="0.7.6" \
       org.opencontainers.image.url="https://github.com/mthamil107/prompt-shield" \
       org.opencontainers.image.source="https://github.com/mthamil107/prompt-shield" \
@@ -66,9 +66,9 @@ WORKDIR /home/shield
 
 # --- Environment variables ---------------------------------------------------
 # The MCP server auto-loads its bundled interactive-assistant profile
-# (mode: monitor, advisory findings only) when PROMPT_SHIELD_CONFIG is
+# (mode: monitor, advisory findings only) when COSMAC_CONFIG is
 # unset — no need to force mode/threshold here.
-ENV PROMPT_SHIELD_DATA_DIR=/home/shield/data \
+ENV COSMAC_DATA_DIR=/home/shield/data \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
 
@@ -76,8 +76,8 @@ ENV PROMPT_SHIELD_DATA_DIR=/home/shield/data \
 # The MCP protocol runs over stdio (JSON-RPC on stdin/stdout, logs on
 # stderr). Nothing to expose over TCP; nothing to health-check with curl.
 # Clients (Glama, Smithery, Claude Desktop) invoke:
-#   docker run --rm -i mthamil107/prompt-shield-mcp
+#   docker run --rm -i mthamil107/cosmac-mcp
 # and speak MCP directly through the container's stdin/stdout streams.
 
 # --- Entrypoint --------------------------------------------------------------
-ENTRYPOINT ["python", "-m", "prompt_shield.mcp_server"]
+ENTRYPOINT ["python", "-m", "cosmac.mcp_server"]

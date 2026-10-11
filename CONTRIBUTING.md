@@ -1,4 +1,4 @@
-# Contributing to prompt-shield
+# Contributing to cosmac
 
 Thank you for your interest in contributing! This guide will help you get started.
 
@@ -6,8 +6,8 @@ Thank you for your interest in contributing! This guide will help you get starte
 
 ```bash
 # Clone the repository
-git clone https://github.com/prompt-shield/prompt-shield.git
-cd prompt-shield
+git clone https://github.com/cosmac/cosmac.git
+cd cosmac
 
 # Install in development mode with all extras
 pip install -e ".[dev,all]"
@@ -58,7 +58,7 @@ Use the next available number: `dXXX_descriptive_name.py`
 
 Check existing detectors:
 ```bash
-ls src/prompt_shield/detectors/d*.py
+ls src/cosmac/detectors/d*.py
 ```
 
 ### 2. Create the Detector File
@@ -71,8 +71,8 @@ from __future__ import annotations
 
 import regex
 
-from prompt_shield.detectors.base import BaseDetector
-from prompt_shield.models import DetectionResult, MatchDetail, Severity
+from cosmac.detectors.base import BaseDetector
+from cosmac.models import DetectionResult, MatchDetail, Severity
 
 
 class MyNewDetector(BaseDetector):

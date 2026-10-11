@@ -1,11 +1,11 @@
 # Agentic Security Demo
 
-Demonstrates the 3-gate `AgentGuard` pattern and `PromptShieldMCPFilter` for protecting agentic AI applications.
+Demonstrates the 3-gate `AgentGuard` pattern and `CosmacMCPFilter` for protecting agentic AI applications.
 
 ## Setup
 
 ```bash
-pip install prompt-shield
+pip install cosmac
 ```
 
 ## Run
@@ -34,4 +34,4 @@ Gate 2 is the most critical for agentic apps because tool results are the primar
 
 ## MCP Filter
 
-`PromptShieldMCPFilter` wraps any MCP server as a transparent proxy. It scans tool arguments before execution and tool results after execution. Modes: `"block"` (reject), `"sanitize"` (redact), or `"flag"` (log only).
+`CosmacMCPFilter` wraps any MCP server as a transparent proxy. It scans tool arguments before execution and tool results after execution. Modes: `"block"` (reject), `"sanitize"` (redact), or `"flag"` (log only).

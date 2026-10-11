@@ -1,4 +1,4 @@
-"""Tests for the prompt-shield-signatures federated-feed client.
+"""Tests for the cosmac-signatures federated-feed client.
 
 These tests use a hermetic minisign signature generated against a fresh
 ed25519 keypair (no network, no binary dependency). The signature is
@@ -21,8 +21,8 @@ from typing import TYPE_CHECKING
 import pytest
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
-from prompt_shield.signatures import SignaturesClient, SignatureVerificationError
-from prompt_shield.signatures.client import (
+from cosmac.signatures import SignaturesClient, SignatureVerificationError
+from cosmac.signatures.client import (
     MAINTAINER_PUBLIC_KEY,
     _decode_pubkey,
     _parse_minisig,
@@ -313,15 +313,15 @@ class TestPinnedKeyShape:
 
 
 @pytest.mark.skipif(
-    os.environ.get("PROMPT_SHIELD_TEST_LIVE_FEED") != "1",
-    reason="Set PROMPT_SHIELD_TEST_LIVE_FEED=1 to hit the real CDN.",
+    os.environ.get("COSMAC_TEST_LIVE_FEED") != "1",
+    reason="Set COSMAC_TEST_LIVE_FEED=1 to hit the real CDN.",
 )
 def test_fetch_real_feed():
     """End-to-end test against the actually-published feed.
 
     Skipped by default to keep CI hermetic. To run::
 
-        PROMPT_SHIELD_TEST_LIVE_FEED=1 pytest tests/signatures/ -k real_feed
+        COSMAC_TEST_LIVE_FEED=1 pytest tests/signatures/ -k real_feed
     """
     client = SignaturesClient(min_fetch_interval_seconds=0)
     update = client.fetch()

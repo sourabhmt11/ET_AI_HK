@@ -7,11 +7,11 @@ from pathlib import Path
 
 import pytest
 
-from prompt_shield.detectors._d028_substitution_matrix import (
+from cosmac.detectors._d028_substitution_matrix import (
     are_synonyms,
     score_pair,
 )
-from prompt_shield.detectors.d028_sequence_alignment import (
+from cosmac.detectors.d028_sequence_alignment import (
     SequenceAlignmentDetector,
     _align,
     _tokenize,

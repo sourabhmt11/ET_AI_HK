@@ -41,9 +41,9 @@ coverage.xml
 .DS_Store
 Thumbs.db
 
-# prompt-shield data
-.prompt_shield/
-prompt_shield.db
+# cosmac data
+.cosmac/
+cosmac.db
 
 # Windows artifacts
 nul

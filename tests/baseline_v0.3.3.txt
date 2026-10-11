@@ -1,4 +1,4 @@
-# prompt-shield baseline metrics — v0.3.3
+# cosmac baseline metrics — v0.3.3
 # Captured: 2026-04-18 (before v0.4.0 phase 0/4 work)
 # Source commit: c9e7583 (Merge pull request #15 from mthamil107/dev)
 #
@@ -43,7 +43,7 @@ category.obfuscation_novel:             80
 ===============================================================================
 BENCHMARK: tests/benchmark_public_datasets.py
 ===============================================================================
-# prompt-shield row only — competitor numbers are not regression-gated.
+# cosmac row only — competitor numbers are not regression-gated.
 # These numbers are from the REGEX-ONLY engine (d022 semantic classifier
 # is explicitly disabled in the benchmark script for speed). F1 is low
 # because deepset/prompt-injections is dominated by semantic attacks that

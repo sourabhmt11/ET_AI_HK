@@ -13,7 +13,7 @@
 ## v0.1.0 (Initial Release)
 
 ### Engine
-- Core `PromptShieldEngine` with scan, batch scan, feedback, and threat management
+- Core `CosmacEngine` with scan, batch scan, feedback, and threat management
 - Layered configuration system (YAML + env vars + dict overrides)
 - Allowlist and blocklist regex pattern support
 - Scan history with SQLite persistence and configurable retention
@@ -35,7 +35,7 @@
 ### Agentic Security
 - `AgentGuard` with 3-gate model (input, data, output)
 - Canary token injection and leak detection
-- `PromptShieldMCPFilter` for transparent MCP server protection
+- `CosmacMCPFilter` for transparent MCP server protection
 - Tool argument and result scanning
 
 ### Integrations
@@ -46,16 +46,16 @@
 - LlamaIndex handler
 
 ### CLI
-- `prompt-shield scan` with file/stdin/text input
-- `prompt-shield detectors list/info`
-- `prompt-shield config init/validate`
-- `prompt-shield vault stats/search/clear`
-- `prompt-shield feedback`
-- `prompt-shield threats export/import/sync/stats`
-- `prompt-shield test` and `prompt-shield benchmark`
+- `cosmac scan` with file/stdin/text input
+- `cosmac detectors list/info`
+- `cosmac config init/validate`
+- `cosmac vault stats/search/clear`
+- `cosmac feedback`
+- `cosmac threats export/import/sync/stats`
+- `cosmac test` and `cosmac benchmark`
 
 ### Plugin System
 - `BaseDetector` interface for custom detectors
-- Auto-discovery of detectors in the `prompt_shield.detectors` package
+- Auto-discovery of detectors in the `cosmac.detectors` package
 - Entry point discovery for third-party detector packages
 - Runtime registration via `engine.register_detector()`

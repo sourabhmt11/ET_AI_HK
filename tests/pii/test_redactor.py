@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.pii.entity_types import EntityType
-from prompt_shield.pii.redactor import PIIRedactor
+from cosmac.pii.entity_types import EntityType
+from cosmac.pii.redactor import PIIRedactor
 
 
 @pytest.fixture

@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from prompt_shield.persistence.database import DatabaseManager
+from cosmac.persistence.database import DatabaseManager
 
 
 @pytest.fixture

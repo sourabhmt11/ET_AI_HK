@@ -1,6 +1,6 @@
 # Self-Learning System
 
-prompt-shield's self-learning system is the core differentiator from static rule-based scanners. It consists of four tightly integrated components that create a positive feedback loop: every blocked attack makes future detection stronger.
+cosmac's self-learning system is the core differentiator from static rule-based scanners. It consists of four tightly integrated components that create a positive feedback loop: every blocked attack makes future detection stronger.
 
 This page provides a complete technical deep-dive into each component, the algorithms involved, and how they interact.
 
@@ -10,7 +10,7 @@ This page provides a complete technical deep-dive into each component, the algor
 
 ```
                     ┌──────────────────────────────────────────────────┐
-                    │              PromptShieldEngine                  │
+                    │              CosmacEngine                  │
                     │                                                  │
   User Input ──────▶  ┌──────────┐    ┌──────────────┐               │
                     │  │ Detectors │───▶│ DetectionResult│              │
@@ -122,7 +122,7 @@ The model is loaded lazily to avoid slowing down import time. The first scan tha
 ### Configuration
 
 ```yaml
-prompt_shield:
+cosmac:
   vault:
     enabled: true
     embedding_model: "all-MiniLM-L6-v2"     # HuggingFace model ID
@@ -136,19 +136,19 @@ prompt_shield:
 
 ```bash
 # Show vault statistics (total entries, by source)
-prompt-shield vault stats
+cosmac vault stats
 
 # Search the vault for similar text
-prompt-shield vault search "ignore all previous instructions"
+cosmac vault search "ignore all previous instructions"
 
 # Clear all entries (destructive, use with care)
-prompt-shield vault clear
+cosmac vault clear
 ```
 
 ### Python API
 
 ```python
-engine = PromptShieldEngine()
+engine = CosmacEngine()
 
 # Access vault directly
 vault = engine.vault
@@ -208,7 +208,7 @@ The feedback system allows operators to mark scan results as correct (true posit
 ### Recording Feedback
 
 ```python
-engine = PromptShieldEngine()
+engine = CosmacEngine()
 report = engine.scan("some suspicious input")
 
 # After manual review -- mark as correct detection
@@ -220,8 +220,8 @@ engine.feedback(report.scan_id, is_correct=False, notes="User was quoting an exa
 
 ```bash
 # CLI
-prompt-shield feedback --scan-id <SCAN_ID> --correct
-prompt-shield feedback --scan-id <SCAN_ID> --incorrect --notes "false positive: user quoting"
+cosmac feedback --scan-id <SCAN_ID> --correct
+cosmac feedback --scan-id <SCAN_ID> --incorrect --notes "false positive: user quoting"
 ```
 
 ### What Happens on Feedback
@@ -346,7 +346,7 @@ If the detector has a row in `detector_tuning`, the `adjusted_threshold` is used
 ### Configuration
 
 ```yaml
-prompt_shield:
+cosmac:
   feedback:
     enabled: true
     auto_tune: true                # Enable automatic threshold adjustment
@@ -368,7 +368,7 @@ engine._auto_tuner.reset()
 
 ## Component 5: Community Threat Feed
 
-The threat feed system allows prompt-shield instances to share anonymized attack intelligence. When one instance detects a novel attack, it can export the embedding and metadata (but never the raw text) for other instances to import.
+The threat feed system allows cosmac instances to share anonymized attack intelligence. When one instance detects a novel attack, it can export the embedding and metadata (but never the raw text) for other instances to import.
 
 ### Feed Format
 
@@ -378,7 +378,7 @@ The threat feed is a JSON file with this structure:
 {
   "version": "1.0",
   "generated_at": "2026-02-12T10:00:00+00:00",
-  "generator": "prompt-shield/0.1.0",
+  "generator": "cosmac/0.1.0",
   "embedding_model": "all-MiniLM-L6-v2",
   "embedding_dim": 384,
   "total_threats": 42,
@@ -419,7 +419,7 @@ feed = engine.export_threats("threats.json", since="2026-02-01T00:00:00")
 ```
 
 ```bash
-prompt-shield threats export -o threats.json
+cosmac threats export -o threats.json
 ```
 
 ### Import
@@ -432,7 +432,7 @@ print(f"Imported: {result['imported']}, Skipped: {result['duplicates_skipped']}"
 ```
 
 ```bash
-prompt-shield threats import -s threats.json
+cosmac threats import -s threats.json
 ```
 
 ### Sync from Remote
@@ -444,8 +444,8 @@ result = engine.sync_threats(feed_url="https://example.com/feed.json")
 ```
 
 ```bash
-prompt-shield threats sync
-prompt-shield threats sync --url https://example.com/feed.json
+cosmac threats sync
+cosmac threats sync --url https://example.com/feed.json
 ```
 
 The default sync URL is configured in `threat_feed.feed_url`. Sync downloads the feed, saves it locally, and imports new entries.
@@ -453,7 +453,7 @@ The default sync URL is configured in `threat_feed.feed_url`. Sync downloads the
 ### Feed Statistics
 
 ```bash
-prompt-shield threats stats
+cosmac threats stats
 ```
 
 ---
@@ -528,7 +528,7 @@ Traditional prompt injection scanners use **static regex patterns**. They catch 
 - **Novel attacks**: New techniques that no one has written a rule for yet
 - **Evolved attacks**: Slight modifications to bypass known patterns
 
-prompt-shield's self-learning loop addresses all three:
+cosmac's self-learning loop addresses all three:
 
 | Gap | Solution |
 |-----|----------|
@@ -556,7 +556,7 @@ The vault query adds minimal overhead because ChromaDB uses HNSW (Hierarchical N
 For environments where self-learning is not desired (e.g., compliance-sensitive deployments), all components can be individually disabled:
 
 ```yaml
-prompt_shield:
+cosmac:
   vault:
     enabled: false              # Disables vault storage + d021 similarity
   feedback:
@@ -568,11 +568,11 @@ prompt_shield:
 Or via environment variables:
 
 ```bash
-export PROMPT_SHIELD_VAULT_ENABLED=false
-export PROMPT_SHIELD_FEEDBACK_ENABLED=false
+export COSMAC_VAULT_ENABLED=false
+export COSMAC_FEEDBACK_ENABLED=false
 ```
 
-With all self-learning disabled, prompt-shield operates as a pure static scanner using the 20 regex/heuristic detectors. This is a valid deployment mode with zero external dependencies.
+With all self-learning disabled, cosmac operates as a pure static scanner using the 20 regex/heuristic detectors. This is a valid deployment mode with zero external dependencies.
 
 ---
 
@@ -584,7 +584,7 @@ With all self-learning disabled, prompt-shield operates as a pure static scanner
 
 3. **Export and share feeds regularly**: If you operate multiple instances, set up a periodic threat feed export/import pipeline to keep all instances synchronized
 
-4. **Monitor vault growth**: Use `prompt-shield vault stats` to track vault size. The `max_entries` config prevents unbounded growth
+4. **Monitor vault growth**: Use `cosmac vault stats` to track vault size. The `max_entries` config prevents unbounded growth
 
 5. **Don't disable d021**: Even if you disable auto-storage, keeping d021 enabled allows imported threat feeds to work
 

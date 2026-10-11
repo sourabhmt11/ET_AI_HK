@@ -253,7 +253,13 @@ exclude_line_patterns:
 # asserts these still exist after the rename.
 # ---------------------------------------------------------------------------
 must_not_change:
-  - 'd001'          # detector IDs d001..d035
+  # Detector IDs d001..d035 (35 detectors; spot-check the ends).
+  - 'd001_system_prompt_extraction'
   - 'd035'
-  - 'scan_prompt'   # MCP tool name
-  - 'attack_vault'  # ChromaDB collection name
+  # MCP tool names, as advertised by mcp_server/server.py.
+  - '"scan_input"'
+  - '"scan_output"'
+  - '"scan_tool_result"'
+  - '"list_detectors"'
+  # ChromaDB collection name.
+  - '_COLLECTION_NAME = "attack_vault"'

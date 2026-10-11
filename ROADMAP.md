@@ -1,4 +1,4 @@
-# prompt-shield Roadmap
+# cosmac Roadmap
 
 ## v0.1.x
 - 22 detectors, DeBERTa ML classifier, ensemble scoring
@@ -10,8 +10,8 @@
 
 ### OWASP LLM Top 10 Compliance Mapping
 All 22 detectors mapped to OWASP LLM Top 10 (2025) categories. Coverage reports show which categories are covered and where gaps remain.
-- `prompt-shield compliance report` — formatted coverage matrix
-- `prompt-shield compliance mapping` — detector-to-OWASP mapping with optional `--detector` filter
+- `cosmac compliance report` — formatted coverage matrix
+- `cosmac compliance mapping` — detector-to-OWASP mapping with optional `--detector` filter
 - JSON output support for CI/CD integration
 - Python API: `generate_compliance_report()` for programmatic access
 
@@ -19,9 +19,9 @@ All 22 detectors mapped to OWASP LLM Top 10 (2025) categories. Coverage reports 
 Accuracy benchmarking framework with ML metrics (precision, recall, F1, accuracy, TPR, FPR).
 - Bundled 50-sample dataset (25 injection + 25 benign) for offline evaluation
 - Dataset loaders for CSV, JSON, and HuggingFace Hub
-- `prompt-shield benchmark accuracy --dataset sample` — run accuracy benchmarks
-- `prompt-shield benchmark performance -n 100` — throughput measurement
-- `prompt-shield benchmark datasets` — list available datasets
+- `cosmac benchmark accuracy --dataset sample` — run accuracy benchmarks
+- `cosmac benchmark performance -n 100` — throughput measurement
+- `cosmac benchmark datasets` — list available datasets
 - Save results to JSON for tracking over time
 
 ## v0.3.0 (current) — Community, Plugins & Trust
@@ -30,13 +30,13 @@ Accuracy benchmarking framework with ML metrics (precision, recall, F1, accuracy
 New `d023_pii_detection` detector and standalone `PIIRedactor` for detecting and redacting personally identifiable information before prompts reach the LLM. Mapped to OWASP LLM02 (Sensitive Information Disclosure).
 - 6 entity types: email, phone, SSN, credit card, API key, IP address (16 regex patterns)
 - Entity-type-aware redaction placeholders (`[EMAIL_REDACTED]`, `[SSN_REDACTED]`, etc.)
-- CLI commands: `prompt-shield pii scan` and `prompt-shield pii redact` with JSON output
+- CLI commands: `cosmac pii scan` and `cosmac pii redact` with JSON output
 - Per-entity enable/disable and custom patterns via YAML config
 - Integrated into AgentGuard `_sanitize_text()` for automatic PII redaction in the sanitize flow
 - Standalone `PIIRedactor` usable directly from Python API
 
 ### Community & Integrations
-- `prompt-shield-threats` public repo — community-contributed attack fingerprints via PRs
+- `cosmac-threats` public repo — community-contributed attack fingerprints via PRs
 - Client-side import from threat repo URL (free, no server)
 - Dify plugin (Tool type)
 - n8n community node
@@ -44,7 +44,7 @@ New `d023_pii_detection` detector and standalone `PIIRedactor` for detecting and
 - Get listed on awesome-llm-security lists
 
 ### Prometheus Metrics Endpoint
-Expose a `/metrics` endpoint for scan counts, block rates, detector hit rates, latency percentiles, and vault size — so users can plug prompt-shield into their existing monitoring stack without waiting for a dashboard.
+Expose a `/metrics` endpoint for scan counts, block rates, detector hit rates, latency percentiles, and vault size — so users can plug cosmac into their existing monitoring stack without waiting for a dashboard.
 
 ### Docker & Helm Charts
 Production-ready container images and Kubernetes deployment manifests for enterprise adoption.
@@ -52,9 +52,9 @@ Production-ready container images and Kubernetes deployment manifests for enterp
 ## v0.4.0 — Closing the Gaps
 
 ### Gap Analysis (2025-2026 Research)
-Security research audit identified 12 attack techniques that bypass prompt-shield's current 23 detectors. Sources: ACL 2025, NSS 2025, CSA 2026, arXiv, OWASP LLM01:2025, AWS Security, NVIDIA.
+Security research audit identified 12 attack techniques that bypass cosmac's current 23 detectors. Sources: ACL 2025, NSS 2025, CSA 2026, arXiv, OWASP LLM01:2025, AWS Security, NVIDIA.
 
-#### P0 — Critical Gaps (prompt-shield is blind)
+#### P0 — Critical Gaps (cosmac is blind)
 | Gap | Attack | Impact | New Detector |
 |-----|--------|--------|-------------|
 | GAP 9 | Multilingual attacks (French, Chinese, Arabic injections) | All 22 regex detectors are English-only | d024: Multilingual injection detection |
@@ -85,8 +85,8 @@ Security research audit identified 12 attack techniques that bypass prompt-shiel
 - **Output scanning** — Detect when injection succeeded by scanning model responses
 
 ### Adversarial Self-Testing (Red Team Loop) ← NEW
-LLM-powered red team that continuously attacks prompt-shield, reports bypasses, and auto-generates fixes.
-- `prompt-shield redteam` CLI command — runs Claude/OpenAI as attacker against prompt-shield
+LLM-powered red team that continuously attacks cosmac, reports bypasses, and auto-generates fixes.
+- `cosmac redteam` CLI command — runs Claude/OpenAI as attacker against cosmac
 - Configurable time budget (e.g., `--duration 1h`)
 - Covers all 12 gap categories: multilingual, cipher, many-shot, multimodal, HILL, TokenBreak, tool-disguised, multi-turn, dual-intention, MCP, document, fuzzing
 - Generates detailed report: attacks tried, bypasses found, severity, suggested fixes
@@ -113,7 +113,7 @@ Hosted dashboard with real-time analytics, attack trends, team alerts, one-click
 Active deception beyond canary tokens. Plant realistic fake credentials, fake APIs, fake sensitive data. If the agent touches them, the session is compromised.
 
 ### OpenTelemetry & Langfuse Integration
-Native observability export so prompt-shield scan data flows into existing monitoring stacks.
+Native observability export so cosmac scan data flows into existing monitoring stacks.
 - OpenTelemetry spans and metrics for every scan (latency, risk score, detectors triggered)
 - Langfuse integration — trace-level prompt security annotations
 
@@ -133,24 +133,24 @@ Projects with meaningful overlap or complementary positioning.
 
 ### Direct Competitors / Overlap
 
-| Project | What It Does | Relation to prompt-shield |
+| Project | What It Does | Relation to cosmac |
 |---------|-------------|--------------------------|
 | [JavelinGuard](https://arxiv.org/abs/2506.07330) | Suite of ~400M-param BERT-variant classifiers (5 architectures) for detecting malicious LLM interactions. Benchmarked on 9 adversarial datasets. | Closest ML-level competitor. Their multi-architecture approach (attention-weighted pooling, multi-task loss) is more sophisticated than our single DeBERTa classifier. |
 | [TSZ (Thyris Safe Zone)](https://github.com/thyrisAI/safe-zone) | Open-source guardrails & data security layer between apps and LLMs. PII redaction, rule-based + semantic guardrails, output schema validation. Apache 2.0, self-hosted. | Similar architecture (middleware layer, rule + ML hybrid). Their PII focus and output validation are features we lack. |
-| [promptfoo](https://www.promptfoo.dev/blog/building-a-security-scanner-for-llm-apps/) | Security scanner for LLM apps. Tests for prompt injection, jailbreaks, and related vulnerabilities. | Testing/evaluation tool, not runtime defense. Could be used to benchmark prompt-shield. |
+| [promptfoo](https://www.promptfoo.dev/blog/building-a-security-scanner-for-llm-apps/) | Security scanner for LLM apps. Tests for prompt injection, jailbreaks, and related vulnerabilities. | Testing/evaluation tool, not runtime defense. Could be used to benchmark cosmac. |
 | [PenStrike](https://penstrike.io/) | Automated security scanning SaaS for LLM applications. | SaaS scanner; we are self-hosted runtime defense. Different delivery model, same problem space. |
 
 ### Complementary Tools (Red-Team / Testing)
 
-| Project | What It Does | Relation to prompt-shield |
+| Project | What It Does | Relation to cosmac |
 |---------|-------------|--------------------------|
-| [DeepTeam](https://github.com/confident-ai/deepteam) | Open-source red-teaming framework. 40+ risk categories, 10+ attack methods (jailbreaks, ROT13, prompt injection, data extraction). | Offensive testing tool — ideal for validating prompt-shield's detection coverage. Candidate for CI integration. |
+| [DeepTeam](https://github.com/confident-ai/deepteam) | Open-source red-teaming framework. 40+ risk categories, 10+ attack methods (jailbreaks, ROT13, prompt injection, data extraction). | Offensive testing tool — ideal for validating cosmac's detection coverage. Candidate for CI integration. |
 | [Compliant LLM](https://github.com/fiddlecube/compliant-llm) | Automated scanner for SQL injection, code injection, template injection, prompt obfuscation, and data exfiltration via LLM tool calls. | Scanner that tests the exact attack types our detectors defend against. Good validation source. |
 | [SiteIQ](https://github.com/sastrophy/siteiq) | Web security scanner with LLM security module — prompt injection, jailbreaking, system prompt leakage, Denial of Wallet attacks. | Their "Denial of Wallet" attack category is one we don't cover yet. |
 
 ### Conceptually Related
 
-| Project | What It Does | Relation to prompt-shield |
+| Project | What It Does | Relation to cosmac |
 |---------|-------------|--------------------------|
 | [Action Authorization Boundary](https://news.ycombinator.com/item?id=42918344) | Deterministic YAML policy layer outside the agent context for intercepting and authorizing tool calls. | Aligns with our AgentGuard concept. Their CAR (Canonical Action Representation) spec is a more formal approach to tool-call governance. |
 | [Pre-Trained Security LLM 8B](https://arxiv.org/abs/2504.21039) | Security-domain fine-tuned 8B LLM. | Potential replacement or enhancement for our DeBERTa classifier — could power an LLM-as-judge detector. |
@@ -161,12 +161,12 @@ Projects with meaningful overlap or complementary positioning.
 
 ## Features to Bring from Competitors
 
-Capabilities observed in comparable projects that would strengthen prompt-shield.
+Capabilities observed in comparable projects that would strengthen cosmac.
 
 ### From JavelinGuard
 - **Multi-architecture classifier ensemble** — Instead of a single DeBERTa model, offer multiple lightweight classifiers (attention-weighted pooling, multi-task heads) and ensemble their predictions. Would improve detection robustness significantly.
 - **Specialized loss functions** — Their Raudra architecture uses multi-task loss to handle borderline cases. Apply this to our semantic classifier training to reduce false positives on ambiguous inputs.
-- **Standardized adversarial benchmarking** — Benchmark prompt-shield against their 9 datasets (NotInject, BIPIA, Garak, ToxicChat, WildGuard, JavelinBench) to produce comparable accuracy numbers.
+- **Standardized adversarial benchmarking** — Benchmark cosmac against their 9 datasets (NotInject, BIPIA, Garak, ToxicChat, WildGuard, JavelinBench) to produce comparable accuracy numbers.
 
 ### From TSZ (Thyris Safe Zone)
 - ~~**PII detection and redaction**~~ — ✅ Shipped in v0.3.0 (`d023_pii_detection` + `PIIRedactor`).
@@ -174,7 +174,7 @@ Capabilities observed in comparable projects that would strengthen prompt-shield
 - **Blocked/redacted response metadata** — Return structured signals (redacted output, metadata, blocked flag) so downstream apps can decide how to proceed rather than just block/pass.
 
 ### From DeepTeam
-- **Built-in red-team attack suite** — Bundle attack simulation capabilities directly into prompt-shield so users can self-test their deployment. A `prompt-shield attack` CLI command that runs jailbreaks, ROT13, data extraction attempts against the user's own configuration.
+- **Built-in red-team attack suite** — Bundle attack simulation capabilities directly into cosmac so users can self-test their deployment. A `cosmac attack` CLI command that runs jailbreaks, ROT13, data extraction attempts against the user's own configuration.
 - **OWASP/NIST compliance mapping** — Map each detector to OWASP LLM Top 10 and NIST AI RMF categories. Produce compliance reports showing which risks are covered and at what confidence level.
 
 ### From SiteIQ

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Interactive demo: fire diverse prompt injection attacks and show how prompt-shield handles each one."""
+"""Interactive demo: fire diverse prompt injection attacks and show how cosmac handles each one."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ import time
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
-from prompt_shield import PromptShieldEngine
+from cosmac import CosmacEngine
 
 RESET = "\033[0m"
 BOLD = "\033[1m"
@@ -96,7 +96,7 @@ def truncate(text: str, length: int = 80) -> str:
 def print_header() -> None:
     print()
     print(f"{CYAN}{BOLD}{'=' * 72}{RESET}")
-    print(f"{CYAN}{BOLD}  prompt-shield demo — prompt injection detection engine{RESET}")
+    print(f"{CYAN}{BOLD}  cosmac demo — prompt injection detection engine{RESET}")
     print(f"{CYAN}{BOLD}{'=' * 72}{RESET}")
     print()
 
@@ -106,7 +106,7 @@ def print_section(title: str) -> None:
 
 
 def run_scan(
-    engine: PromptShieldEngine, label: str, text: str, index: int, total: int
+    engine: CosmacEngine, label: str, text: str, index: int, total: int
 ) -> dict:
     start = time.perf_counter()
     report = engine.scan(text)
@@ -198,9 +198,9 @@ def main() -> None:
     print_header()
 
     print(f"  {DIM}Initializing engine...{RESET}", end="", flush=True)
-    engine = PromptShieldEngine(
+    engine = CosmacEngine(
         config_dict={
-            "prompt_shield": {
+            "cosmac": {
                 "mode": "block",
                 "threshold": 0.7,
                 "vault": {"enabled": False},

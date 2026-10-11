@@ -1,6 +1,6 @@
 # Writing Custom Detectors
 
-prompt-shield has a plugin architecture that makes it straightforward to add new detectors. This guide covers everything from the basics to advanced techniques, with complete real-world examples.
+cosmac has a plugin architecture that makes it straightforward to add new detectors. This guide covers everything from the basics to advanced techniques, with complete real-world examples.
 
 ---
 
@@ -20,8 +20,8 @@ The engine handles everything else: registration, configuration, threshold enfor
 ## The BaseDetector Interface
 
 ```python
-from prompt_shield.detectors.base import BaseDetector
-from prompt_shield.models import DetectionResult, MatchDetail, Severity
+from cosmac.detectors.base import BaseDetector
+from cosmac.models import DetectionResult, MatchDetail, Severity
 
 class BaseDetector(ABC):
     # ── Required class attributes ────────────────────────────
@@ -68,7 +68,7 @@ class BaseDetector(ABC):
 Detector IDs follow the convention `dXXX_snake_case_name`. Check existing detectors:
 
 ```bash
-ls src/prompt_shield/detectors/d*.py
+ls src/cosmac/detectors/d*.py
 ```
 
 The current highest is `d021`. For community contributions, use the next sequential number. For private/custom detectors, use a descriptive prefix like `custom_company_name`.
@@ -84,7 +84,7 @@ Choose a severity based on the real-world impact of the attack type:
 
 ### Step 2: Create the File
 
-Create `src/prompt_shield/detectors/d022_my_detector.py`:
+Create `src/cosmac/detectors/d022_my_detector.py`:
 
 ```python
 """Detector for [describe what it catches]."""
@@ -93,8 +93,8 @@ from __future__ import annotations
 
 import regex
 
-from prompt_shield.detectors.base import BaseDetector
-from prompt_shield.models import DetectionResult, MatchDetail, Severity
+from cosmac.detectors.base import BaseDetector
+from cosmac.models import DetectionResult, MatchDetail, Severity
 
 
 class MyDetector(BaseDetector):
@@ -192,7 +192,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d022_my_detector import MyDetector
+from cosmac.detectors.d022_my_detector import MyDetector
 
 
 @pytest.fixture
@@ -316,21 +316,21 @@ Add your detector to the table in `docs/detectors.md`.
 ### Step 7: Register and Test
 
 **Auto-discovery** (recommended for contributions to the main repo):
-Place the file in `src/prompt_shield/detectors/` -- the registry auto-discovers it. No registration code needed.
+Place the file in `src/cosmac/detectors/` -- the registry auto-discovers it. No registration code needed.
 
 **Runtime registration** (for application-specific detectors):
 ```python
-from prompt_shield import PromptShieldEngine
+from cosmac import CosmacEngine
 from my_package.d022_my_detector import MyDetector
 
-engine = PromptShieldEngine()
+engine = CosmacEngine()
 engine.register_detector(MyDetector())
 ```
 
 **Entry point** (for distributing as a separate package):
 ```toml
 # In your package's pyproject.toml
-[project.entry-points."prompt_shield.detectors"]
+[project.entry-points."cosmac.detectors"]
 my_detector = "my_package.d022_my_detector:MyDetector"
 ```
 
@@ -349,8 +349,8 @@ from __future__ import annotations
 
 import regex
 
-from prompt_shield.detectors.base import BaseDetector
-from prompt_shield.models import DetectionResult, MatchDetail, Severity
+from cosmac.detectors.base import BaseDetector
+from cosmac.models import DetectionResult, MatchDetail, Severity
 
 
 class EmotionalManipulationDetector(BaseDetector):
@@ -360,7 +360,7 @@ class EmotionalManipulationDetector(BaseDetector):
     severity: Severity = Severity.MEDIUM
     tags: list[str] = ["jailbreak", "social_engineering"]
     version: str = "1.0.0"
-    author: str = "prompt-shield"
+    author: str = "cosmac"
 
     _base_confidence: float = 0.75
 
@@ -425,8 +425,8 @@ from __future__ import annotations
 
 import math
 
-from prompt_shield.detectors.base import BaseDetector
-from prompt_shield.models import DetectionResult, MatchDetail, Severity
+from cosmac.detectors.base import BaseDetector
+from cosmac.models import DetectionResult, MatchDetail, Severity
 
 
 class EntropyPayloadDetector(BaseDetector):
@@ -436,7 +436,7 @@ class EntropyPayloadDetector(BaseDetector):
     severity: Severity = Severity.HIGH
     tags: list[str] = ["obfuscation"]
     version: str = "1.0.0"
-    author: str = "prompt-shield"
+    author: str = "cosmac"
 
     _entropy_threshold: float = 4.5   # Shannon entropy threshold
     _min_segment_length: int = 50     # Minimum chars to analyze
@@ -582,7 +582,7 @@ report = engine.scan(
 | `position` | `tuple[int, int]` | `(start, end)` character offsets in the input |
 | `description` | `str` | Human-readable description of the match |
 
-**Important**: The `position` field enables the `AgentGuard` sanitizer to replace matched segments with `[REDACTED by prompt-shield]`. Always provide accurate positions.
+**Important**: The `position` field enables the `AgentGuard` sanitizer to replace matched segments with `[REDACTED by cosmac]`. Always provide accurate positions.
 
 ---
 
@@ -608,7 +608,7 @@ confidence = min(1.0, self._base_confidence + 0.1 * (len(matches) - 1))
 
 ### Method 1: Auto-Discovery (Recommended for Contributors)
 
-Place your file in `src/prompt_shield/detectors/` with the naming convention `dXXX_snake_case.py`. The registry uses `pkgutil.iter_modules` to discover all modules in the `prompt_shield.detectors` package, then instantiates every non-abstract `BaseDetector` subclass.
+Place your file in `src/cosmac/detectors/` with the naming convention `dXXX_snake_case.py`. The registry uses `pkgutil.iter_modules` to discover all modules in the `cosmac.detectors` package, then instantiates every non-abstract `BaseDetector` subclass.
 
 No import statements or registration code needed. Just create the file and restart the engine.
 
@@ -617,9 +617,9 @@ No import statements or registration code needed. Just create the file and resta
 Register a detector instance at runtime:
 
 ```python
-from prompt_shield import PromptShieldEngine
+from cosmac import CosmacEngine
 
-engine = PromptShieldEngine()
+engine = CosmacEngine()
 engine.register_detector(MyDetector())
 
 # Verify it's registered
@@ -636,17 +636,17 @@ If distributing your detector as a separate pip-installable package, add an entr
 
 ```toml
 # In your package's pyproject.toml
-[project.entry-points."prompt_shield.detectors"]
+[project.entry-points."cosmac.detectors"]
 my_detector = "my_package.detectors:MyDetector"
 ```
 
-The engine calls `importlib.metadata.entry_points(group="prompt_shield.detectors")` on startup and instantiates each entry.
+The engine calls `importlib.metadata.entry_points(group="cosmac.detectors")` on startup and instantiates each entry.
 
 ---
 
 ## Using the `regex` Library
 
-prompt-shield uses the `regex` package (not stdlib `re`) for better Unicode support. Key differences:
+cosmac uses the `regex` package (not stdlib `re`) for better Unicode support. Key differences:
 
 ```python
 import regex
@@ -688,7 +688,7 @@ pattern = regex.compile(r"ignore\s+instructions", regex.IGNORECASE)
 
 ## Checklist for New Detectors
 
-- [ ] Detector file created in `src/prompt_shield/detectors/dXXX_name.py`
+- [ ] Detector file created in `src/cosmac/detectors/dXXX_name.py`
 - [ ] All required class attributes set (`detector_id`, `name`, `description`, `severity`, `tags`, `version`, `author`)
 - [ ] `detect()` method implemented with proper return types
 - [ ] At least 5 regex patterns (for pattern-based detectors)

@@ -6,12 +6,12 @@ Shows how to protect an agent loop with three security gates:
   Gate 3 (Output):  Inject canary token + check LLM output for prompt leakage
 """
 
-from prompt_shield import PromptShieldEngine
-from prompt_shield.integrations.agent_guard import AgentGuard
+from cosmac import CosmacEngine
+from cosmac.integrations.agent_guard import AgentGuard
 
 # --- Setup ---
 
-engine = PromptShieldEngine()
+engine = CosmacEngine()
 
 guard = AgentGuard(
     engine=engine,

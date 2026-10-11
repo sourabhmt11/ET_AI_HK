@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d031_language_enforcement import LanguageEnforcementDetector
+from cosmac.detectors.d031_language_enforcement import LanguageEnforcementDetector
 
 
 @pytest.fixture

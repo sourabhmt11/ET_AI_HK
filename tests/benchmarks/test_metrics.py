@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.benchmarks.metrics import BenchmarkMetrics, compute_metrics
+from cosmac.benchmarks.metrics import BenchmarkMetrics, compute_metrics
 
 
 class TestComputeMetricsPerfect:

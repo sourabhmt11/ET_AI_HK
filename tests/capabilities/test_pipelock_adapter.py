@@ -15,8 +15,8 @@ from typing import Any
 
 import pytest
 
-from prompt_shield.capabilities import ReceiptVerificationError
-from prompt_shield.capabilities.pipelock import PipelockAdapter
+from cosmac.capabilities import ReceiptVerificationError
+from cosmac.capabilities.pipelock import PipelockAdapter
 
 VALID_KEY = "a" * 64
 

@@ -1,6 +1,6 @@
 # Detectors
 
-prompt-shield ships with 22 built-in detectors organized into six categories. All detectors run on every scan and can be individually enabled, disabled, or tuned.
+cosmac ships with 22 built-in detectors organized into six categories. All detectors run on every scan and can be individually enabled, disabled, or tuned.
 
 ---
 
@@ -142,7 +142,7 @@ On every `engine.scan()` call:
 ### Disable a Detector
 
 ```yaml
-prompt_shield:
+cosmac:
   detectors:
     d018_academic_pretext:
       enabled: false
@@ -151,7 +151,7 @@ prompt_shield:
 ### Override Severity
 
 ```yaml
-prompt_shield:
+cosmac:
   detectors:
     d007_task_deflection:
       severity: high       # Promote from medium to high
@@ -160,7 +160,7 @@ prompt_shield:
 ### Adjust Threshold
 
 ```yaml
-prompt_shield:
+cosmac:
   detectors:
     d001_system_prompt_extraction:
       threshold: 0.5       # More sensitive (lower threshold)
@@ -171,7 +171,7 @@ prompt_shield:
 ### Configure Actions by Severity
 
 ```yaml
-prompt_shield:
+cosmac:
   actions:
     critical: block       # Block critical-severity detections
     high: block           # Block high-severity detections
@@ -187,16 +187,16 @@ prompt_shield:
 
 ```bash
 # List all detectors with their status
-prompt-shield detectors list
+cosmac detectors list
 
 # Get detailed info about a specific detector
-prompt-shield detectors info d001_system_prompt_extraction
+cosmac detectors info d001_system_prompt_extraction
 ```
 
 **Python:**
 
 ```python
-engine = PromptShieldEngine()
+engine = CosmacEngine()
 
 for det in engine.list_detectors():
     print(f"{det['detector_id']}: {det['name']} [{det['severity']}] v{det['version']}")

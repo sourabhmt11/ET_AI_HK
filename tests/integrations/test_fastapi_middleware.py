@@ -12,7 +12,7 @@ except ImportError:
 
 from typing import TYPE_CHECKING
 
-from prompt_shield.integrations.fastapi_middleware import PromptShieldMiddleware
+from cosmac.integrations.fastapi_middleware import CosmacASGIMiddleware
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 def _write_test_config(tmp_dir: Path) -> str:
     """Write a minimal YAML config with vault disabled and return its path."""
     cfg = {
-        "prompt_shield": {
+        "cosmac": {
             "mode": "block",
             "threshold": 0.7,
             "data_dir": str(tmp_dir / "ps_data"),
@@ -60,7 +60,7 @@ def app(tmp_path):
     async def health():
         return JSONResponse(content={"status": "ok"})
 
-    app.add_middleware(PromptShieldMiddleware, config_path=config_path)
+    app.add_middleware(CosmacASGIMiddleware, config_path=config_path)
     return app
 
 

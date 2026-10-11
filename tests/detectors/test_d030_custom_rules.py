@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from prompt_shield.detectors.d030_custom_rules import CustomRulesDetector
-from prompt_shield.models import Severity
+from cosmac.detectors.d030_custom_rules import CustomRulesDetector
+from cosmac.models import Severity
 
 if TYPE_CHECKING:
     from pathlib import Path

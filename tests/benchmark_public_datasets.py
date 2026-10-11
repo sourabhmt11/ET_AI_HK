@@ -1,4 +1,4 @@
-"""Benchmark prompt-shield on public datasets for verifiable, reproducible results.
+"""Benchmark cosmac on public datasets for verifiable, reproducible results.
 
 Datasets:
 - deepset/prompt-injections (116 test samples: 60 injection + 56 benign)
@@ -53,13 +53,13 @@ def load_notinject() -> list[tuple[str, bool]]:
     return samples
 
 
-def scan_prompt_shield(samples: list[tuple[str, bool]]) -> tuple[list[dict], float]:
-    """Scan with prompt-shield (regex only, no ML for speed)."""
-    from prompt_shield.engine import PromptShieldEngine
+def scan_cosmac(samples: list[tuple[str, bool]]) -> tuple[list[dict], float]:
+    """Scan with cosmac (regex only, no ML for speed)."""
+    from cosmac.engine import CosmacEngine
 
-    engine = PromptShieldEngine(
+    engine = CosmacEngine(
         config_dict={
-            "prompt_shield": {
+            "cosmac": {
                 "mode": "block",
                 "threshold": 0.7,
                 "vault": {"enabled": False},
@@ -169,7 +169,7 @@ def print_results(name: str, metrics: dict, elapsed: float, total: int) -> None:
 
 def main():
     print("=" * 100)
-    print("PROMPT-SHIELD — PUBLIC DATASET BENCHMARK")
+    print("COSMAC — PUBLIC DATASET BENCHMARK")
     print("=" * 100)
     print()
 
@@ -196,7 +196,7 @@ def main():
         notinject_samples = []
 
     scanners = [
-        ("prompt-shield", lambda s: scan_prompt_shield(s)),
+        ("cosmac", lambda s: scan_cosmac(s)),
         (
             "ProtectAI DeBERTa v2",
             lambda s: scan_with_model(
@@ -282,7 +282,7 @@ def main():
     print()
     print("=" * 100)
     print("Both datasets are publicly available on HuggingFace. Reproduce:")
-    print("  pip install prompt-shield-ai datasets transformers")
+    print("  pip install cosmac datasets transformers")
     print("  python tests/benchmark_public_datasets.py")
     print("=" * 100)
 

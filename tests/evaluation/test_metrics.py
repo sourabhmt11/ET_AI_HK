@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.evaluation.metrics import Proportion, wilson_interval
+from cosmac.evaluation.metrics import Proportion, wilson_interval
 
 
 def test_wilson_matches_known_value():

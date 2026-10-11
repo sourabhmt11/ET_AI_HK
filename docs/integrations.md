@@ -1,23 +1,23 @@
 # Integrations
 
-prompt-shield integrates with popular Python web frameworks and LLM orchestration libraries. Each integration is available as an optional dependency.
+cosmac integrates with popular Python web frameworks and LLM orchestration libraries. Each integration is available as an optional dependency.
 
 ## FastAPI / Starlette
 
 ```bash
-pip install prompt-shield[fastapi]
+pip install cosmac[fastapi]
 ```
 
-Add `PromptShieldMiddleware` to scan all POST/PUT/PATCH request bodies:
+Add `CosmacASGIMiddleware` to scan all POST/PUT/PATCH request bodies:
 
 ```python
 from fastapi import FastAPI
-from prompt_shield.integrations.fastapi_middleware import PromptShieldMiddleware
+from cosmac.integrations.fastapi_middleware import CosmacASGIMiddleware
 
 app = FastAPI()
 app.add_middleware(
-    PromptShieldMiddleware,
-    config_path="prompt_shield.yaml",  # Optional
+    CosmacASGIMiddleware,
+    config_path="cosmac.yaml",  # Optional
     mode="block",                       # "block", "monitor", or "flag"
     scan_fields=["body.prompt", "body.messages.*.content"],
 )
@@ -40,19 +40,19 @@ An optional `on_detection` async callback receives `(request, report)` for custo
 ## Flask
 
 ```bash
-pip install prompt-shield[flask]
+pip install cosmac[flask]
 ```
 
 Wrap the WSGI app:
 
 ```python
 from flask import Flask
-from prompt_shield.integrations.flask_middleware import PromptShieldMiddleware
+from cosmac.integrations.flask_middleware import CosmacFlaskMiddleware
 
 app = Flask(__name__)
-app.wsgi_app = PromptShieldMiddleware(
+app.wsgi_app = CosmacFlaskMiddleware(
     app.wsgi_app,
-    config_path="prompt_shield.yaml",
+    config_path="cosmac.yaml",
     scan_fields=["prompt", "messages.*.content"],
 )
 ```
@@ -62,14 +62,14 @@ Blocked requests receive HTTP 400 with JSON containing `error` and `scan_id`.
 ## Django
 
 ```bash
-pip install prompt-shield[django]
+pip install cosmac[django]
 ```
 
 Add the middleware to `settings.py`:
 
 ```python
 MIDDLEWARE = [
-    "prompt_shield.integrations.django_middleware.PromptShieldMiddleware",
+    "cosmac.integrations.django_middleware.CosmacDjangoMiddleware",
     # ... other middleware
 ]
 ```
@@ -79,17 +79,17 @@ The middleware scans `prompt` and `messages.*.content` fields in JSON request bo
 ## LangChain
 
 ```bash
-pip install prompt-shield[langchain]
+pip install cosmac[langchain]
 ```
 
-Attach `PromptShieldCallback` to any LangChain LLM, ChatModel, or AgentExecutor:
+Attach `CosmacCallback` to any LangChain LLM, ChatModel, or AgentExecutor:
 
 ```python
-from prompt_shield import PromptShieldEngine
-from prompt_shield.integrations.langchain_callback import PromptShieldCallback
+from cosmac import CosmacEngine
+from cosmac.integrations.langchain_callback import CosmacCallback
 
-engine = PromptShieldEngine()
-callback = PromptShieldCallback(
+engine = CosmacEngine()
+callback = CosmacCallback(
     engine=engine,
     mode="block",              # Raises ValueError on detection
     scan_tool_results=True,    # Scan tool output for indirect injection
@@ -108,20 +108,20 @@ Lifecycle hooks:
 | `on_llm_start` | Input | Scans prompts; raises `ValueError` on detection |
 | `on_tool_end` | Data | Scans tool output; raises `ValueError` in block mode |
 | `on_llm_end` | Output | Checks for canary token leakage |
-| `on_chain_error` | -- | Logs prompt-shield block events |
+| `on_chain_error` | -- | Logs cosmac block events |
 
 ## LlamaIndex
 
 ```bash
-pip install prompt-shield[llamaindex]
+pip install cosmac[llamaindex]
 ```
 
-Use `PromptShieldHandler` to scan queries and retrieved nodes:
+Use `CosmacHandler` to scan queries and retrieved nodes:
 
 ```python
-from prompt_shield.integrations.llamaindex_handler import PromptShieldHandler
+from cosmac.integrations.llamaindex_handler import CosmacHandler
 
-handler = PromptShieldHandler(mode="block", scan_retrieved=True)
+handler = CosmacHandler(mode="block", scan_retrieved=True)
 
 # Scan user query
 handler.scan_query("What is the company revenue?")
@@ -138,15 +138,15 @@ In block mode, `scan_query` raises `ValueError` if injection is detected. `scan_
 ## MCP (Model Context Protocol)
 
 ```bash
-pip install prompt-shield[mcp]
+pip install cosmac[mcp]
 ```
 
-Wrap any MCP server with `PromptShieldMCPFilter`:
+Wrap any MCP server with `CosmacMCPFilter`:
 
 ```python
-from prompt_shield.integrations.mcp import PromptShieldMCPFilter
+from cosmac.integrations.mcp import CosmacMCPFilter
 
-protected = PromptShieldMCPFilter(
+protected = CosmacMCPFilter(
     server=mcp_server,
     engine=engine,
     mode="sanitize",
@@ -163,9 +163,9 @@ See [Agentic Security](agentic-security.md) for details on the MCP filter.
 For maximum control, use the engine directly:
 
 ```python
-from prompt_shield import PromptShieldEngine
+from cosmac import CosmacEngine
 
-engine = PromptShieldEngine()
+engine = CosmacEngine()
 
 # Single scan
 report = engine.scan(user_input, context={"source": "api"})
@@ -185,7 +185,7 @@ elif report.action.value == "flag":
 For agentic applications, use `AgentGuard` which implements the 3-gate pattern:
 
 ```python
-from prompt_shield.integrations.agent_guard import AgentGuard
+from cosmac.integrations.agent_guard import AgentGuard
 
 guard = AgentGuard(engine=engine)
 input_result = guard.scan_input(user_message)

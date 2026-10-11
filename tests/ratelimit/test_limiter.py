@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.ratelimit import (
+from cosmac.ratelimit import (
     RateLimitExceededError,
     SlidingWindowLimiter,
 )

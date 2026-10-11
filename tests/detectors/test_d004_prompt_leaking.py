@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d004_prompt_leaking import PromptLeakingDetector
+from cosmac.detectors.d004_prompt_leaking import PromptLeakingDetector
 
 
 @pytest.fixture

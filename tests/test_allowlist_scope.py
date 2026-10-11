@@ -41,7 +41,7 @@ class TestWholeInputMatch:
     def test_exact_match_is_allowed(self, allowlisted_engine):
         report = allowlisted_engine.scan("hello")
         assert report.action == Action.PASS
-        assert report.detectors_run == 0, "an allowlisted input short-circuits"
+        assert report.total_detectors_run == 0, "an allowlisted input short-circuits"
 
     def test_prefix_does_not_allow_the_rest(self, allowlisted_engine):
         """The DEF-02 acceptance criterion, stated verbatim in the story."""
@@ -86,7 +86,7 @@ class TestAllowlistDoesNotApplyToUntrustedContent:
     ):
         """An operator's allowlist must not whitelist fetched content."""
         report = allowlisted_engine.scan("hello", context=context)
-        assert report.detectors_run > 0, (
+        assert report.total_detectors_run > 0, (
             f"allowlist short-circuited for {context}; retrieved and "
             "tool-result content must always be scanned (FR-8)"
         )
@@ -94,4 +94,4 @@ class TestAllowlistDoesNotApplyToUntrustedContent:
     def test_allowlist_still_applies_to_direct_user_input(self, allowlisted_engine):
         report = allowlisted_engine.scan("hello", context={"trust": "user"})
         assert report.action == Action.PASS
-        assert report.detectors_run == 0
+        assert report.total_detectors_run == 0

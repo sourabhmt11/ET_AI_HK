@@ -9,14 +9,14 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from prompt_shield.models import (
+from cosmac.models import (
     Action,
     DetectionResult,
     ScanReport,
     Severity,
     ToolResultAttackFamily,
 )
-from prompt_shield.tool_guard._taxonomy import (
+from cosmac.tool_guard._taxonomy import (
     DETECTOR_TO_FAMILY,
     build_mitigation,
     classify,

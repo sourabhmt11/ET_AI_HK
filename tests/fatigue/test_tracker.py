@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.fatigue.tracker import FatigueConfig, FatigueTracker
+from cosmac.fatigue.tracker import FatigueConfig, FatigueTracker
 
 
 def _enabled_config(**overrides: object) -> FatigueConfig:

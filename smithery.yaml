@@ -1,4 +1,4 @@
-# Smithery.ai registry manifest for the prompt-shield MCP server.
+# Smithery.ai registry manifest for the cosmac MCP server.
 # https://smithery.ai/ — hosted MCP registry with search + install UIs.
 
 startCommand:
@@ -9,21 +9,21 @@ startCommand:
       config_path:
         type: string
         description: >-
-          Optional path to a custom prompt-shield YAML config. If omitted,
+          Optional path to a custom cosmac YAML config. If omitted,
           the bundled interactive-assistant profile is used
-          (src/prompt_shield/mcp_server/mcp_profile.yaml).
+          (src/cosmac/mcp_server/mcp_profile.yaml).
       data_dir:
         type: string
         description: >-
-          Optional override for the prompt-shield data directory
-          (default: ~/.prompt_shield/). Set this if the default home
+          Optional override for the cosmac data directory
+          (default: ~/.cosmac/). Set this if the default home
           directory is read-only.
     required: []
   commandFunction: |-
     (config) => ({
-      command: "prompt-shield-mcp",
+      command: "cosmac-mcp",
       env: {
-        ...(config.config_path ? { PROMPT_SHIELD_CONFIG: config.config_path } : {}),
-        ...(config.data_dir ? { PROMPT_SHIELD_DATA_DIR: config.data_dir } : {}),
+        ...(config.config_path ? { COSMAC_CONFIG: config.config_path } : {}),
+        ...(config.data_dir ? { COSMAC_DATA_DIR: config.data_dir } : {}),
       },
     })

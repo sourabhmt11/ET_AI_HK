@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d010_unicode_homoglyph import UnicodeHomoglyphDetector
+from cosmac.detectors.d010_unicode_homoglyph import UnicodeHomoglyphDetector
 
 
 @pytest.fixture

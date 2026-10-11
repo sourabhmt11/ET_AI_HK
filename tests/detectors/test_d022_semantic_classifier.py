@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from prompt_shield.detectors.d022_semantic_classifier import SemanticClassifierDetector
+from cosmac.detectors.d022_semantic_classifier import SemanticClassifierDetector
 
 
 @pytest.fixture

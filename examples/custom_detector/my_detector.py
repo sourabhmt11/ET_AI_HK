@@ -6,8 +6,8 @@ the detector with the engine at runtime.
 
 import regex
 
-from prompt_shield.detectors.base import BaseDetector
-from prompt_shield.models import DetectionResult, MatchDetail, Severity
+from cosmac.detectors.base import BaseDetector
+from cosmac.models import DetectionResult, MatchDetail, Severity
 
 
 class PleaseHackDetector(BaseDetector):
@@ -72,9 +72,9 @@ class PleaseHackDetector(BaseDetector):
 # --- Registration demo ---
 
 if __name__ == "__main__":
-    from prompt_shield import PromptShieldEngine
+    from cosmac import CosmacEngine
 
-    engine = PromptShieldEngine()
+    engine = CosmacEngine()
 
     # Register the custom detector at runtime
     engine.register_detector(PleaseHackDetector())

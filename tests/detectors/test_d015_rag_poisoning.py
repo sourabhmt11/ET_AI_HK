@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d015_rag_poisoning import RAGPoisoningDetector
+from cosmac.detectors.d015_rag_poisoning import RAGPoisoningDetector
 
 
 @pytest.fixture

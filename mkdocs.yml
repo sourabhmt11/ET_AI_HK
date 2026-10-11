@@ -1,7 +1,7 @@
-site_name: prompt-shield
+site_name: cosmac
 site_description: Self-learning prompt injection detection engine for LLM applications
 repo_url: https://github.com/mthamil107/prompt-shield
-repo_name: mthamil107/prompt-shield
+repo_name: mthamil107/cosmac
 
 theme:
   name: material

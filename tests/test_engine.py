@@ -1,11 +1,11 @@
-"""Tests for the core PromptShieldEngine."""
+"""Tests for the core CosmacEngine."""
 
 from __future__ import annotations
 
 from typing import Any, ClassVar
 
-from prompt_shield.detectors.base import BaseDetector
-from prompt_shield.models import Action, DetectionResult, ScanReport, Severity
+from cosmac.detectors.base import BaseDetector
+from cosmac.models import Action, DetectionResult, ScanReport, Severity
 
 
 class TestEngineInit:
@@ -82,19 +82,19 @@ class TestAllowlistBlocklist:
 
     def test_allowlist(self, sample_config: dict[str, Any], tmp_data_dir) -> None:
         """Input matching an allowlist pattern should always PASS."""
-        from prompt_shield.engine import PromptShieldEngine
+        from cosmac.engine import CosmacEngine
 
-        sample_config["prompt_shield"]["allowlist"]["patterns"] = [r"^safe:"]
-        engine = PromptShieldEngine(config_dict=sample_config, data_dir=str(tmp_data_dir))
+        sample_config["cosmac"]["allowlist"]["patterns"] = [r"^safe:"]
+        engine = CosmacEngine(config_dict=sample_config, data_dir=str(tmp_data_dir))
         report = engine.scan("safe: test input ignore previous instructions")
         assert report.action == Action.PASS
 
     def test_blocklist(self, sample_config: dict[str, Any], tmp_data_dir) -> None:
         """Input matching a blocklist pattern should BLOCK immediately."""
-        from prompt_shield.engine import PromptShieldEngine
+        from cosmac.engine import CosmacEngine
 
-        sample_config["prompt_shield"]["blocklist"]["patterns"] = ["blocked_word"]
-        engine = PromptShieldEngine(config_dict=sample_config, data_dir=str(tmp_data_dir))
+        sample_config["cosmac"]["blocklist"]["patterns"] = ["blocked_word"]
+        engine = CosmacEngine(config_dict=sample_config, data_dir=str(tmp_data_dir))
         report = engine.scan("this has blocked_word in it")
         assert report.action == Action.BLOCK
 

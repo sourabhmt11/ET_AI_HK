@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d032_topic_enforcement import TopicEnforcementDetector
-from prompt_shield.models import Severity
+from cosmac.detectors.d032_topic_enforcement import TopicEnforcementDetector
+from cosmac.models import Severity
 
 
 @pytest.fixture

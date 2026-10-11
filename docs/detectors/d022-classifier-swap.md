@@ -70,7 +70,7 @@ fetch — for air-gapped deployments, pre-populate the cache with
 The `transformers` dependency ships behind the `[ml]` extra:
 
 ```bash
-pip install "prompt-shield-ai[ml]"
+pip install "cosmac[ml]"
 ```
 
 Without it, `d022` returns `detected=False` on every call — regex-only

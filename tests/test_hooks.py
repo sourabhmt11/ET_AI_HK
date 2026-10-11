@@ -6,13 +6,13 @@ import sys
 from pathlib import Path
 from unittest import mock
 
-from prompt_shield.hooks import (
+from cosmac.hooks import (
     _find_line_number,
     _is_binary,
     _read_file_text,
     _should_exclude,
-    prompt_shield_hook,
-    prompt_shield_pii_hook,
+    cosmac_hook,
+    cosmac_pii_hook,
 )
 
 
@@ -65,7 +65,7 @@ class TestHelpers:
         assert _find_line_number(text, 12) == 3
 
 
-class TestPromptShieldHook:
+class TestCosmacHook:
     """Tests for the injection scanning hook."""
 
     def test_clean_file_passes(self, tmp_path: Path) -> None:
@@ -76,7 +76,7 @@ class TestPromptShieldHook:
             encoding="utf-8",
         )
         with mock.patch.object(sys, "argv", ["hook", str(clean_file)]):
-            result = prompt_shield_hook()
+            result = cosmac_hook()
         assert result == 0
 
     def test_malicious_file_fails(self, tmp_path: Path) -> None:
@@ -89,7 +89,7 @@ class TestPromptShieldHook:
             encoding="utf-8",
         )
         with mock.patch.object(sys, "argv", ["hook", "--threshold", "0.5", str(bad_file)]):
-            result = prompt_shield_hook()
+            result = cosmac_hook()
         assert result == 1
 
     def test_binary_file_skipped(self, tmp_path: Path) -> None:
@@ -97,7 +97,7 @@ class TestPromptShieldHook:
         bin_file = tmp_path / "image.png"
         bin_file.write_bytes(b"\x89PNG\r\n\x1a\n\x00\x00\x00")
         with mock.patch.object(sys, "argv", ["hook", str(bin_file)]):
-            result = prompt_shield_hook()
+            result = cosmac_hook()
         assert result == 0
 
     def test_empty_file_skipped(self, tmp_path: Path) -> None:
@@ -105,19 +105,19 @@ class TestPromptShieldHook:
         empty_file = tmp_path / "empty.txt"
         empty_file.write_text("", encoding="utf-8")
         with mock.patch.object(sys, "argv", ["hook", str(empty_file)]):
-            result = prompt_shield_hook()
+            result = cosmac_hook()
         assert result == 0
 
     def test_nonexistent_file_skipped(self, tmp_path: Path) -> None:
         """Non-existent files should be silently skipped (exit 0)."""
         with mock.patch.object(sys, "argv", ["hook", str(tmp_path / "nope.txt")]):
-            result = prompt_shield_hook()
+            result = cosmac_hook()
         assert result == 0
 
     def test_no_files_passes(self) -> None:
         """No filenames should return 0."""
         with mock.patch.object(sys, "argv", ["hook"]):
-            result = prompt_shield_hook()
+            result = cosmac_hook()
         assert result == 0
 
     def test_threshold_argument(self, tmp_path: Path) -> None:
@@ -128,7 +128,7 @@ class TestPromptShieldHook:
             encoding="utf-8",
         )
         with mock.patch.object(sys, "argv", ["hook", "--threshold", "0.99", str(borderline)]):
-            result = prompt_shield_hook()
+            result = cosmac_hook()
         assert result == 0
 
     def test_exclude_argument(self, tmp_path: Path) -> None:
@@ -139,7 +139,7 @@ class TestPromptShieldHook:
             encoding="utf-8",
         )
         with mock.patch.object(sys, "argv", ["hook", "--exclude", "*.min.js", str(excluded)]):
-            result = prompt_shield_hook()
+            result = cosmac_hook()
         assert result == 0
 
     def test_encoding_error_handled(self, tmp_path: Path) -> None:
@@ -148,7 +148,7 @@ class TestPromptShieldHook:
         bad_enc.write_bytes(b"normal text \x80\x81 more text")
         with mock.patch.object(sys, "argv", ["hook", str(bad_enc)]):
             # Should not raise
-            result = prompt_shield_hook()
+            result = cosmac_hook()
         assert result in (0, 1)  # Either is fine, just don't crash
 
 
@@ -163,7 +163,7 @@ class TestPIIHook:
             encoding="utf-8",
         )
         with mock.patch.object(sys, "argv", ["hook", str(clean_file)]):
-            result = prompt_shield_pii_hook()
+            result = cosmac_pii_hook()
         assert result == 0
 
     def test_email_detected(self, tmp_path: Path) -> None:
@@ -174,7 +174,7 @@ class TestPIIHook:
             encoding="utf-8",
         )
         with mock.patch.object(sys, "argv", ["hook", str(pii_file)]):
-            result = prompt_shield_pii_hook()
+            result = cosmac_pii_hook()
         assert result == 1
 
     def test_ssn_detected(self, tmp_path: Path) -> None:
@@ -185,7 +185,7 @@ class TestPIIHook:
             encoding="utf-8",
         )
         with mock.patch.object(sys, "argv", ["hook", str(pii_file)]):
-            result = prompt_shield_pii_hook()
+            result = cosmac_pii_hook()
         assert result == 1
 
     def test_binary_file_skipped(self, tmp_path: Path) -> None:
@@ -193,13 +193,13 @@ class TestPIIHook:
         bin_file = tmp_path / "data.bin"
         bin_file.write_bytes(b"\x00\x01\x02john@example.com")
         with mock.patch.object(sys, "argv", ["hook", str(bin_file)]):
-            result = prompt_shield_pii_hook()
+            result = cosmac_pii_hook()
         assert result == 0
 
     def test_no_files_passes(self) -> None:
         """No filenames should return 0."""
         with mock.patch.object(sys, "argv", ["hook"]):
-            result = prompt_shield_pii_hook()
+            result = cosmac_pii_hook()
         assert result == 0
 
     def test_encoding_error_handled(self, tmp_path: Path) -> None:
@@ -207,7 +207,7 @@ class TestPIIHook:
         bad_enc = tmp_path / "bad.txt"
         bad_enc.write_bytes(b"contact: \x80\x81 john@example.com")
         with mock.patch.object(sys, "argv", ["hook", str(bad_enc)]):
-            result = prompt_shield_pii_hook()
+            result = cosmac_pii_hook()
         assert result in (0, 1)
 
     def test_exclude_argument(self, tmp_path: Path) -> None:
@@ -218,5 +218,5 @@ class TestPIIHook:
             encoding="utf-8",
         )
         with mock.patch.object(sys, "argv", ["hook", "--exclude", "*.json", str(excluded)]):
-            result = prompt_shield_pii_hook()
+            result = cosmac_pii_hook()
         assert result == 0

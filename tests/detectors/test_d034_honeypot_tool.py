@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d034_honeypot_tool import (
+from cosmac.detectors.d034_honeypot_tool import (
     DEFAULT_HONEYPOT_TOOLS,
     HoneypotToolDetector,
 )
-from prompt_shield.models import Severity
+from cosmac.models import Severity
 
 
 @pytest.fixture
@@ -27,7 +27,7 @@ class TestDefaults:
     def test_detector_id_and_metadata(self, detector: HoneypotToolDetector):
         assert detector.detector_id == "d034_honeypot_tool"
         assert "honeypot" in detector.tags
-        assert detector.author == "prompt-shield"
+        assert detector.author == "cosmac"
 
 
 class TestTextMention:

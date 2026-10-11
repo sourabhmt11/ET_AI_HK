@@ -1,13 +1,13 @@
-# Prompt Shield GitHub Action
+# COSMAC GitHub Action
 
 Automatically scan pull requests for prompt injection attacks and PII leakage. The action analyzes changed files, posts findings as a PR comment, and optionally blocks the PR if threats are detected.
 
 ## Quick Start
 
-Add this workflow to your repository at `.github/workflows/prompt-shield.yml`:
+Add this workflow to your repository at `.github/workflows/cosmac.yml`:
 
 ```yaml
-name: Prompt Shield Scan
+name: COSMAC Scan
 
 on:
   pull_request:
@@ -24,19 +24,19 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: prompt-shield/prompt-shield/.github/actions/prompt-shield-scan@main
+      - uses: cosmac/cosmac/.github/actions/cosmac-scan@main
         with:
           threshold: "0.7"
           pii-scan: "true"
 ```
 
-> **Note:** Replace `prompt-shield/prompt-shield/.github/actions/prompt-shield-scan@main` with the correct path if you are vendoring the action locally or referencing a specific release tag.
+> **Note:** Replace `cosmac/cosmac/.github/actions/cosmac-scan@main` with the correct path if you are vendoring the action locally or referencing a specific release tag.
 
 ## How It Works
 
 1. **Detects changed files** in the PR using `git diff` against the base branch.
 2. **Filters files** based on configurable glob patterns (defaults to common text and code formats).
-3. **Scans each file** using the `prompt-shield-ai` engine with all heuristic and pattern detectors enabled. Vault, feedback, and canary subsystems are disabled for CI speed.
+3. **Scans each file** using the `cosmac` engine with all heuristic and pattern detectors enabled. Vault, feedback, and canary subsystems are disabled for CI speed.
 4. **Optionally scans for PII** (emails, phone numbers, SSNs, API keys, etc.) using the built-in PII redactor.
 5. **Posts a PR comment** with a detailed Markdown summary table of findings.
 6. **Fails the check** if detections are found above the threshold (configurable).
@@ -68,7 +68,7 @@ jobs:
 Scan all PRs with default settings. Blocks the PR if prompt injection is detected with a risk score of 0.7 or higher:
 
 ```yaml
-name: Prompt Shield Scan
+name: COSMAC Scan
 
 on:
   pull_request:
@@ -85,7 +85,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: prompt-shield/prompt-shield/.github/actions/prompt-shield-scan@main
+      - uses: cosmac/cosmac/.github/actions/cosmac-scan@main
 ```
 
 ### Custom Threshold
@@ -93,7 +93,7 @@ jobs:
 Use a lower threshold for stricter detection. A threshold of `0.5` catches more potential threats at the cost of higher false positives:
 
 ```yaml
-      - uses: prompt-shield/prompt-shield/.github/actions/prompt-shield-scan@main
+      - uses: cosmac/cosmac/.github/actions/cosmac-scan@main
         with:
           threshold: "0.5"
 ```
@@ -103,7 +103,7 @@ Use a lower threshold for stricter detection. A threshold of `0.5` catches more 
 Report findings in a PR comment without failing the check. Useful for initial rollout or evaluation:
 
 ```yaml
-      - uses: prompt-shield/prompt-shield/.github/actions/prompt-shield-scan@main
+      - uses: cosmac/cosmac/.github/actions/cosmac-scan@main
         with:
           mode: "flag"
           fail-on-detection: "false"
@@ -114,7 +114,7 @@ Report findings in a PR comment without failing the check. Useful for initial ro
 If you only want PII detection and do not need prompt injection blocking, set the threshold high to avoid false positives on injection, but keep PII scanning enabled:
 
 ```yaml
-      - uses: prompt-shield/prompt-shield/.github/actions/prompt-shield-scan@main
+      - uses: cosmac/cosmac/.github/actions/cosmac-scan@main
         with:
           threshold: "0.99"
           pii-scan: "true"
@@ -126,7 +126,7 @@ If you only want PII detection and do not need prompt injection blocking, set th
 Only scan Markdown and YAML files (for example, documentation or configuration repos):
 
 ```yaml
-      - uses: prompt-shield/prompt-shield/.github/actions/prompt-shield-scan@main
+      - uses: cosmac/cosmac/.github/actions/cosmac-scan@main
         with:
           scan-patterns: "**/*.md,**/*.yaml,**/*.yml"
 ```
@@ -136,7 +136,7 @@ Only scan Markdown and YAML files (for example, documentation or configuration r
 Run scans on specific paths within a monorepo by combining scan patterns with path filters on the workflow trigger:
 
 ```yaml
-name: Prompt Shield Scan
+name: COSMAC Scan
 
 on:
   pull_request:
@@ -157,7 +157,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: prompt-shield/prompt-shield/.github/actions/prompt-shield-scan@main
+      - uses: cosmac/cosmac/.github/actions/cosmac-scan@main
         with:
           scan-patterns: "services/ai-gateway/**/*.py,prompts/**/*.txt,prompts/**/*.md,config/**/*.yaml"
           threshold: "0.6"
@@ -177,7 +177,7 @@ jobs:
           fetch-depth: 0
 
       - id: shield
-        uses: prompt-shield/prompt-shield/.github/actions/prompt-shield-scan@main
+        uses: cosmac/cosmac/.github/actions/cosmac-scan@main
         with:
           mode: "flag"
           fail-on-detection: "false"
@@ -211,7 +211,7 @@ The comment is updated on each push to the PR rather than creating duplicates.
 
 ## Troubleshooting
 
-**The action fails to install `prompt-shield-ai`:**
+**The action fails to install `cosmac`:**
 Ensure your workflow has internet access. If you are on a self-hosted runner behind a proxy, configure pip accordingly.
 
 **No files are being scanned:**

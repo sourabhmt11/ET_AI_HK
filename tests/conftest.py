@@ -1,4 +1,4 @@
-"""Shared test fixtures for prompt-shield."""
+"""Shared test fixtures for cosmac."""
 
 from __future__ import annotations
 
@@ -47,7 +47,7 @@ def _redirect_data_dir_away_from_home() -> Any:
 @pytest.fixture
 def tmp_data_dir(tmp_path: Path) -> Path:
     """Create a temporary data directory for tests."""
-    data_dir = tmp_path / "prompt_shield_test"
+    data_dir = tmp_path / "cosmac_test"
     data_dir.mkdir()
     return data_dir
 
@@ -56,7 +56,7 @@ def tmp_data_dir(tmp_path: Path) -> Path:
 def sample_config(tmp_data_dir: Path) -> dict[str, Any]:
     """Minimal config dict for testing — vault/feedback disabled to avoid heavy deps."""
     return {
-        "prompt_shield": {
+        "cosmac": {
             "mode": "block",
             "threshold": 0.7,
             "data_dir": str(tmp_data_dir),
@@ -80,10 +80,10 @@ def sample_config(tmp_data_dir: Path) -> dict[str, Any]:
 
 @pytest.fixture
 def engine(sample_config: dict[str, Any], tmp_data_dir: Path):
-    """Create a PromptShieldEngine for testing (vault disabled for speed)."""
-    from prompt_shield.engine import PromptShieldEngine
+    """Create a CosmacEngine for testing (vault disabled for speed)."""
+    from cosmac.engine import CosmacEngine
 
-    return PromptShieldEngine(config_dict=sample_config, data_dir=str(tmp_data_dir))
+    return CosmacEngine(config_dict=sample_config, data_dir=str(tmp_data_dir))
 
 
 @pytest.fixture

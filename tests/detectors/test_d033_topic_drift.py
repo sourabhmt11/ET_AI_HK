@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d033_topic_drift import TopicDriftDetector
+from cosmac.detectors.d033_topic_drift import TopicDriftDetector
 
 
 @pytest.fixture

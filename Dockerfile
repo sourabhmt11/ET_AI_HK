@@ -1,5 +1,5 @@
 # =============================================================================
-# prompt-shield Docker image — multi-stage build for minimal runtime footprint
+# cosmac Docker image — multi-stage build for minimal runtime footprint
 # =============================================================================
 
 # ---------------------------------------------------------------------------
@@ -28,10 +28,10 @@ RUN pip install --no-cache-dir --prefix=/install "." && \
 FROM python:3.12-slim
 
 # --- OCI / opencontainers labels -------------------------------------------
-LABEL maintainer="prompt-shield contributors" \
+LABEL maintainer="cosmac contributors" \
       version="0.7.5" \
       description="Prompt-injection detection engine for LLM applications" \
-      org.opencontainers.image.title="prompt-shield" \
+      org.opencontainers.image.title="cosmac" \
       org.opencontainers.image.description="Prompt-injection detection engine for LLM applications" \
       org.opencontainers.image.version="0.7.5" \
       org.opencontainers.image.url="https://github.com/mthamil107/prompt-shield" \
@@ -57,9 +57,9 @@ USER shield
 WORKDIR /home/shield
 
 # --- Environment variables ---------------------------------------------------
-ENV PROMPT_SHIELD_MODE=block \
-    PROMPT_SHIELD_THRESHOLD=0.7 \
-    PROMPT_SHIELD_DATA_DIR=/home/shield/data \
+ENV COSMAC_MODE=block \
+    COSMAC_THRESHOLD=0.7 \
+    COSMAC_DATA_DIR=/home/shield/data \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
 
@@ -72,5 +72,5 @@ EXPOSE 8000
 
 # --- Entrypoint --------------------------------------------------------------
 # Default: run the REST API server.
-# Override with CLI:  docker run prompt-shield prompt-shield scan "text"
-ENTRYPOINT ["python", "-m", "prompt_shield.api"]
+# Override with CLI:  docker run cosmac cosmac scan "text"
+ENTRYPOINT ["python", "-m", "cosmac.api"]

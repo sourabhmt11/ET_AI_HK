@@ -8,8 +8,8 @@ import time
 
 import pytest
 
-from prompt_shield.capabilities import ReceiptVerificationError
-from prompt_shield.capabilities.jws import JWSAdapter
+from cosmac.capabilities import ReceiptVerificationError
+from cosmac.capabilities.jws import JWSAdapter
 
 jwt = pytest.importorskip("jwt", reason="PyJWT not installed")
 

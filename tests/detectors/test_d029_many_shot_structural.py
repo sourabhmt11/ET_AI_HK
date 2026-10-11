@@ -6,7 +6,7 @@ import time
 
 import pytest
 
-from prompt_shield.detectors.d029_many_shot_structural import (
+from cosmac.detectors.d029_many_shot_structural import (
     ManyShotStructuralDetector,
 )
 

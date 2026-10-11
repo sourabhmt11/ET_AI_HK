@@ -6,8 +6,8 @@ import asyncio
 
 import pytest
 
-from prompt_shield.models import Action, ToolResultAttackFamily
-from prompt_shield.tool_guard import ToolResultGuard
+from cosmac.models import Action, ToolResultAttackFamily
+from cosmac.tool_guard import ToolResultGuard
 
 
 class TestConstruction:
@@ -115,7 +115,7 @@ class TestSanitizeMode:
         )
         assert report.scan_context is not None
         assert report.scan_context.sanitized_text is not None
-        assert "[REDACTED by prompt-shield]" in report.scan_context.sanitized_text
+        assert "[REDACTED by cosmac]" in report.scan_context.sanitized_text
 
 
 class TestCache:

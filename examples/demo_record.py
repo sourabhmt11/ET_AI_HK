@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Record the prompt-shield demo as an SVG image for the README."""
+"""Record the cosmac demo as an SVG image for the README."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from rich.text import Text
 from rich.panel import Panel
 from rich.columns import Columns
 
-from prompt_shield import PromptShieldEngine
+from cosmac import CosmacEngine
 
 ATTACKS: list[tuple[str, str]] = [
     (
@@ -89,16 +89,16 @@ def main() -> None:
     console.print()
     console.print(
         Panel.fit(
-            "[bold cyan]prompt-shield[/bold cyan]  [dim]prompt injection detection engine[/dim]",
+            "[bold cyan]cosmac[/bold cyan]  [dim]prompt injection detection engine[/dim]",
             border_style="cyan",
         )
     )
     console.print()
 
     console.print("[dim]Initializing engine...[/dim]", end="")
-    engine = PromptShieldEngine(
+    engine = CosmacEngine(
         config_dict={
-            "prompt_shield": {
+            "cosmac": {
                 "mode": "block",
                 "threshold": 0.7,
                 "vault": {"enabled": False},
@@ -222,7 +222,7 @@ def main() -> None:
     console.print(table)
     console.print()
 
-    svg = console.export_svg(title="prompt-shield demo")
+    svg = console.export_svg(title="cosmac demo")
     output_path = "docs/images/demo.svg"
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(svg)

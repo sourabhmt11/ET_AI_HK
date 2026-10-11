@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.output_scanners.code_injection import CodeInjectionScanner
+from cosmac.output_scanners.code_injection import CodeInjectionScanner
 
 
 @pytest.fixture

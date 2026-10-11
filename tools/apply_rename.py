@@ -85,7 +85,7 @@ def run_paths(manifest: dict, apply: bool) -> None:
             continue
         print(f"  [del ] {target}")
         if apply:
-            subprocess.run(["git", "rm", "-r", "-q", target], cwd=ROOT, check=True)
+            subprocess.run(["git", "rm", "-r", "-q", "-f", target], cwd=ROOT, check=True)
 
 
 def _replace_occurrences(text: str, old: str, new: str, which) -> tuple[str, int]:

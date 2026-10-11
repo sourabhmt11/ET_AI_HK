@@ -1,6 +1,6 @@
 # Architecture
 
-This document describes the internal architecture of prompt-shield, covering all components, their responsibilities, data flow, and key design decisions.
+This document describes the internal architecture of cosmac, covering all components, their responsibilities, data flow, and key design decisions.
 
 ---
 
@@ -8,7 +8,7 @@ This document describes the internal architecture of prompt-shield, covering all
 
 ```
                     ┌───────────────────────────────────┐
-                    │       PromptShieldEngine           │
+                    │       CosmacEngine           │
                     │       (engine.py)                  │
                     ├───────────────────────────────────┤
                     │  scan()          feedback()        │
@@ -53,7 +53,7 @@ This document describes the internal architecture of prompt-shield, covering all
 
 ## Core Components
 
-### PromptShieldEngine (`engine.py`)
+### CosmacEngine (`engine.py`)
 
 The central orchestrator. All public API methods go through the engine. It coordinates detectors, vault, feedback, canary, and persistence.
 
@@ -109,8 +109,8 @@ Manages detector lifecycle with three discovery methods:
 
 | Method | How | When |
 |--------|-----|------|
-| Auto-discovery | `pkgutil.iter_modules` on `prompt_shield.detectors` package | Engine init |
-| Entry points | `importlib.metadata.entry_points(group="prompt_shield.detectors")` | Engine init |
+| Auto-discovery | `pkgutil.iter_modules` on `cosmac.detectors` package | Engine init |
+| Entry points | `importlib.metadata.entry_points(group="cosmac.detectors")` | Engine init |
 | Manual | `engine.register_detector(instance)` | Runtime |
 
 The registry stores detector instances in a `dict[str, BaseDetector]` keyed by `detector_id`. It supports `register()`, `unregister()`, `get()`, `list_all()`, `list_metadata()`, and `__contains__()`.
@@ -202,7 +202,7 @@ Thin wrapper around `sentence-transformers`:
 Layered configuration with four sources merged in priority order:
 
 ```
-Priority 1: Environment variables (PROMPT_SHIELD_*)
+Priority 1: Environment variables (COSMAC_*)
 Priority 2: config_dict parameter (Python dict)
 Priority 3: YAML config file (config_path parameter)
 Priority 4: Built-in defaults (config/default.yaml)
@@ -210,12 +210,12 @@ Priority 4: Built-in defaults (config/default.yaml)
 
 Key functions:
 - `load_config()` → Deep-merge all sources
-- `resolve_data_dir()` → Explicit > CWD `.prompt-shield.yaml` > `~/.prompt_shield/`
+- `resolve_data_dir()` → Explicit > CWD `.cosmac.yaml` > `~/.cosmac/`
 - `get_detector_config()` → Per-detector config with global fallbacks
 - `get_action_for_severity()` → Maps severity to action string
 - `validate_config()` → Returns list of error strings (empty = valid)
 - `_deep_merge()` → Recursive dict merge
-- `_apply_env_overrides()` → Reads `PROMPT_SHIELD_*` env vars
+- `_apply_env_overrides()` → Reads `COSMAC_*` env vars
 
 ### Tool Guard (`tool_guard/`) — new in v0.7.0
 
@@ -227,29 +227,29 @@ First-class primitive for scanning tool-result content, with an attack-family ta
 | `tool_guard/guard.py` | `scan_tool_result()` | One-liner using a default engine. |
 | `tool_guard/_taxonomy.py` | `DETECTOR_TO_FAMILY`, `classify()`, `build_mitigation()` | Projection dict + classifier + mitigation-string builder. |
 | `tool_guard/_sanitize.py` | `sanitize_text()` | Shared PII-aware span-replacer (previously private to `agent_guard.py`). |
-| `tool_guard/models.py` | Re-exports of `ScanContext`, `ToolProvenance`, `ToolResultAttackFamily` | Types live in `prompt_shield.models` to avoid circular imports; this file re-exports for the `tool_guard` namespace. |
+| `tool_guard/models.py` | Re-exports of `ScanContext`, `ToolProvenance`, `ToolResultAttackFamily` | Types live in `cosmac.models` to avoid circular imports; this file re-exports for the `tool_guard` namespace. |
 
 ### Integrations (`integrations/`)
 
 | Module | Class | Purpose | Key Methods |
 |--------|-------|---------|-------------|
 | `agent_guard.py` | `AgentGuard` | 3-gate protection for agent loops. Delegates tool-result scanning to `ToolResultGuard`; return type stays `GateResult` for backward compat. Families exposed via `GateResult.metadata["attack_families"]`. | `scan_input()`, `scan_tool_result()`, `scan_tool_call()`, `prepare_prompt()`, `scan_output()`, `scan_multi_hop()` |
-| `mcp.py` | `PromptShieldMCPFilter` | Transparent MCP server proxy. Tool-result path now delegates to `ToolResultGuard`. | `call_tool()`, `list_tools()` |
-| `fastapi_middleware.py` | `PromptShieldMiddleware` | Starlette ASGI middleware | Scans POST/PUT/PATCH bodies |
-| `flask_middleware.py` | `PromptShieldMiddleware` | WSGI middleware | Wraps `wsgi.input` stream |
-| `django_middleware.py` | `PromptShieldMiddleware` | Django middleware | `__call__(request)` |
-| `langchain_callback.py` | `PromptShieldCallback` | LangChain callback handler. `on_tool_end` delegates to `ToolResultGuard`. | `on_llm_start()`, `on_tool_end()`, `on_llm_end()` |
-| `llamaindex_handler.py` | `PromptShieldHandler` | LlamaIndex handler. `scan_retrieved_nodes` delegates to `ToolResultGuard`. | `scan_query()`, `scan_retrieved_nodes()`, `scan_response()` |
-| `haystack_component.py` | `PromptShieldGuard`, `PromptShieldOutputGuard` | Haystack v2 pipeline components. Document scanning delegates to `ToolResultGuard`; gate string normalized in v0.7.0 from `"retrieved_document"` → `"tool_result"` + `"tool_type": "retrieval"`. | `run()` |
-| `anthropic_wrapper.py` | `PromptShieldAnthropic` | Anthropic client wrapper. Scans input messages, output responses, and (new in v0.7.0) `tool_result` blocks inside message content lists. | `create()` |
-| `pydantic_ai_guard.py` | `PromptShieldOutputValidator`, `scan_input`, `attach` | pydantic-ai integration (input + output). Tool-result primitives arrive in v0.7.1. | `scan_input()`, `attach()` |
+| `mcp.py` | `CosmacMCPFilter` | Transparent MCP server proxy. Tool-result path now delegates to `ToolResultGuard`. | `call_tool()`, `list_tools()` |
+| `fastapi_middleware.py` | `CosmacASGIMiddleware` | Starlette ASGI middleware | Scans POST/PUT/PATCH bodies |
+| `flask_middleware.py` | `CosmacFlaskMiddleware` | WSGI middleware | Wraps `wsgi.input` stream |
+| `django_middleware.py` | `CosmacDjangoMiddleware` | Django middleware | `__call__(request)` |
+| `langchain_callback.py` | `CosmacCallback` | LangChain callback handler. `on_tool_end` delegates to `ToolResultGuard`. | `on_llm_start()`, `on_tool_end()`, `on_llm_end()` |
+| `llamaindex_handler.py` | `CosmacHandler` | LlamaIndex handler. `scan_retrieved_nodes` delegates to `ToolResultGuard`. | `scan_query()`, `scan_retrieved_nodes()`, `scan_response()` |
+| `haystack_component.py` | `CosmacGuard`, `CosmacOutputGuard` | Haystack v2 pipeline components. Document scanning delegates to `ToolResultGuard`; gate string normalized in v0.7.0 from `"retrieved_document"` → `"tool_result"` + `"tool_type": "retrieval"`. | `run()` |
+| `anthropic_wrapper.py` | `CosmacAnthropic` | Anthropic client wrapper. Scans input messages, output responses, and (new in v0.7.0) `tool_result` blocks inside message content lists. | `create()` |
+| `pydantic_ai_guard.py` | `CosmacOutputValidator`, `scan_input`, `attach` | pydantic-ai integration (input + output). Tool-result primitives arrive in v0.7.1. | `scan_input()`, `attach()` |
 
 ### CLI (`cli.py`)
 
 Click-based CLI with nested command groups:
 
 ```
-prompt-shield
+cosmac
 ├── --version
 ├── -c / --config-file
 ├── --data-dir
@@ -364,7 +364,7 @@ The config loader lives at `config/__init__.py` rather than `config.py` because 
 
 ### 2. Lazy Model Loading
 
-The sentence-transformers model is loaded on first use (not on import). This means `from prompt_shield import PromptShieldEngine` is fast (~0ms) even with the vault enabled. The ~2-5 second model load only happens when the first scan hits d021 or stores a detection.
+The sentence-transformers model is loaded on first use (not on import). This means `from cosmac import CosmacEngine` is fast (~0ms) even with the vault enabled. The ~2-5 second model load only happens when the first scan hits d021 or stores a detection.
 
 ### 3. No Raw Text Storage
 
@@ -391,7 +391,7 @@ Supporting auto-discovery (for built-in detectors), entry points (for third-part
 ## File Structure
 
 ```
-src/prompt_shield/
+src/cosmac/
 ├── __init__.py              # Public API exports
 ├── engine.py                # Core orchestrator (258 lines)
 ├── registry.py              # Plugin registry

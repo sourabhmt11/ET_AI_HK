@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.canary.leak_detector import LeakDetector
-from prompt_shield.canary.token_generator import CanaryTokenGenerator
+from cosmac.canary.leak_detector import LeakDetector
+from cosmac.canary.token_generator import CanaryTokenGenerator
 
 
 @pytest.fixture

@@ -1,6 +1,6 @@
 # Agentic Security
 
-Agentic AI applications face a unique threat surface because they interact with external tools, databases, and APIs. Malicious content in tool results can hijack the agent's behavior through indirect prompt injection. prompt-shield provides a 3-gate model specifically designed for this threat.
+Agentic AI applications face a unique threat surface because they interact with external tools, databases, and APIs. Malicious content in tool results can hijack the agent's behavior through indirect prompt injection. cosmac provides a 3-gate model specifically designed for this threat.
 
 ## Why Tool Results Are the Most Dangerous Attack Surface
 
@@ -44,7 +44,7 @@ if result.blocked:
 
 Scans tool results for indirect injection before they are fed to the LLM. This is the most critical gate for agentic applications.
 
-As of v0.7.0, the underlying scan is the first-class `ToolResultGuard` primitive (see `prompt_shield.tool_guard`). `AgentGuard.scan_tool_result()` delegates to it while preserving the historical `GateResult` return shape; the new attack-family classification is exposed via `GateResult.metadata["attack_families"]` and `GateResult.metadata["scan_context"]`.
+As of v0.7.0, the underlying scan is the first-class `ToolResultGuard` primitive (see `cosmac.tool_guard`). `AgentGuard.scan_tool_result()` delegates to it while preserving the historical `GateResult` return shape; the new attack-family classification is exposed via `GateResult.metadata["attack_families"]` and `GateResult.metadata["scan_context"]`.
 
 ```python
 result = guard.scan_tool_result("search_documents", tool_output)
@@ -58,7 +58,7 @@ families = result.metadata["attack_families"]
 ```
 
 Modes:
-- `"sanitize"` (default): Replaces matched injection segments with `[REDACTED by prompt-shield]`
+- `"sanitize"` (default): Replaces matched injection segments with `[REDACTED by cosmac]`
 - `"block"`: Rejects the entire tool result
 - `"flag"`: Logs the detection but passes the content through
 
@@ -105,10 +105,10 @@ if result.canary_leaked:
 `AgentGuard` is the high-level API that implements all three gates:
 
 ```python
-from prompt_shield import PromptShieldEngine
-from prompt_shield.integrations.agent_guard import AgentGuard
+from cosmac import CosmacEngine
+from cosmac.integrations.agent_guard import AgentGuard
 
-engine = PromptShieldEngine()
+engine = CosmacEngine()
 guard = AgentGuard(
     engine=engine,
     input_mode="block",
@@ -165,12 +165,12 @@ results = guard.scan_multi_hop([
 
 ## MCP Filter
 
-`PromptShieldMCPFilter` wraps any MCP server as a transparent proxy that scans tool arguments and results automatically.
+`CosmacMCPFilter` wraps any MCP server as a transparent proxy that scans tool arguments and results automatically.
 
 ```python
-from prompt_shield.integrations.mcp import PromptShieldMCPFilter
+from cosmac.integrations.mcp import CosmacMCPFilter
 
-protected_server = PromptShieldMCPFilter(
+protected_server = CosmacMCPFilter(
     server=mcp_server,
     engine=engine,
     scan_results=True,

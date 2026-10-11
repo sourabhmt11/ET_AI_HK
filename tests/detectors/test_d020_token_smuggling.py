@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d020_token_smuggling import TokenSmugglingDetector
+from cosmac.detectors.d020_token_smuggling import TokenSmugglingDetector
 
 
 @pytest.fixture

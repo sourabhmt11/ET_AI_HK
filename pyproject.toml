@@ -1,11 +1,11 @@
 [project]
-name = "prompt-shield-ai"
+name = "cosmac"
 version = "0.8.1"
 description = "Self-learning prompt injection detection engine for LLM applications"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 requires-python = ">=3.10"
-authors = [{ name = "prompt-shield contributors" }]
+authors = [{ name = "cosmac contributors" }]
 keywords = [
     "llm", "llm-security", "llm-firewall", "prompt-injection", "prompt-injection-detection",
     "ai-safety", "guardrails", "firewall", "self-learning", "threat-intelligence",
@@ -40,9 +40,9 @@ dependencies = [
     "sentence-transformers>=2.0,<6",
     "chromadb>=0.5,<2",
     # ed25519 minisign verification for the federated threat-intel feed
-    # (SignaturesClient in prompt_shield.signatures). Added in v0.7.4:
+    # (SignaturesClient in cosmac.signatures). Added in v0.7.4:
     # was previously a transitively-missing dep, causing a documented-but-
-    # broken import for anyone doing a base `pip install prompt-shield-ai`.
+    # broken import for anyone doing a base `pip install cosmac`.
     # Floor bumped to 50.0.0 in v0.8.0 so `pip-audit`/Dependabot won't
     # flag CVE-2026-69247/-69248/-69249 (fixed in 49.0.0/50.0.0); none
     # reachable from our ed25519 code path, but the floor should not
@@ -71,7 +71,7 @@ observability = ["prometheus_client>=0.17,<1"]
 sentiment = ["vaderSentiment>=3.3,<4"]
 language = ["langdetect>=1.0,<2"]
 # v0.8.0 — receipt-format adapters for ToolResultGuard (interop layer for
-# upstream capability enforcement projects; prompt-shield verifies, does
+# upstream capability enforcement projects; cosmac verifies, does
 # not mint tokens). See docs/capabilities/receipt-adapter.md.
 capabilities-pipelock = ["pipelock-verify>=0.1,<1"]
 # PyJWT lower bound raised to 2.13 to close CVE-2024-53861 (issuer
@@ -84,7 +84,7 @@ capabilities-pipelock = ["pipelock-verify>=0.1,<1"]
 # and CVE-2026-69249 (path-building DoS, fixed 49.0.0); none reachable
 # from our verify path but pip-audit will flag lower floors.
 capabilities-jws = ["PyJWT>=2.13.0,<3", "cryptography>=50.0.0,<51"]
-all = ["prompt-shield-ai[fastapi,flask,langchain,llamaindex,haystack,pydantic-ai,django,crewai,mcp,openai,anthropic,ml,observability,sentiment,language,capabilities-pipelock,capabilities-jws]"]
+all = ["cosmac[fastapi,flask,langchain,llamaindex,haystack,pydantic-ai,django,crewai,mcp,openai,anthropic,ml,observability,sentiment,language,capabilities-pipelock,capabilities-jws]"]
 dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
@@ -97,19 +97,19 @@ dev = [
 ]
 
 [project.scripts]
-prompt-shield = "prompt_shield.cli:main"
-prompt-shield-hook = "prompt_shield.hooks:prompt_shield_hook"
-prompt-shield-pii-hook = "prompt_shield.hooks:prompt_shield_pii_hook"
-prompt-shield-mcp = "prompt_shield.mcp_server.__main__:main"
+cosmac = "cosmac.cli:main"
+cosmac-hook = "cosmac.hooks:cosmac_hook"
+cosmac-pii-hook = "cosmac.hooks:cosmac_pii_hook"
+cosmac-mcp = "cosmac.mcp_server.__main__:main"
 
-[project.entry-points."prompt_shield.detectors"]
+[project.entry-points."cosmac.detectors"]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/prompt_shield"]
+packages = ["src/cosmac"]
 
 [tool.ruff]
 target-version = "py310"
@@ -122,18 +122,18 @@ select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM", "TCH", "RUF"]
 [tool.ruff.lint.per-file-ignores]
 # Compliance-mapping data: URL strings and OWASP descriptions are data,
 # not code — wrapping them hurts readability and loses grep-ability.
-"src/prompt_shield/compliance/owasp_mapping.py" = ["E501"]
+"src/cosmac/compliance/owasp_mapping.py" = ["E501"]
 # Attack-sequence database is a literal data table.
-"src/prompt_shield/detectors/_d028_attack_sequences.py" = ["E501"]
+"src/cosmac/detectors/_d028_attack_sequences.py" = ["E501"]
 # Built-in detectors embed long regex patterns and human-readable
 # descriptions that are clearer on a single line than wrapped.
-"src/prompt_shield/detectors/d0*.py" = ["E501"]
+"src/cosmac/detectors/d0*.py" = ["E501"]
 # Benchmarks print long report lines that are easier to read unwrapped,
 # and embed multilingual / mathematical glyphs as legitimate test data.
 "tests/benchmark_*.py" = ["E501", "RUF001", "RUF002", "RUF003"]
 # Homoglyph normalization pipeline & tests use Cyrillic / fullwidth chars
 # as the literal data being tested — flagging them is noise.
-"src/prompt_shield/normalization/pipeline.py" = ["RUF001"]
+"src/cosmac/normalization/pipeline.py" = ["RUF001"]
 "tests/normalization/test_pipeline.py" = ["RUF001", "RUF002", "RUF003"]
 "tests/detectors/test_d031_language_enforcement.py" = ["RUF001", "RUF002", "RUF003"]
 
@@ -144,15 +144,15 @@ select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM", "TCH", "RUF"]
 # 3.10/3.11/3.12/3.13 catches any 3.12-only feature that sneaks into code.
 python_version = "3.12"
 strict = true
-packages = ["prompt_shield"]
+packages = ["cosmac"]
 mypy_path = "src"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = [
-    "prompt_shield.integrations.*",
-    "prompt_shield.vault.*",
-    "prompt_shield.detectors.d022_semantic_classifier",
+    "cosmac.integrations.*",
+    "cosmac.vault.*",
+    "cosmac.detectors.d022_semantic_classifier",
 ]
 disallow_any_generics = false
 warn_return_any = false
@@ -162,16 +162,16 @@ disable_error_code = ["arg-type", "misc", "assignment", "return-value", "index",
 # stubs-less package (mcp>=1.10); their untyped-call / untyped-decorator
 # rules are noise for a first-party server implementation.
 [[tool.mypy.overrides]]
-module = ["prompt_shield.mcp_server.*"]
+module = ["cosmac.mcp_server.*"]
 disable_error_code = ["no-untyped-call", "untyped-decorator", "misc"]
 
 # FastAPI handlers rely on response_model= for schema; return type annotations
 # on each async def are boilerplate. Benchmarks/runner call into a loose
-# `engine: object` parameter (PromptShieldEngine) that mypy can't narrow.
+# `engine: object` parameter (CosmacEngine) that mypy can't narrow.
 [[tool.mypy.overrides]]
 module = [
-    "prompt_shield.api",
-    "prompt_shield.benchmarks.runner",
+    "cosmac.api",
+    "cosmac.benchmarks.runner",
 ]
 disable_error_code = ["no-untyped-def", "no-untyped-call"]
 
@@ -186,7 +186,7 @@ ignore_errors = true
 # but contributor envs may not have it. d030 imports yaml — silence the
 # missing-stub error in the importing module since it varies by env.
 [[tool.mypy.overrides]]
-module = ["prompt_shield.detectors.d030_custom_rules"]
+module = ["cosmac.detectors.d030_custom_rules"]
 disable_error_code = ["import-untyped", "unused-ignore"]
 
 # Receipt-format adapters lazy-import third-party packages (pipelock-verify,
@@ -197,7 +197,7 @@ disable_error_code = ["import-untyped", "unused-ignore"]
 # expects a private TypedDict — passing a plain dict is idiomatic in the
 # real API but trips mypy in strict mode.
 [[tool.mypy.overrides]]
-module = ["prompt_shield.capabilities.*"]
+module = ["cosmac.capabilities.*"]
 disable_error_code = ["arg-type", "unused-ignore", "import-not-found"]
 
 # haystack-ai and pydantic-ai are optional deps; their decorators aren't
@@ -205,8 +205,8 @@ disable_error_code = ["arg-type", "unused-ignore", "import-not-found"]
 # classes dynamically. Silence the resulting decorator/return-type noise.
 [[tool.mypy.overrides]]
 module = [
-    "prompt_shield.integrations.haystack_component",
-    "prompt_shield.integrations.pydantic_ai_guard",
+    "cosmac.integrations.haystack_component",
+    "cosmac.integrations.pydantic_ai_guard",
 ]
 disable_error_code = [
     "no-untyped-def",
@@ -228,10 +228,10 @@ ignore_errors = true
 
 [[tool.mypy.overrides]]
 module = [
-    "prompt_shield.config.*",
-    "prompt_shield.persistence.*",
-    "prompt_shield.feedback.*",
-    "prompt_shield.registry",
+    "cosmac.config.*",
+    "cosmac.persistence.*",
+    "cosmac.feedback.*",
+    "cosmac.registry",
 ]
 disallow_any_generics = false
 warn_return_any = false
@@ -247,14 +247,14 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["prompt_shield"]
+source = ["cosmac"]
 branch = true
 
 [tool.coverage.report]
 fail_under = 60
 omit = [
-    "src/prompt_shield/vault/*",
-    "src/prompt_shield/integrations/django_middleware.py",
-    "src/prompt_shield/integrations/flask_middleware.py",
-    "src/prompt_shield/integrations/llamaindex_handler.py",
+    "src/cosmac/vault/*",
+    "src/cosmac/integrations/django_middleware.py",
+    "src/cosmac/integrations/flask_middleware.py",
+    "src/cosmac/integrations/llamaindex_handler.py",
 ]

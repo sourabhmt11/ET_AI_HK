@@ -25,7 +25,7 @@ from pathlib import Path
 
 import pytest
 
-from prompt_shield.detectors._d027_features import (
+from cosmac.detectors._d027_features import (
     FEATURE_ORDER,
     allcaps_word_ratio,
     avg_sentence_length,
@@ -42,7 +42,7 @@ from prompt_shield.detectors._d027_features import (
     uppercase_ratio,
     yules_k,
 )
-from prompt_shield.detectors.d027_stylometric_discontinuity import (
+from cosmac.detectors.d027_stylometric_discontinuity import (
     StylometricDiscontinuityDetector,
 )
 

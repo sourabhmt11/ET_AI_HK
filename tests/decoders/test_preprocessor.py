@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import base64
 
-from prompt_shield.decoders import MultiEncodingPreprocessor
+from cosmac.decoders import MultiEncodingPreprocessor
 
 
 class TestBase64:

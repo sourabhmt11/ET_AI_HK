@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.compliance.owasp_mapping import (
+from cosmac.compliance.owasp_mapping import (
     _VALID_AGENTIC_IDS,
     _VALID_OWASP_IDS,
     DETECTOR_AGENTIC_MAP,
@@ -12,7 +12,7 @@ from prompt_shield.compliance.owasp_mapping import (
     EU_AI_ACT_ARTICLES,
     OWASP_AGENTIC_TOP_10,
     OWASP_LLM_TOP_10,
-    PROMPT_SHIELD_EU_AI_ACT_COVERAGE,
+    COSMAC_EU_AI_ACT_COVERAGE,
     generate_agentic_compliance_report,
     generate_compliance_report,
     generate_eu_ai_act_report,
@@ -26,14 +26,14 @@ def _discover_detector_ids() -> list[str]:
     import importlib
     import pkgutil
 
-    import prompt_shield.detectors as pkg
+    import cosmac.detectors as pkg
 
     ids: set[str] = set()
     for _, modname, _ in pkgutil.iter_modules(pkg.__path__):
         if not modname.startswith("d0"):
             continue
         try:
-            mod = importlib.import_module(f"prompt_shield.detectors.{modname}")
+            mod = importlib.import_module(f"cosmac.detectors.{modname}")
         except Exception:
             continue
         for attr in dir(mod):
@@ -252,7 +252,7 @@ class TestEuAiActCoverage:
 
     def test_eu_ai_act_articles_have_coverage_items(self) -> None:
         for article in EU_AI_ACT_ARTICLES:
-            items = PROMPT_SHIELD_EU_AI_ACT_COVERAGE.get(article.id, [])
+            items = COSMAC_EU_AI_ACT_COVERAGE.get(article.id, [])
             assert len(items) > 0, f"{article.id} has no coverage items"
 
     def test_eu_ai_act_article_ids_are_unique(self) -> None:

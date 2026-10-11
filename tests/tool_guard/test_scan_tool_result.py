@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.models import Action
-from prompt_shield.tool_guard import scan_tool_result
+from cosmac.models import Action
+from cosmac.tool_guard import scan_tool_result
 
 
 class TestScanToolResult:

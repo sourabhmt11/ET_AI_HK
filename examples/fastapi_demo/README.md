@@ -1,11 +1,11 @@
 # FastAPI Demo
 
-Demonstrates `PromptShieldMiddleware` scanning HTTP request bodies for prompt injection.
+Demonstrates `CosmacASGIMiddleware` scanning HTTP request bodies for prompt injection.
 
 ## Setup
 
 ```bash
-pip install prompt-shield[fastapi] uvicorn
+pip install cosmac[fastapi] uvicorn
 ```
 
 ## Run

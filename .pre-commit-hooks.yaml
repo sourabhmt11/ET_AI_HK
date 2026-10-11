@@ -1,16 +1,16 @@
-- id: prompt-shield-scan
-  name: Prompt Shield Scan
+- id: cosmac-scan
+  name: COSMAC Scan
   description: Scan staged files for prompt injection patterns
-  entry: prompt-shield-hook
+  entry: cosmac-hook
   language: python
   types: [text]
   minimum_pre_commit_version: "3.0.0"
   require_serial: true
 
-- id: prompt-shield-pii
-  name: Prompt Shield PII Scan
+- id: cosmac-pii
+  name: COSMAC PII Scan
   description: Scan staged files for PII (emails, phone numbers, SSNs, etc.)
-  entry: prompt-shield-pii-hook
+  entry: cosmac-pii-hook
   language: python
   types: [text]
   minimum_pre_commit_version: "3.0.0"

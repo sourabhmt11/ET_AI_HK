@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d012_markdown_html_injection import (
+from cosmac.detectors.d012_markdown_html_injection import (
     MarkdownHtmlInjectionDetector,
 )
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d011_whitespace_injection import (
+from cosmac.detectors.d011_whitespace_injection import (
     WhitespaceInjectionDetector,
 )
 

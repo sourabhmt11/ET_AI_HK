@@ -1,19 +1,19 @@
 ---
 layout: home
-title: prompt-shield — OSS prompt-injection firewall
+title: cosmac — OSS prompt-injection firewall
 description: Apache 2.0 prompt-injection detection engine for LLM applications. 33 input detectors, 9 output scanners, federated ed25519-signed threat-intel feed. Paper + benchmarks + integrations for LangChain, LlamaIndex, CrewAI.
 seo:
   type: SoftwareApplication
-  name: prompt-shield
+  name: cosmac
 image: https://raw.githubusercontent.com/mthamil107/prompt-shield/main/prompt-shield-logo.png
 ---
 
-# prompt-shield
+# cosmac
 
 **Open-source [prompt injection](https://owasp.org/www-project-top-10-for-large-language-model-applications/) firewall for LLM applications.**
 Apache 2.0. 33 input detectors, 9 output scanners, first OSS federated threat-intel feed for LLM defense.
 
-- 📦 **Install:** `pip install prompt-shield-ai`
+- 📦 **Install:** `pip install cosmac`
 - 💻 **Repo:** [github.com/mthamil107/prompt-shield](https://github.com/mthamil107/prompt-shield)
 - 📄 **Paper:** [arXiv:2604.18248](https://arxiv.org/abs/2604.18248) (CC BY 4.0) · [Zenodo DOI 10.5281/zenodo.19644135](https://doi.org/10.5281/zenodo.19644135)
 - 🔖 **Design notes:** [Zenodo DOI 10.5281/zenodo.20809165](https://doi.org/10.5281/zenodo.20809165)
@@ -35,7 +35,7 @@ Apache 2.0. 33 input detectors, 9 output scanners, first OSS federated threat-in
 
 ## Novel techniques
 
-Novel techniques shipped in prompt-shield as of 2026. The [paper](https://arxiv.org/abs/2604.18248) §4 proposes seven cross-domain techniques; three of those seven are shipped (`d027` stylometric discontinuity, `d028` Smith-Waterman alignment, and the adversarial fatigue tracker), and four remain as design specifications for future implementation (honeypot tools, prediction-market ensemble, perplexity spectral analysis, runtime taint tracking). The list below is a superset — it adds four post-paper novel infrastructure pieces (`d033` topic drift, the federated threat-intel feed, the multi-encoding preprocessor, and the normalisation pipeline):
+Novel techniques shipped in cosmac as of 2026. The [paper](https://arxiv.org/abs/2604.18248) §4 proposes seven cross-domain techniques; three of those seven are shipped (`d027` stylometric discontinuity, `d028` Smith-Waterman alignment, and the adversarial fatigue tracker), and four remain as design specifications for future implementation (honeypot tools, prediction-market ensemble, perplexity spectral analysis, runtime taint tracking). The list below is a superset — it adds four post-paper novel infrastructure pieces (`d033` topic drift, the federated threat-intel feed, the multi-encoding preprocessor, and the normalisation pipeline):
 
 ### Smith-Waterman sequence alignment (d028)
 
@@ -58,7 +58,7 @@ EWMA + per-source threshold hardening. Treats probing campaigns as the signal, n
 **First OSS-with-no-commercial-strings signed public feed for LLM defense.** Pure-Python ed25519 verification, hourly-pollable, opt-in. Subscribe in 3 lines:
 
 ```python
-from prompt_shield.signatures import SignaturesClient
+from cosmac.signatures import SignaturesClient
 update = SignaturesClient().fetch()
 # update.signature_count == 56, ed25519-verified against pinned key
 ```

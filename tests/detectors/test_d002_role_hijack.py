@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d002_role_hijack import RoleHijackDetector
+from cosmac.detectors.d002_role_hijack import RoleHijackDetector
 
 
 @pytest.fixture

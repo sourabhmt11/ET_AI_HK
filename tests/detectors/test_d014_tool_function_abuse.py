@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.detectors.d014_tool_function_abuse import ToolFunctionAbuseDetector
+from cosmac.detectors.d014_tool_function_abuse import ToolFunctionAbuseDetector
 
 
 @pytest.fixture

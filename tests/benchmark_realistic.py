@@ -1,13 +1,13 @@
-"""Realistic benchmark: test prompt-shield against real-world attack techniques from 2025-2026 research."""
+"""Realistic benchmark: test cosmac against real-world attack techniques from 2025-2026 research."""
 
 import time
 
-from prompt_shield.engine import PromptShieldEngine
+from cosmac.engine import CosmacEngine
 
 # Lightweight engine (no vault, no ML for speed — then separately test with ML)
-engine = PromptShieldEngine(
+engine = CosmacEngine(
     config_dict={
-        "prompt_shield": {
+        "cosmac": {
             "mode": "block",
             "threshold": 0.7,
             "vault": {"enabled": False},
@@ -179,7 +179,7 @@ def run_benchmark():
     start = time.perf_counter()
 
     print("=" * 70)
-    print("PROMPT-SHIELD REALISTIC BENCHMARK")
+    print("COSMAC REALISTIC BENCHMARK")
     print("=" * 70)
 
     # Test attacks

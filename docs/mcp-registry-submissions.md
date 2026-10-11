@@ -1,6 +1,6 @@
 # MCP registry submissions — paste-ready
 
-Registries where the `prompt-shield` MCP server belongs. Each entry below is
+Registries where the `cosmac` MCP server belongs. Each entry below is
 formatted for the registry's expected shape and can be pasted into a PR or a
 form. **None of these are auto-submitted** — submit them yourself, in your
 own name, when you're ready.
@@ -66,8 +66,8 @@ scrapes your repo's `smithery.yaml` if present.
 
 Suggested form values:
 
-* **Server ID:** `mthamil107/prompt-shield`
-* **Command:** `prompt-shield-mcp`
+* **Server ID:** `mthamil107/cosmac`
+* **Command:** `cosmac-mcp`
 * **Description:**
   Prompt-injection firewall exposing scan_input, scan_output,
   scan_tool_result, and list_detectors tools. Backed by 34+ detectors and a
@@ -78,15 +78,15 @@ Suggested form values:
 Optionally check in a `smithery.yaml` at the repo root:
 
 ```yaml
-name: prompt-shield
+name: cosmac
 description: Prompt-injection firewall for LLM applications
 version: 0.8.0
 runtime: python
-command: prompt-shield-mcp
+command: cosmac-mcp
 args: []
 env:
-  PROMPT_SHIELD_CONFIG:
-    description: Optional path to a custom prompt-shield YAML config
+  COSMAC_CONFIG:
+    description: Optional path to a custom cosmac YAML config
     required: false
 ```
 
@@ -129,9 +129,9 @@ Submit only after you have:
 
 * Cut a `v0.8.0` release tag on GitHub with the MCP server changelog entry
   visible.
-* Published `prompt-shield-ai==0.8.0` to PyPI so `pip install
-  "prompt-shield-ai[mcp]"` picks up the console script.
-* Manually tested `prompt-shield-mcp` end-to-end in Claude Desktop or Cursor
+* Published `cosmac==0.8.0` to PyPI so `pip install
+  "cosmac[mcp]"` picks up the console script.
+* Manually tested `cosmac-mcp` end-to-end in Claude Desktop or Cursor
   so the demo transcript in `docs/mcp-server.md` is reproducible.
 
 Submitting before those three steps produces broken listings that maintainers
@@ -140,5 +140,5 @@ close.
 ## After the PRs merge
 
 Add merged registry URLs to `docs/mcp-server.md` under a "Where to find
-prompt-shield" section — that's evergreen social proof for anyone reading
+cosmac" section — that's evergreen social proof for anyone reading
 the docs later.

@@ -1,4 +1,4 @@
-"""Evaluate prompt-shield against the attack strategies from Liu et al.
+"""Evaluate cosmac against the attack strategies from Liu et al.
 
 References
 ----------
@@ -14,10 +14,10 @@ template that concatenates a benign "data prompt" with an injected
 instruction and injected data. Their main paper metric is **Attack Success
 Value (ASV)**: whether the underlying LLM is fooled into performing the
 injected task. That requires querying an actual LLM and is out of scope
-for prompt-shield (which is a *detector*, not the LLM under attack).
+for cosmac (which is a *detector*, not the LLM under attack).
 
 This script measures a complementary quantity: **detection rate** — i.e.,
-what fraction of Liu-generated attacks does prompt-shield's input-side
+what fraction of Liu-generated attacks does cosmac's input-side
 firewall flag or block?
 
 Methodology
@@ -26,7 +26,7 @@ Methodology
   against the upstream repo on 2026-05-07).
 - 8 clean data prompts × 5 injection payloads × 5 attack strategies =
   200 attack inputs.
-- Scan each with prompt-shield (regex-only configuration; d022 ML
+- Scan each with cosmac (regex-only configuration; d022 ML
   classifier disabled so the result is reproducible without GPU).
 - Report detection rate per strategy. A detection is recorded when
   ``action in {block, flag}``.
@@ -39,7 +39,7 @@ Honest caveats
   which is a separate exercise.
 - We use a small, fixed set of clean prompts (not their full SST-2 /
   SMS-Spam test splits). Numbers are indicative, not definitive.
-- prompt-shield is optimised for *general* prompt-injection detection;
+- cosmac is optimised for *general* prompt-injection detection;
   Liu's attacks are a specific subset focused on application-level
   task hijacking. Strong detection here does NOT imply strong detection
   on other attack distributions.
@@ -54,7 +54,7 @@ from __future__ import annotations
 import io
 import sys
 
-from prompt_shield import PromptShieldEngine
+from cosmac import CosmacEngine
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
@@ -173,9 +173,9 @@ def build_attack(
 # --------------------------------------------------------------------------
 
 
-def _make_engine(disable_ml: bool) -> PromptShieldEngine:
+def _make_engine(disable_ml: bool) -> CosmacEngine:
     cfg: dict = {
-        "prompt_shield": {
+        "cosmac": {
             "mode": "block",
             "threshold": 0.7,
             "vault": {"enabled": False},
@@ -185,11 +185,11 @@ def _make_engine(disable_ml: bool) -> PromptShieldEngine:
         }
     }
     if disable_ml:
-        cfg["prompt_shield"]["detectors"] = {"d022_semantic_classifier": {"enabled": False}}
-    return PromptShieldEngine(config_dict=cfg)
+        cfg["cosmac"]["detectors"] = {"d022_semantic_classifier": {"enabled": False}}
+    return CosmacEngine(config_dict=cfg)
 
 
-def _evaluate(engine: PromptShieldEngine) -> tuple[dict, int, dict]:
+def _evaluate(engine: CosmacEngine) -> tuple[dict, int, dict]:
     """Return (results, benign_fp, per_strategy_examples)."""
     benign_fp = 0
     for _, clean in CLEAN_PROMPTS:
@@ -239,7 +239,7 @@ def _print_table(label: str, results: dict, benign_fp: int) -> tuple[int, int]:
 
 def main() -> None:
     print("=" * 70)
-    print("  prompt-shield evaluation: Liu et al. attack strategies")
+    print("  cosmac evaluation: Liu et al. attack strategies")
     print("=" * 70)
     print()
 

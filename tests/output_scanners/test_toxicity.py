@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from prompt_shield.output_scanners.models import OutputScanResult
-from prompt_shield.output_scanners.toxicity import ToxicityScanner
+from cosmac.output_scanners.models import OutputScanResult
+from cosmac.output_scanners.toxicity import ToxicityScanner
 
 
 @pytest.fixture()

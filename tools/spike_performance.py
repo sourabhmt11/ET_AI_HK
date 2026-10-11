@@ -71,6 +71,12 @@ def main() -> int:
     engine = CosmacEngine()
     engine.scan("warm up")  # pay model load outside the measurements
 
+    # The engine holds a DetectorRegistry on `_registry`; there is no public
+    # `detectors` attribute. Reading the wrong one yields an empty list and
+    # makes every per-detector measurement silently vanish.
+    registry = engine._registry
+    all_detectors = list(registry._detectors.values())
+
     results: dict[str, object] = {
         "machine": f"{platform.system()} {platform.release()} / {platform.machine()} "
                    f"/ Python {platform.python_version()}",
@@ -90,7 +96,7 @@ def main() -> int:
     log("measuring per-detector cost on a 2k input...")
     text = make_input(2_000, attack=True)
     per_detector = {}
-    for detector in getattr(engine, "detectors", []):
+    for detector in all_detectors:
         did = getattr(detector, "detector_id", detector.__class__.__name__)
         try:
             per_detector[did] = timed(lambda d=detector: d.detect(text, {}), repeats=3)["p50"]
@@ -108,7 +114,7 @@ def main() -> int:
     log("measuring d028 sequence alignment growth...")
     alignment = {}
     d028 = next(
-        (d for d in getattr(engine, "detectors", [])
+        (d for d in all_detectors
          if getattr(d, "detector_id", "").startswith("d028")),
         None,
     )

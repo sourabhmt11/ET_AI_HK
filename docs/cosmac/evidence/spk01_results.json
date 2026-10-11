@@ -1,0 +1,92 @@
+{
+  "machine": "Windows 11 / AMD64 / Python 3.12.2",
+  "note": "In-process scan latency. Not server latency; no network, no queueing.",
+  "latency_by_bucket_ms": {
+    "0-500": {
+      "n": 5,
+      "p50": 166.02,
+      "p95": 170.39,
+      "min": 164.52,
+      "max": 170.39
+    },
+    "501-2k": {
+      "n": 5,
+      "p50": 692.96,
+      "p95": 698.46,
+      "min": 663.89,
+      "max": 698.46
+    },
+    "2k-10k": {
+      "n": 5,
+      "p50": 1809.49,
+      "p95": 1908.36,
+      "min": 1787.75,
+      "max": 1908.36
+    },
+    "10k+": {
+      "n": 5,
+      "p50": 3079.67,
+      "p95": 3238.62,
+      "min": 3028.16,
+      "max": 3238.62
+    }
+  },
+  "per_detector_p50_ms_2k_input": {
+    "d022_semantic_classifier": 531.87,
+    "d035_perplexity_spectral": 200.25,
+    "d028_sequence_alignment": 138.64,
+    "d021_vault_similarity": 29.75,
+    "d025_multi_encoding": 9.42,
+    "d031_language_enforcement": 3.26,
+    "d027_stylometric_discontinuity": 2.39,
+    "d001_system_prompt_extraction": 1.06,
+    "d010_unicode_homoglyph": 0.73,
+    "d003_instruction_override": 0.5,
+    "d004_prompt_leaking": 0.46,
+    "d024_multilingual_injection": 0.43,
+    "d026_denial_of_wallet": 0.36,
+    "d017_hypothetical_framing": 0.24,
+    "d018_academic_pretext": 0.24,
+    "d002_role_hijack": 0.22,
+    "d008_base64_payload": 0.22,
+    "d013_data_exfiltration": 0.21,
+    "d006_multi_turn_escalation": 0.19,
+    "d020_token_smuggling": 0.17,
+    "d007_task_deflection": 0.16,
+    "d023_pii_detection": 0.15,
+    "d029_many_shot_structural": 0.15,
+    "d005_context_manipulation": 0.13,
+    "d009_rot13_substitution": 0.11,
+    "d014_tool_function_abuse": 0.1,
+    "d019_dual_persona": 0.1,
+    "d011_whitespace_injection": 0.09,
+    "d012_markdown_html_injection": 0.06,
+    "d015_rag_poisoning": 0.06,
+    "d034_honeypot_tool": 0.05,
+    "d016_url_injection": 0.01,
+    "d030_custom_rules": 0.0,
+    "d032_topic_enforcement": 0.0,
+    "d033_topic_drift": 0.0
+  },
+  "d028_alignment_p50_ms_by_length": {
+    "500": 49.61,
+    "2000": 136.3,
+    "8000": 696.99,
+    "16000": 1113.55
+  },
+  "repeat_scan_ms": {
+    "same_input_repeated": {
+      "n": 3,
+      "p50": 862.89,
+      "p95": 878.64,
+      "min": 859.11,
+      "max": 878.64
+    },
+    "note": "The engine has no verdict cache today, so a repeated scan costs the same as a first scan. This figure is the budget a cache would recover for identical input (FR-44)."
+  },
+  "not_measured": {
+    "onnx_or_quantised_classifier": "Requires optimum[onnxruntime] and a conversion run. Not attempted in phase 0; NFR-3 targets below are therefore for the PyTorch classifier as shipped.",
+    "cross_segment_view": "Does not exist until DET-05 (M2).",
+    "token_sized_windows": "d022 already chunks; measuring an alternative window policy needs the windowing work in DET-04 (M2)."
+  }
+}

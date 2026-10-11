@@ -1,0 +1,112 @@
+{
+  "sample_set": "docs/cosmac/evidence/probe_set_v1.jsonl",
+  "sample_count": 240,
+  "attacks": 120,
+  "benign": 120,
+  "candidates": [
+    {
+      "id": "inherited",
+      "model": "protectai/deberta-v3-base-prompt-injection-v2",
+      "licence": "Apache-2.0 (claimed, not confirmed \u2014 see docs/licences.md)",
+      "note": "The classifier COSMAC inherited. The incumbent in decision 9.",
+      "status": "scored",
+      "recall": {
+        "successes": 78,
+        "total": 120,
+        "observed": 0.65,
+        "ci_lower": 0.561213245977243,
+        "ci_upper": 0.729481004097146
+      },
+      "recall_text": "65.0% [56.1-72.9%] n=120",
+      "benign_block_rate": {
+        "successes": 22,
+        "total": 120,
+        "observed": 0.18333333333333332,
+        "ci_lower": 0.12430300356014223,
+        "ci_upper": 0.2620091351717033
+      },
+      "benign_block_rate_text": "18.3% [12.4-26.2%] n=120",
+      "latency_ms": {
+        "p50": 66.82,
+        "p95": 167.42
+      },
+      "confusion": {
+        "tp": 78,
+        "fn": 42,
+        "fp": 22,
+        "tn": 98
+      }
+    },
+    {
+      "id": "protectai-v1",
+      "model": "protectai/deberta-v3-base-prompt-injection",
+      "licence": "Apache-2.0 (claimed, not confirmed)",
+      "note": "Earlier revision of the incumbent; included as a floor.",
+      "status": "scored",
+      "recall": {
+        "successes": 44,
+        "total": 120,
+        "observed": 0.36666666666666664,
+        "ci_lower": 0.2858293519000576,
+        "ci_upper": 0.45577575914493
+      },
+      "recall_text": "36.7% [28.6-45.6%] n=120",
+      "benign_block_rate": {
+        "successes": 20,
+        "total": 120,
+        "observed": 0.16666666666666666,
+        "ci_lower": 0.11055996367984618,
+        "ci_upper": 0.24345281393262286
+      },
+      "benign_block_rate_text": "16.7% [11.1-24.3%] n=120",
+      "latency_ms": {
+        "p50": 66.72,
+        "p95": 164.73
+      },
+      "confusion": {
+        "tp": 44,
+        "fn": 76,
+        "fp": 20,
+        "tn": 100
+      }
+    },
+    {
+      "id": "deepset",
+      "model": "deepset/deberta-v3-base-injection",
+      "licence": "MIT (claimed, not confirmed)",
+      "note": "Independent lineage; the README's named comparator.",
+      "status": "scored",
+      "recall": {
+        "successes": 117,
+        "total": 120,
+        "observed": 0.975,
+        "ci_lower": 0.9290699666721339,
+        "ci_upper": 0.9914618252300978
+      },
+      "recall_text": "97.5% [92.9-99.1%] n=120",
+      "benign_block_rate": {
+        "successes": 57,
+        "total": 120,
+        "observed": 0.475,
+        "ci_lower": 0.3878209113791835,
+        "ci_upper": 0.5637300469417518
+      },
+      "benign_block_rate_text": "47.5% [38.8-56.4%] n=120",
+      "latency_ms": {
+        "p50": 66.74,
+        "p95": 163.16
+      },
+      "confusion": {
+        "tp": 117,
+        "fn": 3,
+        "fp": 57,
+        "tn": 63
+      }
+    }
+  ],
+  "caveats": [
+    "Scored on the development probe set, which is small and written by one author. These figures do not support a D2 claim.",
+    "Each candidate runs at its own default threshold. Recall at a fixed 1% benign block rate needs score outputs and a sweep; where a candidate does not expose scores this is reported as default-threshold recall instead.",
+    "Licences are as claimed on the model card and are NOT confirmed. See docs/licences.md."
+  ]
+}

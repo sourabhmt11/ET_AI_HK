@@ -1,0 +1,15 @@
+loading engine (first scan pays model load)...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Loading weights:   0%|          | 0/202 [00:00<?, ?it/s]Loading weights:  15%|#4        | 30/202 [00:00<00:00, 245.54it/s]Loading weights: 100%|##########| 202/202 [00:00<00:00, 951.03it/s]
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 3569.30it/s]
+measuring latency by length bucket...
+     0-500: p50=166.02ms p95=170.39ms
+    501-2k: p50=692.96ms p95=698.46ms
+    2k-10k: p50=1809.49ms p95=1908.36ms
+      10k+: p50=3079.67ms p95=3238.62ms
+measuring per-detector cost on a 2k input...
+Loading weights:   0%|          | 0/76 [00:00<?, ?it/s]Loading weights:  24%|##3       | 18/76 [00:00<00:00, 153.86it/s]Loading weights:  45%|####4     | 34/76 [00:00<00:00, 70.91it/s] Loading weights: 100%|##########| 76/76 [00:00<00:00, 172.67it/s]
+measuring d028 sequence alignment growth...
+measuring repeat-scan cost (verdict cache upper bound)...

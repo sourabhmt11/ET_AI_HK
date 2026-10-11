@@ -1,0 +1,28 @@
+{
+ "short_n": 180,
+ "short_p50": 47.254417004296556,
+ "short_p95": 68.040625017602,
+ "short_mean": 48.718979410477914,
+ "long_chars": 10000,
+ "long_n": 25,
+ "long_p50": 1086.002791998908,
+ "long_p95": 1327.2329589817673,
+ "per_detector_ms_long": {
+  "d028_sequence_alignment": 591.4,
+  "d022_semantic_classifier": 533.87,
+  "d025_multi_encoding": 19.06,
+  "d027_stylometric_discontinuity": 4.52,
+  "d001_system_prompt_extraction": 2.8,
+  "d010_unicode_homoglyph": 2.36,
+  "d004_prompt_leaking": 1.51,
+  "d003_instruction_override": 1.16
+ },
+ "per_detector_ms_short": {
+  "d022_semantic_classifier": 42.41,
+  "d028_sequence_alignment": 2.99,
+  "d025_multi_encoding": 0.09,
+  "d001_system_prompt_extraction": 0.04,
+  "d006_multi_turn_escalation": 0.04,
+  "d017_hypothetical_framing": 0.04
+ }
+}

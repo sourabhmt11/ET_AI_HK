@@ -65,3 +65,7 @@ data/jbb_*
 # Dify packaging artifacts
 dify.exe
 *.difypkg
+
+# macOS archive metadata (from extracted zips)
+__MACOSX/
+.DS_Store

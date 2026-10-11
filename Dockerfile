@@ -29,11 +29,11 @@ FROM python:3.12-slim
 
 # --- OCI / opencontainers labels -------------------------------------------
 LABEL maintainer="cosmac contributors" \
-      version="0.7.5" \
+      version="0.8.1" \
       description="Prompt-injection detection engine for LLM applications" \
       org.opencontainers.image.title="cosmac" \
       org.opencontainers.image.description="Prompt-injection detection engine for LLM applications" \
-      org.opencontainers.image.version="0.7.5" \
+      org.opencontainers.image.version="0.8.1" \
       org.opencontainers.image.url="https://github.com/mthamil107/prompt-shield" \
       org.opencontainers.image.source="https://github.com/mthamil107/prompt-shield" \
       org.opencontainers.image.licenses="Apache-2.0"

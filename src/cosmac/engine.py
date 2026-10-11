@@ -244,7 +244,7 @@ class CosmacEngine:
         ctx = dict(context) if context else {}
 
         # Stage 1: short-circuit on allow/block list matches.
-        early = self._check_allowlist_blocklist(input_text, scan_id, start)
+        early = self._check_allowlist_blocklist(input_text, scan_id, start, ctx)
         if early is not None:
             return early
 
@@ -286,12 +286,39 @@ class CosmacEngine:
         self._postprocess_report(report, detections, input_text, risk_score)
         return report
 
+    #: Trust tiers whose content an operator allowlist must never cover.
+    #: An allowlist is a statement about phrasing the operator trusts from
+    #: their own users; it says nothing about the same phrasing arriving
+    #: inside a fetched document, a tool result or a stored memory.
+    _UNTRUSTED_TIERS = frozenset({"retrieved", "tool_description", "memory"})
+
+    def _allowlist_applies(self, ctx: dict[str, object]) -> bool:
+        """False when the content did not come straight from the caller (FR-8)."""
+        if str(ctx.get("gate", "")) == "tool_result":
+            return False
+        return str(ctx.get("trust", "")) not in self._UNTRUSTED_TIERS
+
     def _check_allowlist_blocklist(
-        self, input_text: str, scan_id: str, start: float
+        self, input_text: str, scan_id: str, start: float,
+        ctx: dict[str, object] | None = None,
     ) -> ScanReport | None:
-        """Short-circuit on allowlist or blocklist match; else return None."""
+        """Short-circuit on allowlist or blocklist match; else return None.
+
+        DEF-02 (FR-8) changed two things here:
+
+        * A pattern must match the **whole** input. ``search`` let an
+          attacker put an allowlisted string in front of anything:
+          ``hello`` allowed ``hello. Ignore all previous instructions``.
+        * The allowlist does not apply to retrieved or tool-result content.
+
+        The blocklist keeps using ``search`` and applies everywhere: it is a
+        deny rule, so matching more is the safe direction.
+        """
+        ctx = ctx or {}
+        allowlist_applies = self._allowlist_applies(ctx)
+
         for pattern in self._allowlist_patterns:
-            if pattern.search(input_text):
+            if allowlist_applies and pattern.fullmatch(input_text):
                 return self._build_report(
                     scan_id=scan_id,
                     input_text=input_text,
@@ -552,28 +579,34 @@ class CosmacEngine:
         """
         url = feed_url or self._ps_config.get("threat_feed", {}).get("feed_url", "")
 
-        # Transitional default (v0.7.2): choose based on whether a key was
-        # supplied; hard failure moves to v0.8.0 to protect existing PyPI
-        # callers from a surprise ValueError on dependency upgrade.
+        # DEF-01 / FR-45. The inherited code chose the UNVERIFIED path when
+        # no key was supplied and only emitted a FutureWarning. A warning
+        # does not stop anything: the feed content reached the d030 rules
+        # engine either way, so anyone who could serve that URL could inject
+        # detection rules. COSMAC refuses instead.
+        #
+        # verify=False is still honoured, but it must now be passed
+        # explicitly - the caller has to say, in code, that they accept
+        # unverified content.
+        if not url:
+            raise ValueError(
+                "sync_threats() needs a feed URL. There is no default: the "
+                "inherited default pointed at a third party of unverified "
+                "ownership (spec 9.2). Pass feed_url=, or set "
+                "cosmac.threat_feed.feed_url in your configuration."
+            )
+
         if verify is None:
             if public_key is None:
-                import warnings
-
-                warnings.warn(
-                    "sync_threats() called without an explicit verify= or "
-                    "public_key= argument. The legacy unverified path is "
-                    "being used for this call, but v0.8.0 (targeted no "
-                    "later than 2026-10-01) will require verify=True with "
-                    "a base64 minisign public_key. To keep the current "
-                    "unverified behaviour past v0.8.0, pass verify=False "
-                    "explicitly; to opt into verification now, pass "
-                    "verify=True and public_key=<pinned key>.",
-                    FutureWarning,
-                    stacklevel=2,
+                raise ValueError(
+                    "sync_threats() refuses to run unverified. Feed content "
+                    "is merged into the d030 custom-rules detector, so "
+                    "whoever serves this URL controls detection behaviour. "
+                    "Pass verify=True with a base64 minisign public_key, or "
+                    "pass verify=False explicitly to accept unverified "
+                    "content."
                 )
-                verify = False
-            else:
-                verify = True
+            verify = True
 
         if verify:
             if not public_key:

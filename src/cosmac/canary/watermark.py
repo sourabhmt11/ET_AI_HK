@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import hashlib
 import hmac
 
@@ -35,9 +37,57 @@ class CanaryWatermark:
         Different secrets produce different watermarks.
     """
 
-    def __init__(self, secret: str = "cosmac") -> None:
+    #: The inherited code shipped the literal default secret "prompt-shield".
+    #: A watermark keyed by a secret every installation shares is forgeable by
+    #: anyone who reads the source, so REP-08 refuses the known defaults and
+    #: generates a per-install secret when none is supplied.
+    _REJECTED_SECRETS = frozenset({"prompt-shield", "cosmac", "", None})
+
+    def __init__(self, secret: str | None = None) -> None:
+        if secret in self._REJECTED_SECRETS:
+            if secret is not None:
+                raise ValueError(
+                    f"{secret!r} is a known default watermark secret and is "
+                    "refused: a secret shared by every installation can be "
+                    "forged by anyone who reads the source (REP-08). Pass a "
+                    "secret of your own, or omit the argument to generate a "
+                    "per-install secret."
+                )
+            secret = self._generate_install_secret()
         self._secret = secret
         self._sequence = self._derive_sequence(secret)
+
+    @staticmethod
+    def _generate_install_secret() -> str:
+        """Return this installation's watermark secret, creating it once.
+
+        Stored under the resolved data directory so the same installation
+        produces stable watermarks across restarts, which is what makes a
+        leaked watermark traceable back to a scan.
+        """
+        import secrets
+
+        from cosmac.config import load_config, resolve_data_dir
+
+        data_dir = resolve_data_dir(load_config())
+        secret_path = Path(data_dir) / "canary_secret"
+        try:
+            if secret_path.exists():
+                existing = secret_path.read_text(encoding="utf-8").strip()
+                if existing:
+                    return existing
+            generated = secrets.token_urlsafe(32)
+            secret_path.parent.mkdir(parents=True, exist_ok=True)
+            secret_path.write_text(generated, encoding="utf-8")
+            try:  # best effort; POSIX only
+                secret_path.chmod(0o600)
+            except OSError:
+                pass
+            return generated
+        except OSError:
+            # Read-only deployment: a process-lifetime secret still beats a
+            # secret published in the source.
+            return secrets.token_urlsafe(32)
 
     # ------------------------------------------------------------------
     # Public API

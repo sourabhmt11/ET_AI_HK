@@ -431,7 +431,11 @@ def _main() -> None:
     """Run the API server via uvicorn."""
     import uvicorn
 
-    log_level = os.environ.get("COSMAC_LOG_LEVEL", "info").lower()
+    # DEF-04: the level comes from configuration, which COSMAC_LOG_LEVEL
+    # overrides, so one name controls it everywhere.
+    from cosmac.config import configure_logging
+
+    log_level = configure_logging().lower()
     uvicorn.run(
         "cosmac.api:app",
         host=_HOST,

@@ -42,11 +42,11 @@ FROM python:3.12-slim
 
 # --- OCI / opencontainers labels -------------------------------------------
 LABEL maintainer="cosmac contributors" \
-      version="0.7.6" \
+      version="0.8.1" \
       description="cosmac MCP server (stdio) for LLM applications" \
       org.opencontainers.image.title="cosmac-mcp" \
       org.opencontainers.image.description="Standalone MCP server exposing cosmac's scan API to Claude Desktop / Cursor / VS Code / n8n over stdio" \
-      org.opencontainers.image.version="0.7.6" \
+      org.opencontainers.image.version="0.8.1" \
       org.opencontainers.image.url="https://github.com/mthamil107/prompt-shield" \
       org.opencontainers.image.source="https://github.com/mthamil107/prompt-shield" \
       org.opencontainers.image.licenses="Apache-2.0"

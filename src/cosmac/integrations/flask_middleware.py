@@ -17,10 +17,13 @@ class CosmacFlaskMiddleware:
         app: Any,
         config_path: str | None = None,
         scan_fields: list[str] | None = None,
+        allow_unparsed: bool = False,
     ) -> None:
         self.app = app
         self.engine = CosmacEngine(config_path=config_path)
         self.scan_fields = scan_fields or ["prompt", "messages.*.content"]
+        #: DEF-03 / FR-7 — see CosmacASGIMiddleware.allow_unparsed.
+        self.allow_unparsed = allow_unparsed
 
     def __call__(self, environ: dict[str, Any], start_response: Any) -> Any:
         method = environ.get("REQUEST_METHOD", "GET")
@@ -34,9 +37,31 @@ class CosmacFlaskMiddleware:
             import io
 
             environ["wsgi.input"] = io.BytesIO(body_bytes)
-            body = json.loads(body_bytes)
-        except Exception:
+        except (ValueError, KeyError, OSError):
+            # Could not read the body at all. Nothing to scan and nothing to
+            # forward safely.
+            if self.allow_unparsed:
+                return self.app(environ, start_response)
+            return self._refuse(
+                start_response, 400, "Could not read the request body."
+            )
+
+        if not body_bytes:
             return self.app(environ, start_response)
+
+        # DEF-03 / FR-7. The inherited code forwarded an unparseable body to
+        # the application unscanned, so a malformed body skipped the scanner.
+        try:
+            body = json.loads(body_bytes)
+        except (ValueError, UnicodeDecodeError) as exc:
+            if self.allow_unparsed:
+                return self.app(environ, start_response)
+            return self._refuse(
+                start_response,
+                400,
+                f"Could not parse the request body as JSON: {exc}. It was "
+                "refused rather than forwarded unscanned (FR-7).",
+            )
 
         texts = self._extract_fields(body)
         for text in texts:
@@ -57,6 +82,21 @@ class CosmacFlaskMiddleware:
                 return [response_body]
 
         return self.app(environ, start_response)
+
+    @staticmethod
+    def _refuse(start_response: Any, status: int, detail: str) -> list[bytes]:
+        """Return a 4xx without calling the wrapped application."""
+        payload = json.dumps(
+            {"error": "Malformed request body", "detail": detail}
+        ).encode("utf-8")
+        start_response(
+            f"{status} Bad Request",
+            [
+                ("Content-Type", "application/json"),
+                ("Content-Length", str(len(payload))),
+            ],
+        )
+        return [payload]
 
     def _extract_fields(self, body: Any) -> list[str]:
         texts: list[str] = []

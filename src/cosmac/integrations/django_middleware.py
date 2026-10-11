@@ -24,10 +24,29 @@ class CosmacDjangoMiddleware:
         if request.method not in ("POST", "PUT", "PATCH"):
             return self.get_response(request)
 
+        if not request.body:
+            return self.get_response(request)
+
+        # DEF-03 / FR-7. The inherited code forwarded an unparseable body to
+        # the view unscanned, so a malformed body skipped the scanner.
         try:
             body = json.loads(request.body)
-        except Exception:
-            return self.get_response(request)
+        except (ValueError, UnicodeDecodeError) as exc:
+            if getattr(self, "allow_unparsed", False):
+                return self.get_response(request)
+            from django.http import JsonResponse
+
+            return JsonResponse(
+                {
+                    "error": "Malformed request body",
+                    "detail": (
+                        f"Could not parse the request body as JSON: {exc}. "
+                        "It was refused rather than forwarded unscanned "
+                        "(FR-7)."
+                    ),
+                },
+                status=400,
+            )
 
         texts = self._extract_fields(body)
         for text in texts:

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from typing import TYPE_CHECKING, Any
 
 try:
@@ -29,23 +30,75 @@ class CosmacASGIMiddleware(BaseHTTPMiddleware):
         mode: str = "block",
         scan_fields: list[str] | None = None,
         on_detection: Callable[..., Awaitable[None]] | None = None,
+        allow_unparsed: bool = False,
+        data_dir: str | None = None,
     ) -> None:
         super().__init__(app)
         self.engine = CosmacEngine(
             config_path=config_path,
             config_dict={"mode": mode} if mode != "block" else None,
+            data_dir=data_dir,
         )
         self.scan_fields = scan_fields or ["body.prompt", "body.messages.*.content"]
         self.on_detection = on_detection
+        #: DEF-03 / FR-7. False (the default) refuses a body this middleware
+        #: cannot parse. Set True only when something else in the stack
+        #: scans the content - it reinstates the inherited behaviour of
+        #: forwarding unscanned bodies.
+        self.allow_unparsed = allow_unparsed
+
+    #: Content types this middleware knows how to read. A body in any other
+    #: type cannot be scanned, so by default it is refused rather than
+    #: forwarded (FR-7). Operators who terminate scanning elsewhere can widen
+    #: this, or set ``allow_unparsed=True``.
+    _PARSEABLE_TYPES = ("application/json", "+json", "text/json")
 
     async def dispatch(self, request: Request, call_next: Any) -> Response:
         if request.method not in ("POST", "PUT", "PATCH"):
             return await call_next(request)
 
-        try:
-            body = await request.json()
-        except Exception:
+        raw = await request.body()
+        if not raw:
+            # Nothing to scan. A bodyless POST is not a parse failure.
             return await call_next(request)
+
+        content_type = request.headers.get("content-type", "").lower()
+        if content_type and not any(t in content_type for t in self._PARSEABLE_TYPES):
+            if self.allow_unparsed:
+                return await call_next(request)
+            return JSONResponse(
+                status_code=415,
+                content={
+                    "error": "Unsupported media type",
+                    "detail": (
+                        f"COSMAC cannot parse {content_type!r}, so this body "
+                        "cannot be scanned. It was refused rather than "
+                        "forwarded unscanned (FR-7). Set allow_unparsed=True "
+                        "if scanning happens elsewhere in your stack."
+                    ),
+                },
+            )
+
+        # DEF-03 / FR-7. The inherited code swallowed every parse error and
+        # called the application anyway, so sending a malformed body was a
+        # way to skip the scanner entirely. A body that cannot be parsed is
+        # now refused.
+        try:
+            body = json.loads(raw)
+        except (ValueError, UnicodeDecodeError) as exc:
+            if self.allow_unparsed:
+                return await call_next(request)
+            return JSONResponse(
+                status_code=400,
+                content={
+                    "error": "Malformed request body",
+                    "detail": (
+                        f"Could not parse the request body as JSON: {exc}. "
+                        "It was refused rather than forwarded unscanned "
+                        "(FR-7)."
+                    ),
+                },
+            )
 
         texts_to_scan = self._extract_fields(body)
         for text in texts_to_scan:

@@ -1,6 +1,6 @@
 [project]
 name = "cosmac"
-version = "0.8.1"
+dynamic = ["version"]
 description = "Self-learning prompt injection detection engine for LLM applications"
 readme = "README.md"
 license = { text = "Apache-2.0" }
@@ -107,6 +107,10 @@ cosmac-mcp = "cosmac.mcp_server.__main__:main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+# REP-09: src/cosmac/__init__.py is the single source of the version.
+[tool.hatch.version]
+path = "src/cosmac/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/cosmac"]

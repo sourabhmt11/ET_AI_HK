@@ -3,7 +3,7 @@ name: cosmac
 description: Self-learning prompt injection detection engine for LLM applications
 type: application
 version: 0.1.0
-appVersion: "0.4.1"
+appVersion: "0.8.1"
 home: https://github.com/mthamil107/prompt-shield
 sources:
   - https://github.com/mthamil107/prompt-shield

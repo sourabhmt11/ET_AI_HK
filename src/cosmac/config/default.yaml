@@ -36,10 +36,10 @@ cosmac:
     medium: flag
     low: log
 
+  # DEF-04: `format` and `output` were removed - nothing read them. `level`
+  # is now wired to logging configuration and is set by COSMAC_LOG_LEVEL.
   logging:
     level: INFO
-    format: json
-    output: stdout
 
   scoring:
     ensemble_bonus: 0.05
@@ -64,13 +64,12 @@ cosmac:
     enabled: true
     embedding_model: "all-MiniLM-L6-v2"
     similarity_threshold: 0.75
-    max_entries: 100000
-    auto_store_detections: true
+    auto_store_detections: false
     min_confidence_to_store: 0.7
 
   feedback:
     enabled: true
-    auto_tune: true
+    auto_tune: false
     tune_interval: 100
     max_threshold_adjustment: 0.15
 
@@ -80,15 +79,18 @@ cosmac:
     header_format: "<-@!-- {canary} --@!->"
 
   threat_feed:
-    enabled: true
+    # DEF-01 / FR-45: a learning loop that pulls remote content is off until
+    # an operator turns it on.
+    enabled: false
     auto_sync: false
-    feed_url: "https://raw.githubusercontent.com/cosmac/threat-feed/main/feeds/latest.json"
-    sync_interval_hours: 24
+    # REP-08: no default URL. The inherited default pointed at a GitHub
+    # organisation of unverified ownership, and the rename would otherwise
+    # have silently repointed it at a COSMAC repository that does not exist.
+    feed_url: ""
 
   history:
     enabled: true
     retention_days: 90
-    store_input_text: false
 
   detectors:
     d001_system_prompt_extraction:

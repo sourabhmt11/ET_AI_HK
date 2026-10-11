@@ -24,24 +24,30 @@ def _redirect_data_dir_away_from_home() -> Any:
     ``autouse`` and session scope are deliberate: making it opt-in is what
     let the leak happen in the first place.
     """
-    with tempfile.TemporaryDirectory(prefix="cosmac-tests-") as tmp:
-        root = Path(tmp)
-        previous = {
-            key: os.environ.get(key)
-            for key in ("COSMAC_DATA_DIR", "HF_HOME", "SENTENCE_TRANSFORMERS_HOME")
-        }
-        os.environ["COSMAC_DATA_DIR"] = str(root / "data")
-        # Model caches default under $HOME too; keep them out of it as well.
-        os.environ["HF_HOME"] = str(root / "models")
-        os.environ["SENTENCE_TRANSFORMERS_HOME"] = str(root / "models")
-        try:
-            yield root
-        finally:
-            for key, value in previous.items():
-                if value is None:
-                    os.environ.pop(key, None)
-                else:
-                    os.environ[key] = value
+    import shutil
+
+    # Not TemporaryDirectory(): its cleanup raises on Windows when SQLite or
+    # ChromaDB still hold a handle on a file inside, which turns a passing
+    # test into a teardown ERROR. The directory is removed best-effort and
+    # the OS reclaims anything left behind.
+    root = Path(tempfile.mkdtemp(prefix="cosmac-tests-"))
+    previous = {
+        key: os.environ.get(key)
+        for key in ("COSMAC_DATA_DIR", "HF_HOME", "SENTENCE_TRANSFORMERS_HOME")
+    }
+    os.environ["COSMAC_DATA_DIR"] = str(root / "data")
+    # Model caches default under $HOME too; keep them out of it as well.
+    os.environ["HF_HOME"] = str(root / "models")
+    os.environ["SENTENCE_TRANSFORMERS_HOME"] = str(root / "models")
+    try:
+        yield root
+    finally:
+        for key, value in previous.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+        shutil.rmtree(root, ignore_errors=True)
 
 
 @pytest.fixture

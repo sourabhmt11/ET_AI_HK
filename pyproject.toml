@@ -33,12 +33,12 @@ classifiers = [
 ]
 
 dependencies = [
-    "pydantic>=2.0",
-    "pyyaml>=6.0",
-    "click>=8.0",
-    "regex>=2023.0",
-    "sentence-transformers>=2.0",
-    "chromadb>=0.5",
+    "pydantic>=2.0,<3",
+    "pyyaml>=6.0,<7",
+    "click>=8.0,<9",
+    "regex>=2023.0,<2027",
+    "sentence-transformers>=2.0,<6",
+    "chromadb>=0.5,<2",
     # ed25519 minisign verification for the federated threat-intel feed
     # (SignaturesClient in prompt_shield.signatures). Added in v0.7.4:
     # was previously a transitively-missing dep, causing a documented-but-
@@ -47,33 +47,33 @@ dependencies = [
     # flag CVE-2026-69247/-69248/-69249 (fixed in 49.0.0/50.0.0); none
     # reachable from our ed25519 code path, but the floor should not
     # admit them.
-    "cryptography>=50.0.0",
+    "cryptography>=50.0.0,<51",
 ]
 
 [project.optional-dependencies]
-fastapi = ["fastapi>=0.100", "starlette>=0.27"]
-flask = ["flask>=2.0"]
-langchain = ["langchain-core>=0.1"]
-llamaindex = ["llama-index-core>=0.10"]
-haystack = ["haystack-ai>=2.0"]
-pydantic-ai = ["pydantic-ai>=0.0.10"]
-django = ["django>=4.0"]
-crewai = ["crewai>=0.70", "crewai-tools>=0.12"]
-mcp = ["mcp>=1.10", "anyio>=3.7"]
-openai = ["openai>=1.0"]
-anthropic = ["anthropic>=0.30"]
+fastapi = ["fastapi>=0.100,<1", "starlette>=0.27,<1"]
+flask = ["flask>=2.0,<4"]
+langchain = ["langchain-core>=0.1,<1"]
+llamaindex = ["llama-index-core>=0.10,<1"]
+haystack = ["haystack-ai>=2.0,<3"]
+pydantic-ai = ["pydantic-ai>=0.0.10,<1"]
+django = ["django>=4.0,<6"]
+crewai = ["crewai>=0.70,<1", "crewai-tools>=0.12,<1"]
+mcp = ["mcp>=1.10,<2", "anyio>=3.7,<5"]
+openai = ["openai>=1.0,<3"]
+anthropic = ["anthropic>=0.30,<1"]
 ml = [
-    "transformers>=4.30",
-    "optimum[onnxruntime]>=1.12",
+    "transformers>=4.30,<6",
+    "optimum[onnxruntime]>=1.12,<2",
 ]
 # v0.5.0 — pluggable extras for the new lazy-loaded features.
-observability = ["prometheus_client>=0.17"]
-sentiment = ["vaderSentiment>=3.3"]
-language = ["langdetect>=1.0"]
+observability = ["prometheus_client>=0.17,<1"]
+sentiment = ["vaderSentiment>=3.3,<4"]
+language = ["langdetect>=1.0,<2"]
 # v0.8.0 — receipt-format adapters for ToolResultGuard (interop layer for
 # upstream capability enforcement projects; prompt-shield verifies, does
 # not mint tokens). See docs/capabilities/receipt-adapter.md.
-capabilities-pipelock = ["pipelock-verify>=0.1"]
+capabilities-pipelock = ["pipelock-verify>=0.1,<1"]
 # PyJWT lower bound raised to 2.13 to close CVE-2024-53861 (issuer
 # partial-match, reachable via issuer=) plus CVE-2026-32597 (unknown
 # crit accepted, 2.12+), CVE-2026-48523 (algorithm allow-list bypass
@@ -83,7 +83,7 @@ capabilities-pipelock = ["pipelock-verify>=0.1"]
 # fixed 50.0.0), CVE-2026-69248 (name-constraint bypass, fixed 49.0.0)
 # and CVE-2026-69249 (path-building DoS, fixed 49.0.0); none reachable
 # from our verify path but pip-audit will flag lower floors.
-capabilities-jws = ["PyJWT>=2.13.0", "cryptography>=50.0.0"]
+capabilities-jws = ["PyJWT>=2.13.0,<3", "cryptography>=50.0.0,<51"]
 all = ["prompt-shield-ai[fastapi,flask,langchain,llamaindex,haystack,pydantic-ai,django,crewai,mcp,openai,anthropic,ml,observability,sentiment,language,capabilities-pipelock,capabilities-jws]"]
 dev = [
     "pytest>=7.0",
@@ -239,7 +239,12 @@ disable_error_code = ["arg-type", "no-any-return", "type-arg", "return-value", "
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=prompt_shield --cov-report=term-missing --cov-report=html"
+addopts = "-ra"
+markers = [
+    "slow: takes more than a few seconds",
+    "network: needs network access",
+    "model: downloads or loads an ML model",
+]
 
 [tool.coverage.run]
 source = ["prompt_shield"]

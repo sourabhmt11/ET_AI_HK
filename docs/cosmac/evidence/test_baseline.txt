@@ -1,0 +1,66 @@
+REP-01 test baseline
+Captured: 2026-10-11T10:04:38Z
+Commit: 252e03f9aed68a3120837b345a827bd530f7ffb7
+Command: pytest --no-cov -p no:cacheprovider -q
+Python: Python 3.12.2
+mcp: 1.30.0
+
+Note: an earlier capture without the mcp package produced 14 failures in
+tests/mcp_server/. Those were caused by the package being absent, NOT by
+the mcp 1.x/2.x API drift in the defects register. With mcp pinned <2 the
+suite is clean. The superseded run is kept as test_baseline_no_mcp.txt.
+
+---
+........................................................................ [  5%]
+........................................................................ [ 10%]
+........................................................................ [ 15%]
+........................................................................ [ 20%]
+........................................................................ [ 25%]
+........................................................................ [ 31%]
+........................................................................ [ 36%]
+........................................................................ [ 41%]
+........................................................................ [ 46%]
+........................................................................ [ 51%]
+........................................................................ [ 57%]
+........................................................................ [ 62%]
+.......................................ssssssssssss..................... [ 67%]
+...................sssss................................................ [ 72%]
+........................................................................ [ 77%]
+........................................................................ [ 83%]
+.....................................................s.................. [ 88%]
+........................................................................ [ 93%]
+........................................................................ [ 98%]
+...................                                                      [100%]
+============================== warnings summary ===============================
+tests\mcp_server\test_stdio_transport.py:28
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\tests\mcp_server\test_stdio_transport.py:28: PytestUnknownMarkWarning: Unknown pytest.mark.slow - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.slow
+
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/benchmarks/test_runner.py::TestRunBenchmark::test_run_sample_benchmark
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+tests/capabilities/test_jws_adapter.py::TestTamper::test_bad_signature_returns_untrusted
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\jwt\api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 16 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+    decoded = self.decode_complete(
+
+tests/integrations/test_pydantic_ai_guard.py::TestScanInput::test_clean_input_returns_report
+tests/integrations/test_pydantic_ai_guard.py::TestScanInput::test_injection_input_raises_in_block_mode
+tests/integrations/test_pydantic_ai_guard.py::TestScanInput::test_injection_input_passes_in_flag_mode
+tests/tool_guard/test_guard.py::TestConstruction::test_lazy_default_engine
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\chromadb\api\types.py:944: DeprecationWarning: The EmbeddingFunction class does not implement name(). This will be required in a future version.
+    self.name() is NotImplemented
+
+tests/integrations/test_pydantic_ai_guard.py::TestScanInput::test_clean_input_returns_report
+tests/integrations/test_pydantic_ai_guard.py::TestScanInput::test_injection_input_raises_in_block_mode
+tests/integrations/test_pydantic_ai_guard.py::TestScanInput::test_injection_input_passes_in_flag_mode
+tests/tool_guard/test_guard.py::TestConstruction::test_lazy_default_engine
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\chromadb\api\collection_configuration.py:791: DeprecationWarning: The EmbeddingFunction class does not implement name(). This will be required in a future version.
+    embedding_function.name() != "default"
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1369 passed, 19 skipped, 12 warnings in 497.07s (0:08:17)

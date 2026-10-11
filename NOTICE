@@ -1,0 +1,75 @@
+COSMAC
+Copyright 2026 The COSMAC contributors
+
+This product includes software developed as "prompt-shield"
+(https://github.com/mthamil107/prompt-shield), copyright the prompt-shield
+contributors, licensed under the Apache License, Version 2.0.
+
+COSMAC is a derivative work of prompt-shield v0.8.1 (git tag
+`upstream-v0.8.1` in this repository). The Apache License, Version 2.0 is
+reproduced in the LICENSE file.
+
+--------------------------------------------------------------------------
+Summary of changes made by COSMAC
+--------------------------------------------------------------------------
+
+Phase 0 (this change set):
+
+  * Renamed the import package, distribution, console scripts, environment
+    variable prefix, configuration root, logger root, metric prefix and data
+    paths from prompt-shield / prompt_shield to COSMAC / cosmac.
+  * Gave distinct names to three middleware classes that previously shared
+    the single name PromptShieldMiddleware.
+  * Changed security-relevant inherited defaults: the self-learning vault,
+    feedback-driven threshold tuning and threat-feed synchronisation are now
+    off by default, and the signature feed refuses to run unverified.
+  * Replaced the hard-coded default canary watermark HMAC secret with a
+    per-install generated secret.
+  * Removed the default upstream signature-feed and threat-feed URLs.
+  * Corrected the allowlist to match a whole input and never to apply to
+    retrieved or tool-result content.
+  * Made the FastAPI, Flask and Django middleware reject a request body that
+    cannot be parsed, instead of passing it through unscanned.
+  * Removed configuration keys that no code read, and unified the two
+    log-level environment variable names.
+  * Added an evaluation command that reports detection rates with 95% Wilson
+    confidence intervals.
+  * Removed the Dify, n8n and PyPI-alias plugins from the build.
+
+Files modified by COSMAC carry no per-file change markers; the complete set
+of modifications is recorded in the git history of this repository from the
+`upstream-v0.8.1` tag onward.
+
+--------------------------------------------------------------------------
+Attribution retained from prompt-shield
+--------------------------------------------------------------------------
+
+The following are kept unchanged as upstream attribution and are NOT part of
+COSMAC's own claims:
+
+  * LICENSE          - the Apache License, Version 2.0
+  * CITATION.cff     - upstream citation metadata
+  * paper/           - the upstream research paper and its sources
+  * CHANGELOG.md     - the upstream release history
+
+--------------------------------------------------------------------------
+Trademark and benchmark notice
+--------------------------------------------------------------------------
+
+The Apache License, Version 2.0 grants no trademark rights. COSMAC does not
+use the name "prompt-shield", the prompt-shield logo, or the prompt-shield
+"Protected by" badge as COSMAC branding. The upstream logo and architecture
+image have been removed from this repository rather than rebranded.
+
+The benchmark figures published by prompt-shield (96.0% F1, 0% false
+positives) are NOT COSMAC's figures and are not reproduced as such. COSMAC
+publishes only figures it has measured itself, with sample counts and 95%
+confidence intervals, through `cosmac eval run`.
+
+--------------------------------------------------------------------------
+Third-party models and datasets
+--------------------------------------------------------------------------
+
+Licences for the models this software downloads at runtime, and for the
+datasets used in evaluation, are recorded in docs/licences.md. Entries marked
+"not confirmed" in that register may not be relied upon by any shipped code.

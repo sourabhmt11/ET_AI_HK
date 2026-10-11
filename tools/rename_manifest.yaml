@@ -1,0 +1,199 @@
+# COSMAC rename manifest — REP-05
+#
+# Implements spec section 9.1 (rename surface) and 9.5 step 2.
+# Applied by tools/apply_rename.py. Run in dry-run first; the dry-run
+# output must be reviewed by a second engineer before REP-06 starts.
+#
+# Ordering matters: the longest and most specific patterns run first so
+# that a short pattern cannot corrupt a longer match it is contained in.
+
+version: 1
+
+# ---------------------------------------------------------------------------
+# Paths that move. Applied with `git mv` so history is preserved.
+# ---------------------------------------------------------------------------
+path_renames:
+  - from: src/prompt_shield
+    to: src/cosmac
+  - from: .prompt-shield-ignore
+    to: .cosmac-ignore
+  - from: .github/actions/prompt-shield-scan
+    to: .github/actions/cosmac-scan
+  - from: .github/workflows/prompt-shield.yml
+    to: .github/workflows/cosmac.yml
+  - from: deploy/helm/prompt-shield
+    to: deploy/helm/cosmac
+  - from: docs/grafana/prompt-shield-dashboard.json
+    to: docs/grafana/cosmac-dashboard.json
+
+# ---------------------------------------------------------------------------
+# Paths deleted outright (REP-10: plugins out of the build; REP-02: upstream
+# branding must not be reused as COSMAC branding).
+# ---------------------------------------------------------------------------
+path_deletes:
+  - plugins/dify
+  - plugins/n8n
+  - plugins/pypi-alias
+  - prompt-shield-logo.png
+  - architecture.png
+
+# ---------------------------------------------------------------------------
+# Literal string replacements, longest-first.
+#
+# `why` is recorded so the dry-run review can check intent, not just volume.
+# ---------------------------------------------------------------------------
+replacements:
+  # --- distribution and console scripts (most specific first) ---
+  - from: prompt-shield-ai
+    to: cosmac
+    why: Distribution name on the package index
+  - from: prompt-shield-pii-hook
+    to: cosmac-pii-hook
+    why: Console script
+  - from: prompt-shield-hook
+    to: cosmac-hook
+    why: Console script
+  - from: prompt-shield-mcp
+    to: cosmac-mcp
+    why: Console script
+  - from: prompt-shield-scan
+    to: cosmac-scan
+    why: Pre-commit hook id and GitHub action directory
+  - from: prompt-shield-pii
+    to: cosmac-pii
+    why: Pre-commit hook id
+
+  # --- environment variables ---
+  - from: PROMPT_SHIELD_
+    to: COSMAC_
+    why: Environment prefix (spec 9.1)
+
+  # --- data paths and files ---
+  - from: .prompt-shield-ignore
+    to: .cosmac-ignore
+    why: Ignore-file name referenced in code and docs
+  - from: .prompt-shield.yaml
+    to: .cosmac.yaml
+    why: Config file name
+  - from: .prompt_shield
+    to: .cosmac
+    why: Home data directory ~/.prompt_shield
+  - from: prompt_shield.db
+    to: cosmac.db
+    why: SQLite database file name
+  - from: prompt-shield.db
+    to: cosmac.db
+    why: SQLite database file name (hyphen variant)
+
+  # --- public classes ---
+  # The three middleware classes that shared one name are given distinct
+  # names by a separate, explicit pass (class_renames below), because a
+  # blanket PromptShieldMiddleware -> CosmacMiddleware would keep the clash.
+  - from: PromptShieldEngine
+    to: CosmacEngine
+    why: Public engine class
+  - from: PromptShieldError
+    to: CosmacError
+    why: Public exception base
+  - from: PromptShieldConfig
+    to: CosmacConfig
+    why: Public config class
+
+  # --- metrics ---
+  - from: prompt_shield_
+    to: cosmac_
+    why: Prometheus metric prefix (Grafana dashboard changes with it)
+
+  # --- import package, config root, logger root (after the longer ones) ---
+  - from: prompt_shield
+    to: cosmac
+    why: Import package, config root key, logger root, entry-point group
+
+  # --- remaining visible-string and case variants ---
+  - from: Prompt Shield
+    to: COSMAC
+    why: Prose and visible strings
+  - from: Prompt-Shield
+    to: COSMAC
+    why: Prose variant
+  - from: Prompt-shield
+    to: COSMAC
+    why: Prose variant
+  - from: PROMPT-SHIELD
+    to: COSMAC
+    why: Upper-case variant
+  - from: PromptShield
+    to: Cosmac
+    why: Camel-case identifiers
+  - from: promptShield
+    to: cosmac
+    why: Lower-camel identifiers
+  - from: prompt-shield
+    to: cosmac
+    why: Hyphen variant — last, so it cannot eat the longer patterns above
+
+# ---------------------------------------------------------------------------
+# Class renames that cannot be a plain string replacement, because three
+# distinct classes shared the single name PromptShieldMiddleware
+# (spec 9.1, defects register). Each file gets its own target name.
+# ---------------------------------------------------------------------------
+class_renames:
+  - file: src/prompt_shield/integrations/fastapi_middleware.py
+    from: PromptShieldMiddleware
+    to: CosmacASGIMiddleware
+  - file: src/prompt_shield/integrations/flask_middleware.py
+    from: PromptShieldMiddleware
+    to: CosmacFlaskMiddleware
+  - file: src/prompt_shield/integrations/django_middleware.py
+    from: PromptShieldMiddleware
+    to: CosmacDjangoMiddleware
+
+# ---------------------------------------------------------------------------
+# Exclusions (spec 9.5 step 2). Content under these paths is never rewritten.
+# ---------------------------------------------------------------------------
+exclude_paths:
+  - .git
+  - LICENSE                 # Apache 2.0 text, unchanged
+  - NOTICE                  # states the upstream derivation; must keep the name
+  - CITATION.cff            # upstream attribution, unchanged
+  - docs/licences.md        # licence register names upstream artefacts
+  - tools/rename_manifest.yaml   # the manifest is the record of the rename
+  - tools/apply_rename.py
+  - paper/                  # upstream paper, unchanged
+  - CHANGELOG.md            # history is a record; new entries are appended
+  - docs/cosmac/            # the COSMAC spec deliberately names the upstream
+  - docs/papers/            # published upstream PDFs and sources
+  - plugins/awesome-lists/  # third-party listings of the upstream project
+  - .venv
+  - node_modules
+  - __pycache__
+
+# Binary and generated files are skipped by extension.
+exclude_extensions: [.png, .jpg, .jpeg, .gif, .svg, .pdf, .docx, .ico, .whl, .pyc, .lock]
+
+# ---------------------------------------------------------------------------
+# Line-level exclusions. A line matching any of these regexes keeps the old
+# name even inside an included file: upstream URLs, model and dataset IDs,
+# and attack strings in fixtures must survive the rename verbatim.
+# ---------------------------------------------------------------------------
+exclude_line_patterns:
+  - 'github\.com/mthamil107'          # upstream repository and signatures feed
+  - 'ghcr\.io/mthamil107'             # upstream container image
+  - 'pypi\.org/project/prompt-shield' # upstream package page
+  - 'raw\.githubusercontent\.com/mthamil107'
+  - 'dev\.to/mthamil107'
+  - 'npmjs\.com/package/n8n-nodes-prompt-shield'
+  - 'protectai/deberta'               # model ID — unchanged until FR-27
+  - 'sentence-transformers/'          # model ID
+  - 'distilgpt2'                      # model ID
+  - 'upstream-v0\.8\.1'               # the baseline tag
+
+# ---------------------------------------------------------------------------
+# Identifiers that must NOT change (spec 9.1 "keep unchanged"). The verifier
+# asserts these still exist after the rename.
+# ---------------------------------------------------------------------------
+must_not_change:
+  - 'd001'          # detector IDs d001..d035
+  - 'd035'
+  - 'scan_prompt'   # MCP tool name
+  - 'attack_vault'  # ChromaDB collection name

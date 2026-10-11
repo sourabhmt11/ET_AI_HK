@@ -1,0 +1,23 @@
+REP-04 evidence: writes to the real home directory during a test run
+Captured: 2026-10-11T09:48:46Z
+
+Spec section 5.7 recorded this as 'inferred, not confirmed'. It is confirmed.
+
+Baseline suite: launched 2026-10-11 ~15:04 local, still running at capture time.
+Note: the 14:58-15:00 entries are from manual CLI/API smoke runs earlier in
+the session. The 15:16 and 15:17 entries fall inside the pytest run and are
+the ones that confirm the defect.
+
+Contents of ~/.prompt_shield with modification times:
+2026-10-11 14:58  /c/Users/soura/.prompt_shield
+2026-10-11 14:58  /c/Users/soura/.prompt_shield/models
+2026-10-11 14:58  /c/Users/soura/.prompt_shield/models/.locks
+2026-10-11 14:58  /c/Users/soura/.prompt_shield/models/CACHEDIR.TAG
+2026-10-11 14:58  /c/Users/soura/.prompt_shield/models/models--sentence-transformers--all-MiniLM-L6-v2
+2026-10-11 14:59  /c/Users/soura/.prompt_shield/vault/f00ec5f8-1a6c-4d07-9c17-5dba111b951a
+2026-10-11 15:00  /c/Users/soura/.prompt_shield/db
+2026-10-11 15:00  /c/Users/soura/.prompt_shield/db/prompt_shield.db
+2026-10-11 15:00  /c/Users/soura/.prompt_shield/db/prompt_shield.db-shm
+2026-10-11 15:16  /c/Users/soura/.prompt_shield/vault
+2026-10-11 15:16  /c/Users/soura/.prompt_shield/vault/chroma.sqlite3
+2026-10-11 15:17  /c/Users/soura/.prompt_shield/db/prompt_shield.db-wal

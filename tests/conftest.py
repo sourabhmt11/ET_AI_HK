@@ -3,10 +3,45 @@
 from __future__ import annotations
 
 import json
+import os
+import tempfile
 from pathlib import Path
 from typing import Any
 
 import pytest
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _redirect_data_dir_away_from_home() -> Any:
+    """Point the data directory at a temporary path for the whole session.
+
+    REP-04. Without this, a test that builds an engine without passing
+    ``data_dir`` writes scan history, the vault and downloaded models into
+    the developer's real home directory. Spec section 5.7 recorded this as
+    inferred; it was confirmed during phase 0 (see
+    docs/cosmac/evidence/rep04_home_writes.txt).
+
+    ``autouse`` and session scope are deliberate: making it opt-in is what
+    let the leak happen in the first place.
+    """
+    with tempfile.TemporaryDirectory(prefix="cosmac-tests-") as tmp:
+        root = Path(tmp)
+        previous = {
+            key: os.environ.get(key)
+            for key in ("COSMAC_DATA_DIR", "HF_HOME", "SENTENCE_TRANSFORMERS_HOME")
+        }
+        os.environ["COSMAC_DATA_DIR"] = str(root / "data")
+        # Model caches default under $HOME too; keep them out of it as well.
+        os.environ["HF_HOME"] = str(root / "models")
+        os.environ["SENTENCE_TRANSFORMERS_HOME"] = str(root / "models")
+        try:
+            yield root
+        finally:
+            for key, value in previous.items():
+                if value is None:
+                    os.environ.pop(key, None)
+                else:
+                    os.environ[key] = value
 
 
 @pytest.fixture

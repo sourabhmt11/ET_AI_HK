@@ -1,0 +1,532 @@
+........................................................................ [  5%]
+........................................................................ [ 10%]
+........................................................................ [ 16%]
+........................................................................ [ 21%]
+........................................................................ [ 27%]
+........................................................................ [ 32%]
+........................................................................ [ 37%]
+........................................................................ [ 43%]
+........................................................................ [ 48%]
+........................................................................ [ 54%]
+........................................................................ [ 59%]
+.......................................................ssssssssssss..... [ 64%]
+...................................sssssFFFFF...FFFFFFFFF............... [ 70%]
+........................................................................ [ 75%]
+........................................................................ [ 81%]
+....................................................................s... [ 86%]
+........................................................................ [ 92%]
+........................................................................ [ 97%]
+..................................                                       [100%]
+================================== FAILURES ===================================
+_______________ TestToolDefinitions.test_advertises_four_tools ________________
+
+self = <tests.mcp_server.test_server.TestToolDefinitions object at 0x000001CB068F4EC0>
+
+    def test_advertises_four_tools(self) -> None:
+>       names = {tool.name for tool in _tool_definitions()}
+                                       ^^^^^^^^^^^^^^^^^^^
+
+tests\mcp_server\test_server.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _tool_definitions() -> list[Tool]:
+        """Return the MCP Tool schemas advertised by this server."""
+>       from mcp.types import Tool
+E       ModuleNotFoundError: No module named 'mcp'
+
+src\prompt_shield\mcp_server\server.py:163: ModuleNotFoundError
+_______ TestToolDefinitions.test_every_tool_has_description_and_schema ________
+
+self = <tests.mcp_server.test_server.TestToolDefinitions object at 0x000001CB068F5B80>
+
+    def test_every_tool_has_description_and_schema(self) -> None:
+>       for tool in _tool_definitions():
+                    ^^^^^^^^^^^^^^^^^^^
+
+tests\mcp_server\test_server.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _tool_definitions() -> list[Tool]:
+        """Return the MCP Tool schemas advertised by this server."""
+>       from mcp.types import Tool
+E       ModuleNotFoundError: No module named 'mcp'
+
+src\prompt_shield\mcp_server\server.py:163: ModuleNotFoundError
+______________ TestToolDefinitions.test_scan_input_requires_text ______________
+
+self = <tests.mcp_server.test_server.TestToolDefinitions object at 0x000001CB068F5E20>
+
+    def test_scan_input_requires_text(self) -> None:
+>       scan_input = next(t for t in _tool_definitions() if t.name == "scan_input")
+                                     ^^^^^^^^^^^^^^^^^^^
+
+tests\mcp_server\test_server.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _tool_definitions() -> list[Tool]:
+        """Return the MCP Tool schemas advertised by this server."""
+>       from mcp.types import Tool
+E       ModuleNotFoundError: No module named 'mcp'
+
+src\prompt_shield\mcp_server\server.py:163: ModuleNotFoundError
+_____ TestToolDefinitions.test_scan_output_declares_scanner_subset_option _____
+
+self = <tests.mcp_server.test_server.TestToolDefinitions object at 0x000001CB068F62D0>
+
+    def test_scan_output_declares_scanner_subset_option(self) -> None:
+>       scan_output = next(t for t in _tool_definitions() if t.name == "scan_output")
+                                      ^^^^^^^^^^^^^^^^^^^
+
+tests\mcp_server\test_server.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _tool_definitions() -> list[Tool]:
+        """Return the MCP Tool schemas advertised by this server."""
+>       from mcp.types import Tool
+E       ModuleNotFoundError: No module named 'mcp'
+
+src\prompt_shield\mcp_server\server.py:163: ModuleNotFoundError
+______ TestToolDefinitions.test_scan_tool_result_supports_sanitize_flag _______
+
+self = <tests.mcp_server.test_server.TestToolDefinitions object at 0x000001CB068F6600>
+
+    def test_scan_tool_result_supports_sanitize_flag(self) -> None:
+>       scan_tool_result = next(t for t in _tool_definitions() if t.name == "scan_tool_result")
+                                           ^^^^^^^^^^^^^^^^^^^
+
+tests\mcp_server\test_server.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _tool_definitions() -> list[Tool]:
+        """Return the MCP Tool schemas advertised by this server."""
+>       from mcp.types import Tool
+E       ModuleNotFoundError: No module named 'mcp'
+
+src\prompt_shield\mcp_server\server.py:163: ModuleNotFoundError
+____________ TestServerConstruction.test_build_server_names_itself ____________
+
+self = <tests.mcp_server.test_server.TestServerConstruction object at 0x000001CB068F7800>
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CE6DC5F770>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CB3FF232F0>
+
+    def test_build_server_names_itself(self, engine, output_engine) -> None:
+>       server = build_server(engine=engine, output_engine=output_engine)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\mcp_server\test_server.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CE6DC5F770>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CB3FF232F0>
+
+    def build_server(
+        engine: PromptShieldEngine | None = None,
+        output_engine: OutputScanEngine | None = None,
+    ) -> Server:
+        """Build the MCP Server object with prompt-shield tool handlers attached.
+    
+        Parameters
+        ----------
+        engine:
+            Pre-built ``PromptShieldEngine``. If ``None``, an engine is created with
+            the default config (the ``PROMPT_SHIELD_CONFIG`` environment variable is
+            honored as a path override, and the bundled interactive-assistant
+            profile is used otherwise).
+        output_engine:
+            Pre-built ``OutputScanEngine`` for ``scan_output``. If ``None``, a new
+            one is created with default per-scanner settings.
+        """
+        # mcp is imported lazily so importing this module (via
+        # ``prompt_shield.mcp_server``) succeeds without the ``[mcp]`` extra;
+        # the actual failure happens only when a caller reaches build_server /
+        # run_stdio, which is the point at which the entrypoint's guard has
+        # already had its chance to print an install hint.
+        import anyio
+>       from mcp.server import Server
+E       ModuleNotFoundError: No module named 'mcp'
+
+src\prompt_shield\mcp_server\server.py:312: ModuleNotFoundError
+_ TestServerConstruction.test_build_server_reports_prompt_shield_version_not_sdk_version _
+
+self = <tests.mcp_server.test_server.TestServerConstruction object at 0x000001CB068F7C80>
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CE765F3710>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CB4B679BE0>
+
+    def test_build_server_reports_prompt_shield_version_not_sdk_version(
+        self, engine, output_engine
+    ) -> None:
+        """The MCP handshake must advertise prompt-shield's version, not the SDK's."""
+        version = _server_version()
+        # Whatever the shipping version string is, it should not match the mcp
+        # SDK's version — that was the bug we fixed.
+>       import mcp
+E       ModuleNotFoundError: No module named 'mcp'
+
+tests\mcp_server\test_server.py:102: ModuleNotFoundError
+_ TestServerConstruction.test_build_server_registers_list_tools_and_call_tool _
+
+self = <tests.mcp_server.test_server.TestServerConstruction object at 0x000001CB0690E420>
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CE6DC25400>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CB4D905910>
+
+    def test_build_server_registers_list_tools_and_call_tool(self, engine, output_engine) -> None:
+>       server = build_server(engine=engine, output_engine=output_engine)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\mcp_server\test_server.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CE6DC25400>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CB4D905910>
+
+    def build_server(
+        engine: PromptShieldEngine | None = None,
+        output_engine: OutputScanEngine | None = None,
+    ) -> Server:
+        """Build the MCP Server object with prompt-shield tool handlers attached.
+    
+        Parameters
+        ----------
+        engine:
+            Pre-built ``PromptShieldEngine``. If ``None``, an engine is created with
+            the default config (the ``PROMPT_SHIELD_CONFIG`` environment variable is
+            honored as a path override, and the bundled interactive-assistant
+            profile is used otherwise).
+        output_engine:
+            Pre-built ``OutputScanEngine`` for ``scan_output``. If ``None``, a new
+            one is created with default per-scanner settings.
+        """
+        # mcp is imported lazily so importing this module (via
+        # ``prompt_shield.mcp_server``) succeeds without the ``[mcp]`` extra;
+        # the actual failure happens only when a caller reaches build_server /
+        # run_stdio, which is the point at which the entrypoint's guard has
+        # already had its chance to print an install hint.
+        import anyio
+>       from mcp.server import Server
+E       ModuleNotFoundError: No module named 'mcp'
+
+src\prompt_shield\mcp_server\server.py:312: ModuleNotFoundError
+____ TestToolInvocationRoundTrip.test_scan_input_returns_success_envelope _____
+
+self = <tests.mcp_server.test_server.TestToolInvocationRoundTrip object at 0x000001CB068F7A40>
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CB4B677A10>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CE6DC6E990>
+
+    @pytest.mark.asyncio
+    async def test_scan_input_returns_success_envelope(self, engine, output_engine) -> None:
+>       server = build_server(engine=engine, output_engine=output_engine)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\mcp_server\test_server.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CB4B677A10>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CE6DC6E990>
+
+    def build_server(
+        engine: PromptShieldEngine | None = None,
+        output_engine: OutputScanEngine | None = None,
+    ) -> Server:
+        """Build the MCP Server object with prompt-shield tool handlers attached.
+    
+        Parameters
+        ----------
+        engine:
+            Pre-built ``PromptShieldEngine``. If ``None``, an engine is created with
+            the default config (the ``PROMPT_SHIELD_CONFIG`` environment variable is
+            honored as a path override, and the bundled interactive-assistant
+            profile is used otherwise).
+        output_engine:
+            Pre-built ``OutputScanEngine`` for ``scan_output``. If ``None``, a new
+            one is created with default per-scanner settings.
+        """
+        # mcp is imported lazily so importing this module (via
+        # ``prompt_shield.mcp_server``) succeeds without the ``[mcp]`` extra;
+        # the actual failure happens only when a caller reaches build_server /
+        # run_stdio, which is the point at which the entrypoint's guard has
+        # already had its chance to print an install hint.
+        import anyio
+>       from mcp.server import Server
+E       ModuleNotFoundError: No module named 'mcp'
+
+src\prompt_shield\mcp_server\server.py:312: ModuleNotFoundError
+_ TestToolInvocationRoundTrip.test_scan_output_calls_output_engine_not_input_engine _
+
+self = <tests.mcp_server.test_server.TestToolInvocationRoundTrip object at 0x000001CB068F71A0>
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CE6DC5F050>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CE6DC242F0>
+
+    @pytest.mark.asyncio
+    async def test_scan_output_calls_output_engine_not_input_engine(
+        self, engine, output_engine
+    ) -> None:
+        """Regression test for the biggest bug the Fable review caught:
+        the earlier draft called ``engine.scan(gate=output)`` which runs
+        INPUT detectors. Every detector_id in a scan_output payload must
+        be an output scanner ID (starts with ``output_*`` or a scanner
+        short-name), never an input detector ID (starts with ``d0``).
+        """
+>       server = build_server(engine=engine, output_engine=output_engine)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\mcp_server\test_server.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CE6DC5F050>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CE6DC242F0>
+
+    def build_server(
+        engine: PromptShieldEngine | None = None,
+        output_engine: OutputScanEngine | None = None,
+    ) -> Server:
+        """Build the MCP Server object with prompt-shield tool handlers attached.
+    
+        Parameters
+        ----------
+        engine:
+            Pre-built ``PromptShieldEngine``. If ``None``, an engine is created with
+            the default config (the ``PROMPT_SHIELD_CONFIG`` environment variable is
+            honored as a path override, and the bundled interactive-assistant
+            profile is used otherwise).
+        output_engine:
+            Pre-built ``OutputScanEngine`` for ``scan_output``. If ``None``, a new
+            one is created with default per-scanner settings.
+        """
+        # mcp is imported lazily so importing this module (via
+        # ``prompt_shield.mcp_server``) succeeds without the ``[mcp]`` extra;
+        # the actual failure happens only when a caller reaches build_server /
+        # run_stdio, which is the point at which the entrypoint's guard has
+        # already had its chance to print an install hint.
+        import anyio
+>       from mcp.server import Server
+E       ModuleNotFoundError: No module named 'mcp'
+
+src\prompt_shield\mcp_server\server.py:312: ModuleNotFoundError
+_____ TestToolInvocationRoundTrip.test_unknown_tool_returns_is_error_true _____
+
+self = <tests.mcp_server.test_server.TestToolInvocationRoundTrip object at 0x000001CB068F64B0>
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CE6DC26000>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CB5414B380>
+
+    @pytest.mark.asyncio
+    async def test_unknown_tool_returns_is_error_true(self, engine, output_engine) -> None:
+>       server = build_server(engine=engine, output_engine=output_engine)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\mcp_server\test_server.py:181: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CE6DC26000>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CB5414B380>
+
+    def build_server(
+        engine: PromptShieldEngine | None = None,
+        output_engine: OutputScanEngine | None = None,
+    ) -> Server:
+        """Build the MCP Server object with prompt-shield tool handlers attached.
+    
+        Parameters
+        ----------
+        engine:
+            Pre-built ``PromptShieldEngine``. If ``None``, an engine is created with
+            the default config (the ``PROMPT_SHIELD_CONFIG`` environment variable is
+            honored as a path override, and the bundled interactive-assistant
+            profile is used otherwise).
+        output_engine:
+            Pre-built ``OutputScanEngine`` for ``scan_output``. If ``None``, a new
+            one is created with default per-scanner settings.
+        """
+        # mcp is imported lazily so importing this module (via
+        # ``prompt_shield.mcp_server``) succeeds without the ``[mcp]`` extra;
+        # the actual failure happens only when a caller reaches build_server /
+        # run_stdio, which is the point at which the entrypoint's guard has
+        # already had its chance to print an install hint.
+        import anyio
+>       from mcp.server import Server
+E       ModuleNotFoundError: No module named 'mcp'
+
+src\prompt_shield\mcp_server\server.py:312: ModuleNotFoundError
+___ TestToolInvocationRoundTrip.test_oversize_input_rejected_with_is_error ____
+
+self = <tests.mcp_server.test_server.TestToolInvocationRoundTrip object at 0x000001CB068F5D90>
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CE765F2930>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CB4D8874D0>
+
+    @pytest.mark.asyncio
+    async def test_oversize_input_rejected_with_is_error(self, engine, output_engine) -> None:
+>       server = build_server(engine=engine, output_engine=output_engine)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\mcp_server\test_server.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CE765F2930>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CB4D8874D0>
+
+    def build_server(
+        engine: PromptShieldEngine | None = None,
+        output_engine: OutputScanEngine | None = None,
+    ) -> Server:
+        """Build the MCP Server object with prompt-shield tool handlers attached.
+    
+        Parameters
+        ----------
+        engine:
+            Pre-built ``PromptShieldEngine``. If ``None``, an engine is created with
+            the default config (the ``PROMPT_SHIELD_CONFIG`` environment variable is
+            honored as a path override, and the bundled interactive-assistant
+            profile is used otherwise).
+        output_engine:
+            Pre-built ``OutputScanEngine`` for ``scan_output``. If ``None``, a new
+            one is created with default per-scanner settings.
+        """
+        # mcp is imported lazily so importing this module (via
+        # ``prompt_shield.mcp_server``) succeeds without the ``[mcp]`` extra;
+        # the actual failure happens only when a caller reaches build_server /
+        # run_stdio, which is the point at which the entrypoint's guard has
+        # already had its chance to print an install hint.
+        import anyio
+>       from mcp.server import Server
+E       ModuleNotFoundError: No module named 'mcp'
+
+src\prompt_shield\mcp_server\server.py:312: ModuleNotFoundError
+__ TestToolInvocationRoundTrip.test_list_detectors_returns_input_and_output ___
+
+self = <tests.mcp_server.test_server.TestToolInvocationRoundTrip object at 0x000001CB0690E390>
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CB4D886E70>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CE6DC27290>
+
+    @pytest.mark.asyncio
+    async def test_list_detectors_returns_input_and_output(self, engine, output_engine) -> None:
+>       server = build_server(engine=engine, output_engine=output_engine)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\mcp_server\test_server.py:200: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CB4D886E70>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CE6DC27290>
+
+    def build_server(
+        engine: PromptShieldEngine | None = None,
+        output_engine: OutputScanEngine | None = None,
+    ) -> Server:
+        """Build the MCP Server object with prompt-shield tool handlers attached.
+    
+        Parameters
+        ----------
+        engine:
+            Pre-built ``PromptShieldEngine``. If ``None``, an engine is created with
+            the default config (the ``PROMPT_SHIELD_CONFIG`` environment variable is
+            honored as a path override, and the bundled interactive-assistant
+            profile is used otherwise).
+        output_engine:
+            Pre-built ``OutputScanEngine`` for ``scan_output``. If ``None``, a new
+            one is created with default per-scanner settings.
+        """
+        # mcp is imported lazily so importing this module (via
+        # ``prompt_shield.mcp_server``) succeeds without the ``[mcp]`` extra;
+        # the actual failure happens only when a caller reaches build_server /
+        # run_stdio, which is the point at which the entrypoint's guard has
+        # already had its chance to print an install hint.
+        import anyio
+>       from mcp.server import Server
+E       ModuleNotFoundError: No module named 'mcp'
+
+src\prompt_shield\mcp_server\server.py:312: ModuleNotFoundError
+_ TestToolInvocationRoundTrip.test_scan_tool_result_sanitize_returns_redacted_text _
+
+self = <tests.mcp_server.test_server.TestToolInvocationRoundTrip object at 0x000001CB0690C440>
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CE6DC5E0C0>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CE6DC25340>
+
+    @pytest.mark.asyncio
+    async def test_scan_tool_result_sanitize_returns_redacted_text(
+        self, engine, output_engine
+    ) -> None:
+>       server = build_server(engine=engine, output_engine=output_engine)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\mcp_server\test_server.py:212: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <prompt_shield.engine.PromptShieldEngine object at 0x000001CE6DC5E0C0>
+output_engine = <prompt_shield.output_scanners.engine.OutputScanEngine object at 0x000001CE6DC25340>
+
+    def build_server(
+        engine: PromptShieldEngine | None = None,
+        output_engine: OutputScanEngine | None = None,
+    ) -> Server:
+        """Build the MCP Server object with prompt-shield tool handlers attached.
+    
+        Parameters
+        ----------
+        engine:
+            Pre-built ``PromptShieldEngine``. If ``None``, an engine is created with
+            the default config (the ``PROMPT_SHIELD_CONFIG`` environment variable is
+            honored as a path override, and the bundled interactive-assistant
+            profile is used otherwise).
+        output_engine:
+            Pre-built ``OutputScanEngine`` for ``scan_output``. If ``None``, a new
+            one is created with default per-scanner settings.
+        """
+        # mcp is imported lazily so importing this module (via
+        # ``prompt_shield.mcp_server``) succeeds without the ``[mcp]`` extra;
+        # the actual failure happens only when a caller reaches build_server /
+        # run_stdio, which is the point at which the entrypoint's guard has
+        # already had its chance to print an install hint.
+        import anyio
+>       from mcp.server import Server
+E       ModuleNotFoundError: No module named 'mcp'
+
+src\prompt_shield\mcp_server\server.py:312: ModuleNotFoundError
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/benchmarks/test_runner.py::TestRunBenchmark::test_run_sample_benchmark
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\torch\jit\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+tests/detectors/test_d035_perplexity_spectral.py::test_integration_real_model_runs
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\huggingface_hub\file_download.py:149: UserWarning: `huggingface_hub` cache-system uses symlinks by default to efficiently store duplicated files but your machine does not support them in C:\Users\soura\.cache\huggingface\hub\models--distilgpt2. Caching files will still work but in a degraded version that might require more space on your disk. This warning can be disabled by setting the `HF_HUB_DISABLE_SYMLINKS_WARNING` environment variable. For more details, see https://huggingface.co/docs/huggingface_hub/how-to-cache#limitations.
+  To support symlinks on Windows, you either need to activate Developer Mode or to run Python as an administrator. In order to activate developer mode, see this article: https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development
+    warnings.warn(message)
+
+tests/detectors/test_d035_perplexity_spectral.py::test_integration_real_model_runs
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\huggingface_hub\file_download.py:149: UserWarning: `huggingface_hub` cache-system uses symlinks by default to efficiently store duplicated files but your machine does not support them in C:\Users\soura\.cache\huggingface\hub. Caching files will still work but in a degraded version that might require more space on your disk. This warning can be disabled by setting the `HF_HUB_DISABLE_SYMLINKS_WARNING` environment variable. For more details, see https://huggingface.co/docs/huggingface_hub/how-to-cache#limitations.
+  To support symlinks on Windows, you either need to activate Developer Mode or to run Python as an administrator. In order to activate developer mode, see this article: https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development
+    warnings.warn(message)
+
+tests/integrations/test_pydantic_ai_guard.py::TestScanInput::test_clean_input_returns_report
+tests/integrations/test_pydantic_ai_guard.py::TestScanInput::test_injection_input_raises_in_block_mode
+tests/integrations/test_pydantic_ai_guard.py::TestScanInput::test_injection_input_passes_in_flag_mode
+tests/tool_guard/test_guard.py::TestConstruction::test_lazy_default_engine
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\chromadb\api\types.py:944: DeprecationWarning: The EmbeddingFunction class does not implement name(). This will be required in a future version.
+    self.name() is NotImplemented
+
+tests/integrations/test_pydantic_ai_guard.py::TestScanInput::test_clean_input_returns_report
+tests/integrations/test_pydantic_ai_guard.py::TestScanInput::test_injection_input_raises_in_block_mode
+tests/integrations/test_pydantic_ai_guard.py::TestScanInput::test_injection_input_passes_in_flag_mode
+tests/tool_guard/test_guard.py::TestConstruction::test_lazy_default_engine
+  C:\Users\soura\OneDrive\Desktop\ET_AI_HK\prompt-shield\.venv\Lib\site-packages\chromadb\api\collection_configuration.py:791: DeprecationWarning: The EmbeddingFunction class does not implement name(). This will be required in a future version.
+    embedding_function.name() != "default"
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/mcp_server/test_server.py::TestToolDefinitions::test_advertises_four_tools
+FAILED tests/mcp_server/test_server.py::TestToolDefinitions::test_every_tool_has_description_and_schema
+FAILED tests/mcp_server/test_server.py::TestToolDefinitions::test_scan_input_requires_text
+FAILED tests/mcp_server/test_server.py::TestToolDefinitions::test_scan_output_declares_scanner_subset_option
+FAILED tests/mcp_server/test_server.py::TestToolDefinitions::test_scan_tool_result_supports_sanitize_flag
+FAILED tests/mcp_server/test_server.py::TestServerConstruction::test_build_server_names_itself
+FAILED tests/mcp_server/test_server.py::TestServerConstruction::test_build_server_reports_prompt_shield_version_not_sdk_version
+FAILED tests/mcp_server/test_server.py::TestServerConstruction::test_build_server_registers_list_tools_and_call_tool
+FAILED tests/mcp_server/test_server.py::TestToolInvocationRoundTrip::test_scan_input_returns_success_envelope
+FAILED tests/mcp_server/test_server.py::TestToolInvocationRoundTrip::test_scan_output_calls_output_engine_not_input_engine
+FAILED tests/mcp_server/test_server.py::TestToolInvocationRoundTrip::test_unknown_tool_returns_is_error_true
+FAILED tests/mcp_server/test_server.py::TestToolInvocationRoundTrip::test_oversize_input_rejected_with_is_error
+FAILED tests/mcp_server/test_server.py::TestToolInvocationRoundTrip::test_list_detectors_returns_input_and_output
+FAILED tests/mcp_server/test_server.py::TestToolInvocationRoundTrip::test_scan_tool_result_sanitize_returns_redacted_text
+14 failed, 1298 passed, 21 skipped, 12 warnings in 797.73s (0:13:17)
